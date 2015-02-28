@@ -26,6 +26,9 @@ typedef struct {
 	ullong l_weapon_address;
 	unsigned int l_weapon_id;
 	//range of weapon
+
+	//when hurtbox is active
+
 } Character;
 
 //print info about the character
@@ -60,14 +63,14 @@ static const int Player_animation_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xC7C 
 static const int Phantom_animation_offsets_length = 5;
 static const int Player_animation_offsets_length = 5;
 //R weapon id
-static const int Phantom_r_weapon_offsets[] = { 0x4, 0x4, 0x3E08 };
+static const int Phantom_r_weapon_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x1F8 };
 static const int Player_r_weapon_offsets[] = { 0x4, 0x0, 0x654, 0x1F8 };
-static const int Phantom_r_weapon_offsets_length = 3;
+static const int Phantom_r_weapon_offsets_length = 5;
 static const int Player_r_weapon_offsets_length = 4;
 //L weapon id
-static const int Phantom_l_weapon_offsets[] = { 0x4, 0x4, 0x3DC8 };
+static const int Phantom_l_weapon_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x1B8 };
 static const int Player_l_weapon_offsets[] = { 0x4, 0x0, 0x654, 0x1B4 };
-static const int Phantom_l_weapon_offsets_length = 3;
+static const int Phantom_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 4;
 
 #endif
