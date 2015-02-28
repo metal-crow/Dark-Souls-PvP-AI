@@ -8,8 +8,8 @@
 
 int main(void){
 	//initalize the phantom and player
-	Character Phantom;
-	memset(&Phantom, 0, sizeof(Character));
+	Character Enemy;
+	memset(&Enemy, 0, sizeof(Character));
 	Character Player;
 	memset(&Player, 0, sizeof(Character));
 
@@ -21,16 +21,16 @@ int main(void){
 	HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
 	//get the base address of the process and append all other addresses onto it
 	ullong memorybase = GetModuleBase(processId, processName);
-	phantom_base_add += memorybase;
+	Enemy_base_add += memorybase;
 	player_base_add += memorybase;
 
 	//add the pointer offsets to the address
-	Phantom.location_x_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_loc_x_offsets_length, Phantom_loc_x_offsets);
-	Phantom.location_y_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_loc_y_offsets_length, Phantom_loc_y_offsets);
-	Phantom.rotation_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_rotation_offsets_length, Phantom_rotation_offsets);
-	Phantom.animation_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_animation_offsets_length, Phantom_animation_offsets);
-	Phantom.r_weapon_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_r_weapon_offsets_length, Phantom_r_weapon_offsets);
-	Phantom.l_weapon_address = FindPointerAddr(processHandle, phantom_base_add, Phantom_l_weapon_offsets_length, Phantom_l_weapon_offsets);
+	Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
+	Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
+	Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
+	Enemy.animation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animation_offsets_length, Enemy_animation_offsets);
+	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
+	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
 	Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -60,11 +60,11 @@ int main(void){
 
 	while (1){
 		//read the data at these pointers, now that offsets have been added and we have a static address
-		ReadPlayer(&Phantom, processHandle);
-		ReadPlayer(&Player, processHandle);
+		ReadPlayer(&Enemy, &processHandle);
+		ReadPlayer(&Player, &processHandle);
 
-		printf("Phantom : ");
-		PrintPhantom(&Phantom);
+		printf("Enemy : ");
+		PrintPhantom(&Enemy);
 		printf("Player : ");
 		PrintPhantom(&Player);
 
@@ -78,10 +78,10 @@ int main(void){
 		iReport.lButtons = 0;
 
 		//basic logic initilization choice
-		if (aboutToBeHit(&Player, &Phantom)){
-			dodge(&Player, &Phantom, &iReport);
+		if (aboutToBeHit(&Player, &Enemy)){
+			dodge(&Player, &Enemy, &iReport);
 		} else{
-			attack(&Player, &Phantom, &iReport);
+			attack(&Player, &Enemy, &iReport);
 		}
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
