@@ -52,8 +52,8 @@ static const int Phantom_loc_y_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x268 };
 static const int Player_loc_y_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xC78 };
 static const int Phantom_loc_y_offsets_length = 5;
 static const int Player_loc_y_offsets_length = 5;
-//offsets and length for rotation
-static const int Phantom_rotation_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x274 };
+//offsets and length for rotation (1 is directly facing opponent)
+static const int Phantom_rotation_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x408 };
 static const int Player_rotation_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xD38 };
 static const int Phantom_rotation_offsets_length = 5;
 static const int Player_rotation_offsets_length = 5;
