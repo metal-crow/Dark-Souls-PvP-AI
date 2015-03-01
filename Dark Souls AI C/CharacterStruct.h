@@ -25,9 +25,11 @@ typedef struct {
 	//current left hand weapon they are holding
 	ullong l_weapon_address;
 	unsigned int l_weapon_id;
-	//range of weapon
+	//hurtbox size(range) of weapon. Bows/Magic have high range
 
-	//when hurtbox is active
+	//subanimation state. Used to see if hurtbox is active during attack animation
+	ullong subanimation_address;
+	unsigned short subanimation;
 
 } Character;
 
@@ -72,5 +74,10 @@ static const int Enemy_l_weapon_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x1B8 };
 static const int Player_l_weapon_offsets[] = { 0x4, 0x0, 0x654, 0x1B4 };
 static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 4;
+//the current subanimation being executed (1 netural, 0 windup, 256 attack, 257 recovery,)
+static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
+static const int Player_subanimation_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0x10B6 };
+static const int Enemy_subanimation_offsets_length = 5;
+static const int Player_subanimation_offsets_length = 5;
 
 #endif
