@@ -6,12 +6,15 @@
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
 #define  _CRT_SECURE_NO_WARNINGS
 
+//initalize the phantom and player
+Character Enemy;
+Character Player;
+
 int main(void){
-	//initalize the phantom and player
-	Character Enemy;
 	memset(&Enemy, 0, sizeof(Character));
-	Character Player;
+	Enemy.range = 1;//temp hardcoding
 	memset(&Player, 0, sizeof(Character));
+	Player.range = 1;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
@@ -43,7 +46,6 @@ int main(void){
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device
-	BOOL ContinuousPOV = FALSE;						// Continuous POV hat (or 4-direction POV Hat)
 
 	int loadresult = loadvJoy(iInterface);
 	if (loadresult != 0){

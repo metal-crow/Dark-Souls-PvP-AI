@@ -13,7 +13,7 @@ typedef struct {
 	//data for y location
 	ullong location_y_address;
 	float loc_y;
-	//data for rotation
+	//data for rotation TODO i think this broke
 	ullong rotation_address;
 	float rotation;
 	//data for current animation id
@@ -26,7 +26,7 @@ typedef struct {
 	ullong l_weapon_address;
 	unsigned int l_weapon_id;
 	//hurtbox size(range) of weapon. Bows/Magic have high range
-
+	float range;
 	//subanimation state. Used to see if hurtbox is active during attack animation
 	ullong subanimation_address;
 	unsigned short subanimation;

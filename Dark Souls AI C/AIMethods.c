@@ -9,13 +9,22 @@ static double distance(Character * Player, Character * Phantom){
 	return hypot(delta_x, delta_y);
 }
 
+static bool isAttackAnimation(unsigned short animation_id){
+
+}
+
 bool aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range
 	if (distance(Player, Phantom) > Phantom->weaponRange){
 		return false;
-	}
-	//if enemy is in attack animation, attack animation about to generate hurtbox(check sub animation), and their attack will hit me(their rotation is correct)
-	else if(){
+	}else if (
+		//if enemy is in attack animation, 
+		isAttackAnimation(Phantom->animation_id) 
+		//attack animation about to generate hurtbox(check sub animation)
+		&& (Phantom->subanimation) == 256 
+		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
+		&& (Phantom->rotation)>0.95 && (Phantom->rotation)<???
+	){
 		return true;
 	}
 }
