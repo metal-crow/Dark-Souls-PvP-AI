@@ -18,7 +18,7 @@ typedef struct {
 	float rotation;
 	//data for current animation id
 	ullong animation_address;
-	unsigned short animation_id;
+	unsigned char animation_id;
 	//current Right hand weapon they are holding
 	ullong r_weapon_address;
 	unsigned int r_weapon_id;
@@ -26,10 +26,10 @@ typedef struct {
 	ullong l_weapon_address;
 	unsigned int l_weapon_id;
 	//hurtbox size(range) of weapon. Bows/Magic have high range
-	float range;
+	float weaponRange;
 	//subanimation state. Used to see if hurtbox is active during attack animation
 	ullong subanimation_address;
-	unsigned short subanimation;
+	unsigned char subanimation;
 
 } Character;
 
@@ -54,9 +54,9 @@ static const int Enemy_loc_y_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x268 };
 static const int Player_loc_y_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xC78 };
 static const int Enemy_loc_y_offsets_length = 5;
 static const int Player_loc_y_offsets_length = 5;
-//offsets and length for rotation (1 is directly facing opponent)
-static const int Enemy_rotation_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x408 };
-static const int Player_rotation_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xD38 };
+//offsets and length for rotation
+static const int Enemy_rotation_offsets[] = { 0x8, 0x398, 0x224, 0x2C, 0x34 };
+static const int Player_rotation_offsets[] = { 0x, 0x, 0x, 0x, 0x };
 static const int Enemy_rotation_offsets_length = 5;
 static const int Player_rotation_offsets_length = 5;
 //offsets and length for animation id

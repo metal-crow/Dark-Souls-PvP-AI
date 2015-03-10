@@ -12,9 +12,9 @@ Character Player;
 
 int main(void){
 	memset(&Enemy, 0, sizeof(Character));
-	Enemy.range = 1;//temp hardcoding
+	Enemy.weaponRange = 1;//temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.range = 1;
+	Player.weaponRange = 1;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";

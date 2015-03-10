@@ -34,9 +34,11 @@ l2:z-max
   
 TODO:  
   Fix rotation, find what its relative to    
-  SubAnimation doesnt exist, figure out way to find when hitbox is created. Some point in animation hurtbox is created, have to find variable about that and location of where exactly weapon is.      
+  Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
+  Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  
-  Method for determining if animation id is attack animation or different
+  Method for determining if animation id is attack animation or different  
+  Find name location, try to fix name length crash(test namefind without pvp watchdog enabled)
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
