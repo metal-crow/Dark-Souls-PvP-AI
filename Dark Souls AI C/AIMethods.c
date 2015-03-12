@@ -9,11 +9,15 @@ static double distance(Character * Player, Character * Phantom){
 	return hypot(delta_x, delta_y);
 }
 
-//determine what type of action the animation id is.
-//i cant seem to find a pattern in the ids, so this is just a big switch statement
-//ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
-//because of this, have to specify if we need to look at subanimation
-//0 is not attack animation, 1 is hurtbox is created, 2 is attack id but must check subanimation
+/*determine what type of action the animation id is.
+
+i cant seem to find a pattern in the ids, so this is just a big switch statement
+
+ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
+because of this, have to specify if we need to look at subanimation
+0 is not attack animation, 1 is hurtbox is created, 2 is attack id but must check subanimation
+
+NOTE: a lookup array would probably be faster, but by VERY little*/
 static unsigned char isAttackAnimation(unsigned char animation_id){
 	switch (animation_id){
 	//1 hand roll

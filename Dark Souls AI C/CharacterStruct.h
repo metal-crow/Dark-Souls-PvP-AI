@@ -54,9 +54,9 @@ static const int Enemy_loc_y_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x268 };
 static const int Player_loc_y_offsets[] = { 0x180, 0x1BC, 0x760, 0x8, 0xC78 };
 static const int Enemy_loc_y_offsets_length = 5;
 static const int Player_loc_y_offsets_length = 5;
-//offsets and length for rotation
-static const int Enemy_rotation_offsets[] = { 0x8, 0x398, 0x224, 0x2C, 0x34 };
-static const int Player_rotation_offsets[] = { 0x, 0x, 0x, 0x, 0x };
+//offsets and length for rotation. 0 to 3, jump, -3 to 0. Clockwise
+static const int Enemy_rotation_offsets[] = { 0x4, 0x40C, 0x224, 0x2C, 0x34 };
+static const int Player_rotation_offsets[] = { 0x7E0, 0x27C, 0x124, 0x634, 0x494 };
 static const int Enemy_rotation_offsets_length = 5;
 static const int Player_rotation_offsets_length = 5;
 //offsets and length for animation id
