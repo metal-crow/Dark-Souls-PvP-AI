@@ -12,8 +12,12 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
 	//read rotation of player
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
+	//append 3 to the rotation to better read it
+	c->rotation += 3;
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
+	//read hp
+	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
 	//read what weapon they currently have in right hand
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
 	//read what weapon they currently have in left hand

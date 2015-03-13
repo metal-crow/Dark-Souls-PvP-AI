@@ -33,7 +33,6 @@ r2:z-0
 l2:z-max  
   
 TODO:  
-  Find what rotation is relative to  
   Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
   Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  

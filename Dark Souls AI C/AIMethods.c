@@ -155,7 +155,7 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 		//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
 		&& (AtkID == 1 || (Phantom->subanimation) == 256)
 		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
-		&& (Phantom->rotation)>0.95 && (Phantom->rotation)<???
+		&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 	){
 		return true;
 	}
@@ -163,7 +163,13 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-
+	//dodge at an angle
+	//angle joystick
+	longTuple move = CoordsToJoystickAngle(Player->loc_x, (Phantom->loc_x)+1, Player->loc_y, (Phantom->loc_y)+1);
+	iReport->wAxisX = move.first;
+	iReport->wAxisY = move.second;
+	//press circle button
+	iReport->lButtons = 2;
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
