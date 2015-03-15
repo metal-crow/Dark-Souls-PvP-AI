@@ -71,65 +71,62 @@ int loadvJoy(UINT iInterface){
 	return 0;
 }
 
-longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y, float phantom_y){
+
+double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y){
 	double delta_x = fabsf(player_x) - fabsf(phantom_x);
 	double delta_y = fabsf(phantom_y) - fabsf(player_y);
-
-	long joystick_x;
-	long joystick_y;
-
-	//camera must be locked for this to work
-	//aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us
 
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
 
+	return angle;
+}
+
+longTuple angleToJoystick(double angle){
+	longTuple tuple;
+
 	//top right quadrant
 	if (angle <= 90 && angle >= 0){
 		if (angle <= 45){
-			joystick_x = MIDDLE + ((angle * MIDDLE) / 45);
-			joystick_y = YTOP;
+			tuple.first = MIDDLE + ((angle * MIDDLE) / 45);
+			tuple.second = YTOP;
 		} else{
-			joystick_y = YTOP + (((angle - 45.0) * MIDDLE) / 45);
-			joystick_x = XRIGHT;
+			tuple.second = YTOP + (((angle - 45.0) * MIDDLE) / 45);
+			tuple.first = XRIGHT;
 		}
 	}
 	//bottom right quadrant
 	else if (angle <= 180 && angle >= 90){
 		double anglediff = fabs(angle - 90.0);
 		if (anglediff <= 45){
-			joystick_x = XRIGHT;
-			joystick_y = MIDDLE + ((anglediff * MIDDLE) / 45);
+			tuple.first = XRIGHT;
+			tuple.second = MIDDLE + ((anglediff * MIDDLE) / 45);
 		} else{
-			joystick_y = YBOTTOM;
-			joystick_x = XRIGHT - (((anglediff - 45.0) * MIDDLE) / 45);
+			tuple.second = YBOTTOM;
+			tuple.first = XRIGHT - (((anglediff - 45.0) * MIDDLE) / 45);
 		}
 	}
 	//bottom left quadrant
 	else if (angle <= 270 && angle >= 180){
 		double anglediff = fabs(angle - 180.0);
 		if (anglediff <= 45){
-			joystick_x = MIDDLE - ((anglediff * MIDDLE) / 45);
-			joystick_y = YBOTTOM;
+			tuple.first = MIDDLE - ((anglediff * MIDDLE) / 45);
+			tuple.second = YBOTTOM;
 		} else{
-			joystick_y = YBOTTOM - (((anglediff - 45.0) * MIDDLE) / 45);
-			joystick_x = XLEFT;
+			tuple.second = YBOTTOM - (((anglediff - 45.0) * MIDDLE) / 45);
+			tuple.first = XLEFT;
 		}
 	//top left quadrant
 	} else{
 		double anglediff = fabs(angle - 270.0);
 		if (anglediff <= 45){
-			joystick_x = XLEFT;
-			joystick_y = MIDDLE - ((anglediff * MIDDLE) / 45);
+			tuple.first = XLEFT;
+			tuple.second = MIDDLE - ((anglediff * MIDDLE) / 45);
 		} else{
-			joystick_y = YTOP;
-			joystick_x = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
+			tuple.second = YTOP;
+			tuple.first = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
 		}
 	}
-
-	longTuple tuple;
-	tuple.first = joystick_x;
-	tuple.second = joystick_y;
 
 	return tuple;
 }

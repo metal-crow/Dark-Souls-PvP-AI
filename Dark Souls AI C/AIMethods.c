@@ -179,9 +179,11 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-	//dodge at an angle
+	//dodge at a 5 degree angle
+	double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+	angle += 5;
 	//angle joystick
-	longTuple move = CoordsToJoystickAngle(Player->loc_x, (Phantom->loc_x)+1, Player->loc_y, (Phantom->loc_y)+1);
+	longTuple move = angleToJoystick(angle);
 	iReport->wAxisX = move.first;
 	iReport->wAxisY = move.second;
 	//press circle button
@@ -195,7 +197,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 	if (distance(Player, Phantom) > Player->weaponRange){
 		printf("move to attack\n");
 		//if we are not close enough, move towards 
-		longTuple move = CoordsToJoystickAngle(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+		longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
 		iReport->wAxisX = move.first;
 		iReport->wAxisY = move.second;
 	}else{
