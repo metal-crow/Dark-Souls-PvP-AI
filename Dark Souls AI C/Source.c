@@ -88,9 +88,6 @@ int main(void){
 			dodge(&Player, &Enemy, &iReport);
 		} else{
 			attack(&Player, &Enemy, &iReport);
-			double x = ((iReport.wAxisXRot / (double)32768) * (double)100);
-			double y = ((iReport.wAxisYRot / (double)32768) * (double)100);
-			printf("x: %f y: %f \n----------------------\n", x, y);
 		}
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)

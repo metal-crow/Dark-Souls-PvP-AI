@@ -14,9 +14,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
 	//read rotation of player
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
-	//Player rotation is pi. 0 to pi,-pi to 0.
+	//Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
 	//convert to radians, then to degrees
-	c->rotation += PI * 180.0 / PI;
+	c->rotation = (c->rotation + PI) * (180.0 / PI);
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
 	//read hp

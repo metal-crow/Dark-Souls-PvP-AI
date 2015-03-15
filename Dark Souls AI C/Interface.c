@@ -72,61 +72,63 @@ int loadvJoy(UINT iInterface){
 }
 
 longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y, float phantom_y){
-	float delta_x = phantom_x - player_x;
-	float delta_y = player_y - phantom_y;
+	double delta_x = fabsf(player_x) - fabsf(phantom_x);
+	double delta_y = fabsf(phantom_y) - fabsf(player_y);
 
 	long joystick_x;
 	long joystick_y;
 
-	//need to calibrate player direction by starting them centered along an axis
-	//aligning with pi points us along x axis, and enemy moves clockwise around us
+	//camera must be locked for this to work
+	//aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us
 
-	double angle = atan2(delta_y, delta_x) * 180 / PI;
+	//convert this to 360 degrees
+	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
+	printf("%f\n", angle);
 
 	//top right quadrant
-	if ((int)angle <= 90 && (int)angle >= 0){
-		printf("top right%f\n", angle);
+	if (angle <= 90 && angle >= 0){
+		printf("top right\n");
 		if (angle <= 45){
 			joystick_x = XRIGHT;
 			joystick_y = MIDDLE - ((angle * MIDDLE) / 45);
 		} else{
 			joystick_y = YTOP;
-			joystick_x = XRIGHT - ((abs(angle - 45) * MIDDLE) / 45);
+			joystick_x = XRIGHT - (((angle - 45.0) * MIDDLE) / 45);
 		}
 	}
 	//bottom right quadrant
-	else if ((int)angle <= 180 && (int)angle >= 90){
-		printf("bottom right%f\n", angle);
-		double anglediff = abs(angle - 135);
+	else if (angle <= 180 && angle >= 90){
+		printf("bottom right\n");
+		double anglediff = fabs(angle - 135.0);
 		if (anglediff <= 45){
 			joystick_x = XRIGHT - ((anglediff * MIDDLE) / 45);
 			joystick_y = YBOTTOM;
 		} else{
-			joystick_y = MIDDLE + ((anglediff * MIDDLE) / 45);
+			joystick_y = MIDDLE + (((anglediff - 45.0) * MIDDLE) / 45);
 			joystick_x = XRIGHT;
 		}
 	}
 	//bottom left quadrant
-	else if ((int)angle <= 270 && (int)angle >= 180){
-		printf("bottom left%f\n", angle);
-		double anglediff = abs(angle - 225);
+	else if (angle <= 270 && angle >= 180){
+		printf("bottom left\n");
+		double anglediff = fabs(angle - 225.0);
 		if (anglediff <= 45){
 			joystick_x = XLEFT + ((anglediff * MIDDLE) / 45);
 			joystick_y = YTOP;
 		} else{
-			joystick_y = YTOP + ((anglediff * MIDDLE) / 45);
+			joystick_y = YTOP + (((anglediff - 45.0) * MIDDLE) / 45);
 			joystick_x = XLEFT;
 		}
 	//top left quadrant
 	} else{
-		printf("top left%f\n", angle);
-		double anglediff = abs(angle - 315);
+		printf("top left\n");
+		double anglediff = fabs(angle - 315.0);
 		if (anglediff <= 45){
 			joystick_x = XLEFT;
 			joystick_y = YBOTTOM - ((anglediff * MIDDLE) / 45);
 		} else{
 			joystick_y = YBOTTOM;
-			joystick_x = XLEFT + ((anglediff * MIDDLE) / 45);
+			joystick_x = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
 		}
 	}
 
