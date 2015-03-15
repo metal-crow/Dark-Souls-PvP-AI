@@ -83,11 +83,9 @@ longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y,
 
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
-	printf("%f\n", angle);
 
 	//top right quadrant
 	if (angle <= 90 && angle >= 0){
-		printf("top right\n");
 		if (angle <= 45){
 			joystick_x = MIDDLE + ((angle * MIDDLE) / 45);
 			joystick_y = YTOP;
@@ -98,7 +96,6 @@ longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y,
 	}
 	//bottom right quadrant
 	else if (angle <= 180 && angle >= 90){
-		printf("bottom right\n");
 		double anglediff = fabs(angle - 90.0);
 		if (anglediff <= 45){
 			joystick_x = XRIGHT;
@@ -110,7 +107,6 @@ longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y,
 	}
 	//bottom left quadrant
 	else if (angle <= 270 && angle >= 180){
-		printf("bottom left\n");
 		double anglediff = fabs(angle - 180.0);
 		if (anglediff <= 45){
 			joystick_x = MIDDLE - ((anglediff * MIDDLE) / 45);
@@ -121,7 +117,6 @@ longTuple CoordsToJoystickAngle(float player_x, float phantom_x, float player_y,
 		}
 	//top left quadrant
 	} else{
-		printf("top left\n");
 		double anglediff = fabs(angle - 270.0);
 		if (anglediff <= 45){
 			joystick_x = XLEFT;
