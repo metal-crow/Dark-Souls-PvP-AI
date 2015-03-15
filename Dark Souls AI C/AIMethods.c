@@ -187,7 +187,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 	iReport->wAxisX = move.first;
 	iReport->wAxisY = move.second;
 	//press circle button
-	iReport->lButtons = 0x00000003;
+	iReport->lButtons = 0x00000008;
 	printf("dodge\n");
 }
 

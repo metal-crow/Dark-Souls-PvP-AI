@@ -10,30 +10,19 @@ https://github.com/OrdinaryMagician. You do some fucking SHIT with assembly, man
 -send joystick commands  
 -ai logic to play  
   
-NOTES:   
-  
-Can ignore z, view as top down from x,y only  
-  
-ignore camera, its irrelivent (mostly)  
-  
-map out phantom struct  
-  
-ps3 controller  
-circle:2  
-x:1  
-square:3  
-triangle:4  
-r1:6  
-l1:5  
-select:7  
-start:8  
-l3:9  
-r3:10  
-r2:z-0  
-l2:z-max  
+Setup:  
+Vjoy controller device config:  
+	x,y,z,rx,ry,10 buttons,1 discrete pov
+
+vJoy button hex mappings(wtf is this done this way)  
+square: 0x00000001  
+triangle: 0x00000002  
+square and triangle: 0x00000003  
+cross: 0x00000004  
+circle: 0x00000008  
   
 TODO:  
-  Fix CoordsToJoystickAngle
+  Dodge rolling has to be done across frames. One action to angle joystick, next frame we press circle to roll.
   Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
   Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  
