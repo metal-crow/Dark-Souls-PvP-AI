@@ -33,11 +33,15 @@ r2:z-0
 l2:z-max  
   
 TODO:  
+  Fix CoordsToJoystickAngle
   Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
   Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  
   Method for determining if animation id is attack animation or different  
-  Find name location, try to fix name length crash(test namefind without pvp watchdog enabled)
+
+TODO2:
+  Find adverse affects not blocked by watchdog
+  Find invisibility that works with watchdog
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  

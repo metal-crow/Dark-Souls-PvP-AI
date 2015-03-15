@@ -1,8 +1,10 @@
 #include "CharacterStruct.h"
 
 void PrintPhantom(Character * c){
-	printf("X: %f Y: %f Rotation: %f Animation id: %i\n", c->loc_x, c->loc_y, c->rotation, c->animation_id);
+	printf("X: %.03f Y: %.03f Rotation: %.03f Animation id: %i SubId: %u\n", c->loc_x, c->loc_y, c->rotation, c->animation_id, c->subanimation);
 }
+
+#define PI 3.14159265
 
 void ReadPlayer(Character * c, HANDLE * processHandle){
 	HANDLE processHandle_nonPoint = *processHandle;
@@ -12,8 +14,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
 	//read rotation of player
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
-	//append 3 to the rotation to better read it
-	c->rotation += 3;
+	//Player rotation is pi. 0 to pi,-pi to 0.
+	//convert to radians, then to degrees
+	c->rotation += PI * 180.0 / PI;
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
 	//read hp

@@ -20,6 +20,9 @@ because of this, have to specify if we need to look at subanimation
 NOTE: a lookup array would probably be faster, but by VERY little*/
 static unsigned char isAttackAnimation(unsigned char animation_id){
 	switch (animation_id){
+	//nothing
+	case 0:
+		return 0;
 	//1 hand roll
 	case 32:
 		return 0;
@@ -86,6 +89,15 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	//2h r1
 	case 107:
 		return 2;
+	//2h r1 bounce back
+	case 108:
+		return 2;
+	//2h r1 combo
+	case 109:
+		return 2;
+	//2h r1 combo
+	case 110:
+		return 2;
 	//jumping 2 hand
 	case 113:
 		return 2;
@@ -146,6 +158,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 bool aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range
 	if (distance(Player, Phantom) > Phantom->weaponRange){
+		printf("not about to be hit\n");
 		return false;
 	}
 	unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
@@ -153,12 +166,15 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 		//if enemy is in attack animation, 
 		AtkID
 		//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
-		&& (AtkID == 1 || (Phantom->subanimation) == 256)
+		//&& (AtkID == 1)// || (Phantom->subanimation) == 256)
 		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
-		&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
+		//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 	){
+		printf("about to be hit\n");
 		return true;
 	}
+	printf("not about to be hit\n");
+	return false;
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
@@ -169,19 +185,22 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 	iReport->wAxisX = move.first;
 	iReport->wAxisY = move.second;
 	//press circle button
-	iReport->lButtons = 2;
+	iReport->lButtons = 0x00000003;
+	printf("dodge\n");
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	//if im farther away then my weapon can reach
 	if (distance(Player, Phantom) > Player->weaponRange){
+		printf("move to attack\n");
 		//if we are not close enough, move towards 
 		longTuple move = CoordsToJoystickAngle(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 		iReport->wAxisX = move.first;
 		iReport->wAxisY = move.second;
+	}else{
+		//otherwise, decide between attack and backstab
+		printf("attack\n");
+		//(always use ghost hits for normal attacks)
 	}
-	//otherwise, decide between attack and backstab
-
-	//(always use ghost hits for normal attacks)
 }
