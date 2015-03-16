@@ -10,7 +10,12 @@
 Character Enemy;
 Character Player;
 
+//subroutine states
+//0 is none active, 255 is need to confirm exit
+unsigned char subroutine_state = 0;
+
 int main(void){
+	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 1;//temp hardcoding
 	memset(&Player, 0, sizeof(Character));
@@ -48,12 +53,10 @@ int main(void){
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device
-
 	int loadresult = loadvJoy(iInterface);
 	if (loadresult != 0){
 		return loadresult;
 	}
-
 	JOYSTICK_POSITION iReport;
 	iReport.bDevice = (BYTE)iInterface;
 
@@ -69,10 +72,10 @@ int main(void){
 		ReadPlayer(&Enemy, &processHandle);
 		ReadPlayer(&Player, &processHandle);
 
-		printf("Enemy : ");
+		/*printf("Enemy : ");
 		PrintPhantom(&Enemy);
 		printf("Player: ");
-		PrintPhantom(&Player);
+		PrintPhantom(&Player);*/
 
 		// reset struct info
 		iReport.wAxisX = MIDDLE;
@@ -80,14 +83,13 @@ int main(void){
 		iReport.wAxisZ = MIDDLE;//this is l2 and r2
 		iReport.wAxisYRot = MIDDLE;
 		iReport.wAxisXRot = MIDDLE;
-		iReport.wAxisZRot = MIDDLE;
 		iReport.lButtons = 0x00000000;
 
 		//basic logic initilization choice
-		if (aboutToBeHit(&Player, &Enemy)){
-			dodge(&Player, &Enemy, &iReport);
+		if (aboutToBeHit(&Player, &Enemy, &subroutine_state)){
+			dodge(&Player, &Enemy, &iReport, &subroutine_state);
 		} else{
-			attack(&Player, &Enemy, &iReport);
+			attack(&Player, &Enemy, &iReport, &subroutine_state);
 		}
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
@@ -96,7 +98,7 @@ int main(void){
 		//SetForegroundWindow(h);
 		//SetFocus(h);
 
-		Sleep(20);
+		Sleep(5);
 	}
 
 	RelinquishVJD(iInterface);

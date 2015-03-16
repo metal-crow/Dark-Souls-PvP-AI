@@ -7,12 +7,12 @@
 #include <stdbool.h>
 
 //return true if i am about to be hit by an attack by the enemy
-bool aboutToBeHit(Character * Player, Character * Phantom);
+bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subroutine_state);
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
+void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state);
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
+void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state);
 
 #endif

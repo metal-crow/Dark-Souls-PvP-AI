@@ -4,8 +4,8 @@
 
 //get straight line distance between me and enemy
 static double distance(Character * Player, Character * Phantom){
-	double delta_x = abs(Player->loc_x - Phantom->loc_x);
-	double delta_y = abs(Player->loc_y - Phantom->loc_y);
+	double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
+	double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
 	return hypot(delta_x, delta_y);
 }
 
@@ -155,12 +155,15 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	}
 }
 
-bool aboutToBeHit(Character * Player, Character * Phantom){
-	//if they are outside of their attack range
+bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subroutine_state){
+	//if they are outside of their attack range, we dont have to do anymore checks
 	if (distance(Player, Phantom) > Phantom->weaponRange){
-		printf("not about to be hit\n");
+		//printf("not about to be hit\n");
+		//here, any dodge subroutine is complete and we reset the subroutine back to 0.
+		(*subroutine_state) = 0;
 		return false;
 	}
+
 	unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
 	if (
 		//if enemy is in attack animation, 
@@ -170,15 +173,19 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 		//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 	){
-		printf("about to be hit\n");
+		//printf("about to be hit\n");
 		return true;
 	}
-	printf("not about to be hit\n");
+
+	//printf("not about to be hit\n");
+	//here, any dodge subroutine is complete and we reset the subroutine back to 0.
+	(*subroutine_state) = 0;
 	return false;
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state){
+	//  Dodge rolling has to be done across frames. One action to angle joystick, next frame we press circle to roll.
 	//dodge at a 5 degree angle
 	double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 	angle += 5;
@@ -186,23 +193,33 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 	longTuple move = angleToJoystick(angle);
 	iReport->wAxisX = move.first;
 	iReport->wAxisY = move.second;
-	//press circle button
-	iReport->lButtons = 0x00000008;
-	printf("dodge\n");
+
+	if ((*subroutine_state) == 1){
+		//press circle button
+		iReport->lButtons = 0x00000008;
+		//set subroutine to halt subroutine
+		(*subroutine_state) = 255;
+	}
+
+	//go to next subroutine, to roll
+	if (!(*subroutine_state)){
+		(*subroutine_state) = 1;
+	}
+	//printf("dodge\n");
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state){
 	//if im farther away then my weapon can reach
 	if (distance(Player, Phantom) > Player->weaponRange){
-		printf("move to attack\n");
+		//printf("move to attack\n");
 		//if we are not close enough, move towards 
 		longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
 		iReport->wAxisX = move.first;
 		iReport->wAxisY = move.second;
 	}else{
 		//otherwise, decide between attack and backstab
-		printf("attack\n");
+		//printf("attack\n");
 		//(always use ghost hits for normal attacks)
 	}
 }
