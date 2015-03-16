@@ -22,7 +22,7 @@ cross: 0x00000004
 circle: 0x00000008  
   
 TODO:  
-  Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's. This is neccicary for knowing when to end subanimation. 
+  Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
   Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  
   Method for determining if animation id is attack animation or different  

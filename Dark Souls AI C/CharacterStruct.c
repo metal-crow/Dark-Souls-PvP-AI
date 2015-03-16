@@ -1,10 +1,12 @@
 #include "CharacterStruct.h"
+#define PI 3.14159265
+
+#pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
+
 
 void PrintPhantom(Character * c){
 	printf("X: %.03f Y: %.03f Rotation: %.03f Animation id: %i SubId: %u\n", c->loc_x, c->loc_y, c->rotation, c->animation_id, c->subanimation);
 }
-
-#define PI 3.14159265
 
 void ReadPlayer(Character * c, HANDLE * processHandle){
 	HANDLE processHandle_nonPoint = *processHandle;
@@ -26,5 +28,5 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	//read what weapon they currently have in left hand
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
 	//read the current subanimation
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 2, 0);
+	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
 }

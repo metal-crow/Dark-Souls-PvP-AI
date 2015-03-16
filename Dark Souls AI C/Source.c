@@ -17,9 +17,9 @@ unsigned char subroutine_state = 0;
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
-	Enemy.weaponRange = 1;//temp hardcoding
+	Enemy.weaponRange = 2.5;//temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 1;
+	Player.weaponRange = 2.5;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
@@ -98,7 +98,7 @@ int main(void){
 		//SetForegroundWindow(h);
 		//SetFocus(h);
 
-		Sleep(5);
+		Sleep(sleep_time);
 	}
 
 	RelinquishVJD(iInterface);

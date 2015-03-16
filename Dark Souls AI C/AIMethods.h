@@ -6,6 +6,9 @@
 #include <math.h>
 #include <stdbool.h>
 
+//the milliseconds the program sleeps for. Needed to know how long to hold a button so game registeres it
+#define sleep_time 1
+
 //return true if i am about to be hit by an attack by the enemy
 bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subroutine_state);
 

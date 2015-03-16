@@ -32,7 +32,7 @@ typedef struct {
 	float weaponRange;
 	//subanimation state. Used to see if hurtbox is active during attack animation
 	ullong subanimation_address;
-	unsigned char subanimation;
+	unsigned int subanimation;
 
 } Character;
 
@@ -57,7 +57,7 @@ static const int Enemy_loc_y_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x268 };
 static const int Player_loc_y_offsets[] = { 0x3C, 0x330, 0x4, 0x20C, 0x3C8 };
 static const int Enemy_loc_y_offsets_length = 5;
 static const int Player_loc_y_offsets_length = 5;
-//offsets and length for rotation. In game is 0 to 3, jump, -3 to 0. Clockwise. I add 3 to make it 0-6 clockwise (our 0 is games -3).
+//offsets and length for rotation.
 static const int Enemy_rotation_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x34 };
 static const int Player_rotation_offsets[] = { 0x288, 0xC0, 0x4, 0x18, 0x4 };
 static const int Enemy_rotation_offsets_length = 5;
@@ -82,7 +82,7 @@ static const int Enemy_l_weapon_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x1B8 };
 static const int Player_l_weapon_offsets[] = { 0x3C, 0x30, 0xC, 0x654, 0x1B4 };
 static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
-//the current subanimation being executed (1 netural, 0 windup, 256 attack, 257 recovery,)
+//the current subanimation being executed (1 netural, 0 windup, 65792 attack, 65793 recovery,)
 static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;

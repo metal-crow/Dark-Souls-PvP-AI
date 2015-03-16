@@ -23,6 +23,9 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	//nothing
 	case 0:
 		return 0;
+	//could not use
+	case 21:
+		return 0;
 	//1 hand roll
 	case 32:
 		return 0;
@@ -149,6 +152,9 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	//weapon switch l
 	case 221:
 		return 0;
+	//backstab
+	case 225:
+		return 0;
 	default:
 		printf("unknown animation id\n");
 		return 0;
@@ -169,7 +175,8 @@ bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subro
 		//if enemy is in attack animation, 
 		AtkID
 		//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
-		//&& (AtkID == 1)// || (Phantom->subanimation) == 256)
+		//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
+		&& ((AtkID == 1) || (Phantom->subanimation) == 0)
 		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 		//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 	){
@@ -185,7 +192,7 @@ bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subro
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state){
-	//  Dodge rolling has to be done across frames. One action to angle joystick, next frame we press circle to roll.
+	//  Dodge rolling has to be done across frames. One action to angle joystick, next frame we press circle to roll. Circle has to be held across a couple frames
 	//dodge at a 5 degree angle
 	double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 	angle += 5;
@@ -194,16 +201,20 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 	iReport->wAxisX = move.first;
 	iReport->wAxisY = move.second;
 
-	if ((*subroutine_state) == 1){
+	if ((*subroutine_state) != 0 && (*subroutine_state) != 255){
 		//press circle button
 		iReport->lButtons = 0x00000008;
-		//set subroutine to halt subroutine
-		(*subroutine_state) = 255;
+		//next subroutine, holding circle
+		(*subroutine_state)++;
 	}
 
 	//go to next subroutine, to roll
-	if (!(*subroutine_state)){
+	if ((*subroutine_state) == 0){
 		(*subroutine_state) = 1;
+	}
+	//set subroutine to halt subroutine (game needs ?? ms of circle holding)
+	if ((*subroutine_state) == (int)(50/sleep_time)){
+		(*subroutine_state) = 255;
 	}
 	//printf("dodge\n");
 }
