@@ -219,7 +219,6 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 			subroutine_states[0] = 255;
 		}
 		//printf("dodge\n");
-		current_frame_subroutine_processed = true;
 	}
 }
 
@@ -255,7 +254,6 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		else if (Player->subanimation == 65793){
 			subroutine_states[1] = 0;
 		}
-		current_frame_subroutine_processed = true;
 	}
 }
 
