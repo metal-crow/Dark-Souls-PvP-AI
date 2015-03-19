@@ -11,6 +11,8 @@
 //indexes:0 is dodge, 1 is attack
 unsigned char subroutine_states[Num_possible_subroutines] = { 0, 0 };
 
+bool current_frame_subroutine_processed = false;
+
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();
 

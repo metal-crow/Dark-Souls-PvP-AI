@@ -82,11 +82,33 @@ int main(void){
 		iReport.wAxisXRot = MIDDLE;
 		iReport.lButtons = 0x00000000;
 
+		current_frame_subroutine_processed = false;
+
 		//basic logic initilization choice
 		if (aboutToBeHit(&Player, &Enemy)){
 			dodge(&Player, &Enemy, &iReport);
 		} else{
 			attack(&Player, &Enemy, &iReport);
+		}
+
+		//loc has subroutine catches to ensure we dont interupt subroutines.
+		//need a continue catch to ensure that each frame has the routine run, since logic does not have garunteed force continue's
+		/*
+		ex: we started an attack subroutine frame 1.
+		Frame 2 has the enemy attack us and trigger aboutToBeHit().
+		We go to dodge(), but our catch says we're already in attack subroutine, so dont start the dodge subroutine.
+		Now the ai logic block is finished, but we havent continued out attack subroutine.
+		This block ensures that it is continued.
+		*/
+		if (!current_frame_subroutine_processed && inActiveSubroutine()){
+			//dodge subroutine
+			if (!subroutine_states[0]){
+				dodge(&Player, &Enemy, &iReport);
+			}
+			//attack subroutine
+			else if (!subroutine_states[0]){
+				attack(&Player, &Enemy, &iReport);
+			}
 		}
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)

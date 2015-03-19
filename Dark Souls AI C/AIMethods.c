@@ -219,6 +219,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 			subroutine_states[0] = 255;
 		}
 		//printf("dodge\n");
+		current_frame_subroutine_processed = true;
 	}
 }
 
@@ -254,19 +255,22 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		else if (Player->subanimation == 65793){
 			subroutine_states[1] = 0;
 		}
+		current_frame_subroutine_processed = true;
 	}
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-	//if im farther away then my weapon can reach
-	if (distance(Player, Phantom) > Player->weaponRange){
+	//if im farther away then my weapon can reach, and we're not in a subroutine
+	if (!inActiveSubroutine() && distance(Player, Phantom) > Player->weaponRange){
 		//printf("move to attack\n");
 		//if we are not close enough, move towards 
 		longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
 		iReport->wAxisX = move.first;
 		iReport->wAxisY = move.second;
 	}else{
+		//TODO will need to differentiate different attack subroutines
+
 		//otherwise, decide between attack and backstab
 		//printf("attack\n");
 
