@@ -102,11 +102,11 @@ int main(void){
 		*/
 		if (!current_frame_subroutine_processed && inActiveSubroutine()){
 			//dodge subroutine
-			if (!subroutine_states[0]){
+			if (subroutine_states[0]){
 				dodge(&Player, &Enemy, &iReport);
 			}
 			//attack subroutine
-			else if (!subroutine_states[0]){
+			else if (subroutine_states[1]){
 				attack(&Player, &Enemy, &iReport);
 			}
 		}
