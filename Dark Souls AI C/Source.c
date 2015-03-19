@@ -2,6 +2,7 @@
 #include "CharacterStruct.h"
 #include "Interface.h"
 #include "AIMethods.h"
+#include "SubRoutines.h"
 
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
 #define  _CRT_SECURE_NO_WARNINGS
@@ -9,10 +10,6 @@
 //initalize the phantom and player
 Character Enemy;
 Character Player;
-
-//subroutine states
-//0 is none active, 255 is need to confirm exit
-unsigned char subroutine_state = 0;
 
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
@@ -86,10 +83,10 @@ int main(void){
 		iReport.lButtons = 0x00000000;
 
 		//basic logic initilization choice
-		if (aboutToBeHit(&Player, &Enemy, &subroutine_state)){
-			dodge(&Player, &Enemy, &iReport, &subroutine_state);
+		if (aboutToBeHit(&Player, &Enemy)){
+			dodge(&Player, &Enemy, &iReport);
 		} else{
-			attack(&Player, &Enemy, &iReport, &subroutine_state);
+			attack(&Player, &Enemy, &iReport);
 		}
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
@@ -97,8 +94,6 @@ int main(void){
 
 		//SetForegroundWindow(h);
 		//SetFocus(h);
-
-		Sleep(sleep_time);
 	}
 
 	RelinquishVJD(iInterface);

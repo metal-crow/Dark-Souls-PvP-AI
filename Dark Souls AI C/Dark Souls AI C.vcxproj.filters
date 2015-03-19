@@ -30,6 +30,9 @@
     <ClCompile Include="MemoryEdits.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SubRoutines.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CharacterStruct.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MemoryEdits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SubRoutines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

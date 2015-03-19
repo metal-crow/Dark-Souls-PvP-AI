@@ -86,6 +86,7 @@
     <ClCompile Include="Interface.c" />
     <ClCompile Include="MemoryEdits.c" />
     <ClCompile Include="Source.c" />
+    <ClCompile Include="SubRoutines.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIMethods.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="Interface.h" />
     <ClInclude Include="MemoryEdits.h" />
     <ClInclude Include="public.h" />
+    <ClInclude Include="SubRoutines.h" />
     <ClInclude Include="vjoyinterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

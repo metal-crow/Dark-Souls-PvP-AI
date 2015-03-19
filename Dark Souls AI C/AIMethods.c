@@ -161,66 +161,104 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	}
 }
 
-bool aboutToBeHit(Character * Player, Character * Phantom, unsigned char * subroutine_state){
+bool aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range, we dont have to do anymore checks
-	if (distance(Player, Phantom) > Phantom->weaponRange){
-		//printf("not about to be hit\n");
-		//here, any dodge subroutine is complete and we reset the subroutine back to 0.
-		(*subroutine_state) = 0;
-		return false;
+	if (distance(Player, Phantom) <= Phantom->weaponRange){
+		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
+		if (
+			//if enemy is in attack animation, 
+			AtkID
+			//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
+			//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
+			&& ((AtkID == 1) || (Phantom->subanimation) == 0)
+			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
+			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
+			){
+			//printf("about to be hit\n");
+			return true;
+		}
 	}
-
-	unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
-	if (
-		//if enemy is in attack animation, 
-		AtkID
-		//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
-		//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
-		&& ((AtkID == 1) || (Phantom->subanimation) == 0)
-		//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
-		//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
-	){
-		//printf("about to be hit\n");
-		return true;
-	}
-
 	//printf("not about to be hit\n");
 	//here, any dodge subroutine is complete and we reset the subroutine back to 0.
-	(*subroutine_state) = 0;
+	if (subroutine_states[0]){
+		subroutine_states[0] = 0;
+	}
 	return false;
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state){
-	//  Dodge rolling has to be done across frames. One action to angle joystick, next frame we press circle to roll. Circle has to be held across a couple frames
-	//dodge at a 5 degree angle
-	double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-	angle += 5;
-	//angle joystick
-	longTuple move = angleToJoystick(angle);
-	iReport->wAxisX = move.first;
-	iReport->wAxisY = move.second;
+void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+	//procede with subroutine if we are not in one already
+	if (!inActiveSubroutine()){
+		//indicate we are in dodge subroutine
+		subroutine_states[0] = 1;
+	}
+	if (subroutine_states[0]){
+		//dodge at a 5 degree angle
+		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+		angle += 5;
+		//angle joystick
+		longTuple move = angleToJoystick(angle);
+		iReport->wAxisX = move.first;
+		iReport->wAxisY = move.second;
 
-	if ((*subroutine_state) != 0 && (*subroutine_state) != 255){
-		//press circle button
-		iReport->lButtons = 0x00000008;
-		//next subroutine, holding circle
-		(*subroutine_state)++;
+		//all frames after the first joystick input, press circle
+		if (subroutine_states[0] != 1 && subroutine_states[0] != 255){
+			//press circle button
+			iReport->lButtons = 0x00000008;
+			//next subroutine, holding circle
+			subroutine_states[0]++;
+		}
+
+		//after the joystick input, next frames will press circle to roll
+		if (subroutine_states[0] == 1){
+			subroutine_states[0] = 2;
+		}
+		//set subroutine to halt subroutine (game needs 50 frames of circle holding)
+		if (subroutine_states[0] == 50){
+			subroutine_states[0] = 255;
+		}
+		//printf("dodge\n");
+	}
+}
+
+static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+	//procede with subroutine if we are not in one already
+	if (!inActiveSubroutine()){
+		//indicate we are in attack subroutine
+		subroutine_states[1] = 1;
 	}
 
-	//go to next subroutine, to roll
-	if ((*subroutine_state) == 0){
-		(*subroutine_state) = 1;
+	if (subroutine_states[1]){
+		//always hold attack button
+		iReport->lButtons = 0x;
+
+		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+
+		//point away from enemy till end of windup
+		if (Player->subanimation == 0){
+			angle = fabs(angle - 180.0);
+			longTuple move = angleToJoystick(angle);
+			iReport->wAxisX = move.first;
+			iReport->wAxisY = move.second;
+		}
+
+		//point towards enemy during active part of animation
+		else if (Player->subanimation == 65792){
+			longTuple move = angleToJoystick(angle);
+			iReport->wAxisX = move.first;
+			iReport->wAxisY = move.second;
+		}
+
+		//end subanimation on recover animation
+		else if (Player->subanimation == 65793){
+			subroutine_states[1] = 0;
+		}
 	}
-	//set subroutine to halt subroutine (game needs ?? ms of circle holding)
-	if ((*subroutine_state) == (int)(50/sleep_time)){
-		(*subroutine_state) = 255;
-	}
-	//printf("dodge\n");
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char * subroutine_state){
+void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	//if im farther away then my weapon can reach
 	if (distance(Player, Phantom) > Player->weaponRange){
 		//printf("move to attack\n");
@@ -231,6 +269,8 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 	}else{
 		//otherwise, decide between attack and backstab
 		//printf("attack\n");
+
 		//(always use ghost hits for normal attacks)
+		ghostHit(Player, Phantom, iReport);
 	}
 }
