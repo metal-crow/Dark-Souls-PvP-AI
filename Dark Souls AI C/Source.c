@@ -57,6 +57,9 @@ int main(void){
 	JOYSTICK_POSITION iReport;
 	iReport.bDevice = (BYTE)iInterface;
 
+	//get current camera details to lock
+	readCamera(&processHandle,memorybase);
+
 	//set window focus
 	HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
 	SetForegroundWindow(h);
@@ -65,6 +68,9 @@ int main(void){
 	//TODO load vJoy driver(we ONLY want the driver loaded when program running)
 
 	while (1){
+		//lock the camera
+		lockCamera(&processHandle);
+
 		//read the data at these pointers, now that offsets have been added and we have a static address
 		ReadPlayer(&Enemy, &processHandle);
 		ReadPlayer(&Player, &processHandle);
@@ -89,7 +95,7 @@ int main(void){
 		/*
 		ex: we started an attack subroutine frame 1.
 		Frame 2 has the enemy attack us and trigger aboutToBeHit().
-		We go to dodge(), but our catch says we're already in attack subroutine, so dont start the dodge subroutine.
+		We go to dodge(), but the ai's internal catch says we're already in attack subroutine, so dont start the dodge subroutine.
 		Now the ai's normal logic would be finished, but we havent continued out attack subroutine.
 		These subroutine checks ensures that it is continued.
 		*/

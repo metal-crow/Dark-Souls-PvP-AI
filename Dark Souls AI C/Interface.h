@@ -2,12 +2,12 @@
 #define Interface_H
 
 #include <stdio.h>
-
 #include <Windows.h>
 #include <math.h>
 
 #include "vjoyinterface.h"
 #include "public.h"
+#include "MemoryEdits.h"
 
 #define PI 3.14159265
 #define XRIGHT 32768
@@ -33,5 +33,11 @@ second is y, which has 1 as topmost and 32768 as bottommost
 MUST LOCK CAMERA for movement to work. it rotates with your movement direction, which messes with it.
 aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us*/
 longTuple angleToJoystick(double angle);
+
+//get current camera details to lock
+void readCamera(HANDLE * processHandle, ullong memorybase);
+
+//set the camera to a fixed position and rotation.
+void lockCamera(HANDLE * processHandle);
 
 #endif

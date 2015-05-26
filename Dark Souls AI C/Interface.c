@@ -3,6 +3,28 @@
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
+//store camera settings
+typedef struct {
+	ullong cam_x_addr;
+	float cam_x;
+	ullong cam_y_addr;
+	float cam_y;
+	ullong rot_x_addr;
+	float rot_x;
+	ullong rot_y_addr;
+	float rot_y;
+} CameraSett;
+
+static CameraSett * camera;
+
+//address data to read camera settings
+static ullong camera_base = 0x00F5CDD4;
+static const int camera_y_offsets[] = { 0x174,0x4D4,0x144,0x320,0xF8 };
+static const int camera_x_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x90 };
+static const int camera_y_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x150 };
+static const int camera_x_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x144 };
+static const int camera_offsets_length = 5;
+
 int loadvJoy(UINT iInterface){
 	// Get the driver attributes (Vendor ID, Product ID, Version Number)
 	if (!vJoyEnabled()){
@@ -71,7 +93,6 @@ int loadvJoy(UINT iInterface){
 	return 0;
 }
 
-
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y){
 	double delta_x = fabsf(player_x) - fabsf(phantom_x);
 	double delta_y = fabsf(phantom_y) - fabsf(player_y);
@@ -129,6 +150,41 @@ longTuple angleToJoystick(double angle){
 	}
 
 	return tuple;
+}
+
+void readCamera(HANDLE * processHandle, ullong memorybase){
+	camera = malloc(sizeof(CameraSett));
+	HANDLE pHandle = (*processHandle);
+	//get camera base address
+	camera_base += memorybase;
+
+	//get final address
+	camera->cam_y_addr = FindPointerAddr(pHandle, camera_base, camera_offsets_length, camera_y_offsets);
+	//read y location
+	ReadProcessMemory(pHandle, (LPCVOID)(camera->cam_y_addr), &(camera->cam_y), 4, 0);
+
+	//get final address
+	camera->cam_x_addr = FindPointerAddr(pHandle, camera_base, camera_offsets_length, camera_x_offsets);
+	//read x location
+	ReadProcessMemory(pHandle, (LPCVOID)(camera->cam_x_addr), &(camera->cam_x), 4, 0);
+
+	//get rotation addresses
+	camera->rot_y_addr = FindPointerAddr(pHandle, camera_base, camera_offsets_length, camera_y_rot_offsets);
+	camera->rot_x_addr = FindPointerAddr(pHandle, camera_base, camera_offsets_length, camera_x_rot_offsets);
+}
+
+void lockCamera(HANDLE * processHandle){
+	//TODO do i need to attach to process in order to write?
+	HANDLE processHandle_nonPoint = *processHandle;
+	//set x location
+	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->cam_x_addr), (LPCVOID)(camera->cam_x), 4, NULL);
+	//set y location
+	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->cam_y_addr), (LPCVOID)(camera->cam_y), 4, NULL);
+	//set x rotation to PI
+	float pi = PI;
+	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->rot_x_addr), &pi, 4, NULL);
+	//set y rotation to anything, this doesnt matter
+
 }
 
 
