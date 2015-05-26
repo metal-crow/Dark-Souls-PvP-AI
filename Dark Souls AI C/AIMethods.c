@@ -162,6 +162,8 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 }
 
 bool aboutToBeHit(Character * Player, Character * Phantom){
+	//TODO check for backstab approches, these are too fast for basic range checks to cancel. Angle of approach, angle in respect to face direction?
+
 	//if they are outside of their attack range, we dont have to do anymore checks
 	if (distance(Player, Phantom) <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
@@ -231,7 +233,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 	if (subroutine_states[1]){
 		//always hold attack button
-		iReport->lButtons = 0x;
+		iReport->lButtons = 0x000000020;
 
 		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
@@ -259,6 +261,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+	//TODO need timing analysis. Opponent can move outside range during windup
+
 	//if im farther away then my weapon can reach, and we're not in a subroutine
 	if (!inActiveSubroutine() && distance(Player, Phantom) > Player->weaponRange){
 		//printf("move to attack\n");

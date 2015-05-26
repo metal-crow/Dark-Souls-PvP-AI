@@ -20,8 +20,13 @@ triangle: 0x00000002
 square and triangle: 0x00000003  
 cross: 0x00000004  
 circle: 0x00000008  
+l1: 0x000000010
+r1: 0x000000020
   
 TODO:  
+  must lock camera(x and y pos and rotation), rotation x set to PI  
+  another animation id is the second swing  
+
   Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  
   Find location of where exactly weapon is.      
   Find range of weapons(hitbox size,bows,etc)  
