@@ -18,6 +18,10 @@
 
 int loadvJoy(UINT iInterface);
 
+//ps3 controller mapping
+#define r1 0x000000020
+
+
 typedef struct{
 	long first;
 	long second;

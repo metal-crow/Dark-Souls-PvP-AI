@@ -176,7 +176,7 @@ bool aboutToBeHit(Character * Player, Character * Phantom){
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){
-			//printf("about to be hit\n");
+			printf("about to be hit\n");
 			return true;
 		}
 	}
@@ -224,29 +224,47 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 	}
 }
 
+#define inputDelayForKick 30
+#define inputDelayForRotateBack 50
+
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	//procede with subroutine if we are not in one already
 	if (!inActiveSubroutine()){
 		//indicate we are in attack subroutine
 		subroutine_states[1] = 1;
+		//set time for this subroutine
+		startTime = clock();
 	}
 
 	if (subroutine_states[1]){
 		//always hold attack button
-		iReport->lButtons = 0x000000020;
+		iReport->lButtons = r1;
 
-		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+		//cant angle joystick immediatly, at first couple frames this will register as kick
+		//wait time, then trigger next stage of routine
+		//printf(" %d ", (long)clock());
+		if (clock() >= startTime + inputDelayForKick){
+			subroutine_states[1] = 2;
+		}
+		//start rotate back(Player->subanimation == 65792 marks point where we can no longer turn back, can use that as flag, need to track internally)
+		if (clock() >= startTime + inputDelayForRotateBack){
+			subroutine_states[1] = 3;
+		}
 
 		//point away from enemy till end of windup
-		if (Player->subanimation == 0){
-			angle = fabs(angle - 180.0);
+		if (Player->subanimation == 0 && subroutine_states[1] == 2){
+			printf("away");
+			double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+			angle = fabs(angle - 180.0);//TODO this doesnt work for some angles
 			longTuple move = angleToJoystick(angle);
 			iReport->wAxisX = move.first;
 			iReport->wAxisY = move.second;
 		}
 
 		//point towards enemy during active part of animation
-		else if (Player->subanimation == 65792){
+		else if (Player->subanimation == 0 && subroutine_states[1] == 3){
+			printf("towards");
+			double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 			longTuple move = angleToJoystick(angle);
 			iReport->wAxisX = move.first;
 			iReport->wAxisY = move.second;
@@ -255,7 +273,13 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		//end subanimation on recover animation
 		else if (Player->subanimation == 65793){
 			subroutine_states[1] = 0;
+			//release attack button and joystick
+			iReport->lButtons = 0x000000000;
+			iReport->wAxisX = MIDDLE;
+			iReport->wAxisY = MIDDLE;
+			printf("end sub");
 		}
+		printf("\n");
 	}
 }
 
@@ -265,7 +289,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 
 	//if im farther away then my weapon can reach, and we're not in a subroutine
 	if (!inActiveSubroutine() && distance(Player, Phantom) > Player->weaponRange){
-		//printf("move to attack\n");
+		printf("move to attack\n");
 		//if we are not close enough, move towards 
 		longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
 		iReport->wAxisX = move.first;
@@ -274,7 +298,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 		//TODO will need to differentiate different attack subroutines
 
 		//otherwise, decide between attack and backstab
-		//printf("attack\n");
+		printf("attack ");
 
 		//(always use ghost hits for normal attacks)
 		ghostHit(Player, Phantom, iReport);

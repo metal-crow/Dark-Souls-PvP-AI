@@ -6,6 +6,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include "SubRoutines.h"
+#include <time.h>
 
 //return true if i am about to be hit by an attack by the enemy
 bool aboutToBeHit(Character * Player, Character * Phantom);

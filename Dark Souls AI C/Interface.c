@@ -177,13 +177,13 @@ void lockCamera(HANDLE * processHandle){
 	//TODO do i need to attach to process in order to write?
 	HANDLE processHandle_nonPoint = *processHandle;
 	//set x location
-	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->cam_x_addr), (LPCVOID)(camera->cam_x), 4, NULL);
+	/*WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->cam_x_addr), (LPCVOID)(camera->cam_x), 4, NULL);
 	//set y location
 	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->cam_y_addr), (LPCVOID)(camera->cam_y), 4, NULL);
-	//set x rotation to PI
+	//set x rotation to ???
 	float pi = PI;
 	WriteProcessMemory(processHandle_nonPoint, (LPCVOID)(camera->rot_x_addr), &pi, 4, NULL);
-	//set y rotation to anything, this doesnt matter
+	//set y rotation to anything, this doesnt matter*/
 
 }
 

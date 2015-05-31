@@ -11,6 +11,9 @@
 //indexes:0 is dodge, 1 is attack
 extern unsigned char subroutine_states[Num_possible_subroutines];
 
+//for timing certain operations(delay op by 1 sec)
+extern long startTime;
+
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();
 

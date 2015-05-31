@@ -24,7 +24,7 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  must lock camera(x and y pos and rotation), rotation x set to PI  
+  must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
   another animation id is the second swing  
 
   Find SubAnimation (when hitbox is created). Found one that works for r1's, but not r2's.  

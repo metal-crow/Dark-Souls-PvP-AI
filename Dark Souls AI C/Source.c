@@ -69,7 +69,7 @@ int main(void){
 
 	while (1){
 		//lock the camera
-		lockCamera(&processHandle);
+		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
 		ReadPlayer(&Enemy, &processHandle);
