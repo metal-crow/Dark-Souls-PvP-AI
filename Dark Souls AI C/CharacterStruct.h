@@ -30,9 +30,12 @@ typedef struct {
 	unsigned int l_weapon_id;
 	//hurtbox size(range) of weapon. Bows/Magic have high range
 	float weaponRange;
-	//subanimation state. Used to see if hurtbox is active during attack animation
+	//subanimation state. Used to see if attack is finished
 	ullong subanimation_address;
 	unsigned int subanimation;
+	//subanimation weight. Used to see if hurtbox is active during attack animation
+	ullong weightanimation_address;
+	float weightanimation;
 
 } Character;
 
@@ -87,5 +90,10 @@ static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
+//current animation weight (0 animation not started, 1 animation fully started)
+static const int Enemy_weightanimation_offsets[] = { 0x, 0x, 0x, 0x, 0x };
+static const int Player_weightanimation_offsets[] = { 0xFC, 0xCC, 0xC, 0x10, 0x714 };
+static const int Enemy_weightanimation_offsets_length = 5;
+static const int Player_weightanimation_offsets_length = 5;
 
 #endif

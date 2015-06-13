@@ -29,4 +29,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
+	//read the current animation weight
+	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->weightanimation_address), &(c->weaponRange), 4, 0);
 }

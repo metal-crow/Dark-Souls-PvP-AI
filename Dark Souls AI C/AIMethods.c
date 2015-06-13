@@ -178,7 +178,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 			AtkID>1
 			//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
 			//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
-			&& ((AtkID == 3) || (Phantom->subanimation) == AttackSubanimationWindup)
+			&& ((AtkID == 3) || (Phantom->weightanimation) == 1.0)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){
