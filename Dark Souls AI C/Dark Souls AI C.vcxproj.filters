@@ -17,6 +17,12 @@
     <Filter Include="VJoy">
       <UniqueIdentifier>{b8d0b07e-4394-4bc2-8e1c-266b2c58fc88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AICore\Core">
+      <UniqueIdentifier>{f1cd6a28-e8c9-4502-bf55-9e4b0b501463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AICore\Minds">
+      <UniqueIdentifier>{53d5f1a3-22c6-4d64-8b91-11a079aeb2b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.c">
@@ -28,14 +34,14 @@
     <ClCompile Include="MemoryEdits.c">
       <Filter>InterfaceUtils</Filter>
     </ClCompile>
-    <ClCompile Include="AIMethods.c">
-      <Filter>AICore</Filter>
-    </ClCompile>
-    <ClCompile Include="SubRoutines.c">
-      <Filter>AICore</Filter>
-    </ClCompile>
     <ClCompile Include="CharacterStruct.c">
       <Filter>HelperUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="AIMethods.c">
+      <Filter>AICore\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SubRoutines.c">
+      <Filter>AICore\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,12 +51,6 @@
     <ClInclude Include="MemoryEdits.h">
       <Filter>InterfaceUtils</Filter>
     </ClInclude>
-    <ClInclude Include="AIMethods.h">
-      <Filter>AICore</Filter>
-    </ClInclude>
-    <ClInclude Include="SubRoutines.h">
-      <Filter>AICore</Filter>
-    </ClInclude>
     <ClInclude Include="CharacterStruct.h">
       <Filter>HelperUtils</Filter>
     </ClInclude>
@@ -59,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="vjoyinterface.h">
       <Filter>VJoy</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMethods.h">
+      <Filter>AICore\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SubRoutines.h">
+      <Filter>AICore\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

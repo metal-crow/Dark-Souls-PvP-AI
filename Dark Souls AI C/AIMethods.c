@@ -15,9 +15,7 @@ i cant seem to find a pattern in the ids, so this is just a big switch statement
 
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
-0 is not attack animation, 1 is hurtbox is created, 2 is attack id but must check subanimation
-
-NOTE: a lookup array would probably be faster, but by VERY little*/
+0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created*/
 static unsigned char isAttackAnimation(unsigned char animation_id){
 	switch (animation_id){
 	//nothing
@@ -37,6 +35,12 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 2;
 	//1h r1
 	case 46:
+		return 2;
+	//1h r1 swing 2
+	case 48:
+		return 2;
+	//1h r1 swing 3
+	case 49:
 		return 2;
 	//jumping 1 hand
 	case 53:
@@ -58,7 +62,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 0;
 	//crossbow/bow attack 2h
 	case 67:
-		return 1;
+		return 3;
 	//crossbow recover 2h
 	case 68:
 		return 0;
@@ -67,7 +71,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 0;
 	//crossbow attack 1h
 	case 70:
-		return 1;
+		return 3;
 	//crossbow recover 1h
 	case 71:
 		return 0;
@@ -82,7 +86,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 0;
 	//parry
 	case 86:
-		return 0;
+		return 1;//not a windup, but pretend it is to prevent attack
 	//1h r2
 	case 89:
 		return 2;
@@ -94,7 +98,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 2;
 	//2h r1 bounce back
 	case 108:
-		return 2;
+		return 0;
 	//2h r1 combo
 	case 109:
 		return 2;
@@ -109,19 +113,19 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 		return 2;
 	//firestorm windup
 	case 163:
-		return 0;
+		return 0;//is a windup, but want to attack during it
 	//firstorm
 	case 164:
 		return 2;
 	//flame windup
 	case 167:
-		return 0;
+		return 1;
 	//flame attack
 	case 168:
 		return 2;
 	//pyro ball windup
 	case 173:
-		return 0;
+		return 1;
 	//pyro ball throw
 	case 174:
 		return 2;
@@ -161,32 +165,39 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 	}
 }
 
-bool aboutToBeHit(Character * Player, Character * Phantom){
-	//TODO check for backstab approches, these are too fast for basic range checks to cancel. Angle of approach, angle in respect to face direction?
-
+unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range, we dont have to do anymore checks
 	if (distance(Player, Phantom) <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
+		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
+
+		//TODO dodging too mutch, need to find when enemy hurtbox stops
+		//also dodging too late(combustion) or too early(sword)
 		if (
 			//if enemy is in attack animation, 
-			AtkID
+			AtkID>1
 			//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
 			//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
-			&& ((AtkID == 1) || (Phantom->subanimation) == 0)
+			&& ((AtkID == 3) || (Phantom->subanimation) == AttackSubanimationWindup)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){
-			printf("about to be hit\n");
-			return true;
+			printf("about to be hit ");
+			return 2;
+		}
+		//windup, attack coming
+		else if (AtkID){
+			printf("dont attack\n");
+			return 1;
 		}
 	}
-	//printf("not about to be hit\n");
-	//here, any dodge subroutine is complete and we reset the subroutine back to 0.
-	if (subroutine_states[0]){
-		subroutine_states[0] = 0;
-	}
-	return false;
+
+	printf("not about to be hit\n");
+	return 0;
 }
+
+#define inputDelayForDodge 30
+#define inputDelayForStopDodge 50
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
@@ -194,7 +205,10 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
 		subroutine_states[0] = 1;
+		//set time for this subroutine
+		startTime = clock();
 	}
+
 	if (subroutine_states[0]){
 		//dodge at a 5 degree angle
 		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
@@ -204,28 +218,23 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport)
 		iReport->wAxisX = move.first;
 		iReport->wAxisY = move.second;
 
-		//all frames after the first joystick input, press circle
-		if (subroutine_states[0] != 1 && subroutine_states[0] != 255){
-			//press circle button
-			iReport->lButtons = 0x00000008;
-			//next subroutine, holding circle
-			subroutine_states[0]++;
+		//after the joystick input, press circle to roll but dont hold circle, otherwise we run
+		long curTime = clock();
+		if ((curTime >= startTime + inputDelayForDodge) && (curTime < startTime + inputDelayForStopDodge)){
+			iReport->lButtons = circle;
 		}
-
-		//after the joystick input, next frames will press circle to roll
-		if (subroutine_states[0] == 1){
-			subroutine_states[0] = 2;
+		
+		//end subanimation on recover animation
+		if (Player->subanimation == AttackSubanimationRecover){
+			printf(" end sub ");
+			subroutine_states[0] = 0;
 		}
-		//set subroutine to halt subroutine (game needs 50 frames of circle holding)
-		if (subroutine_states[0] == 50){
-			subroutine_states[0] = 255;
-		}
-		//printf("dodge\n");
+		printf("dodge\n");
 	}
 }
 
 #define inputDelayForKick 30
-#define inputDelayForRotateBack 50
+#define inputDelayForRotateBack 60
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	//procede with subroutine if we are not in one already
@@ -246,13 +255,13 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		if (clock() >= startTime + inputDelayForKick){
 			subroutine_states[1] = 2;
 		}
-		//start rotate back(Player->subanimation == 65792 marks point where we can no longer turn back, can use that as flag, need to track internally)
+		//start rotate back(Player->subanimation == 65792 marks point where we can NO longer turn back, CANT use that as flag, need to track internally)
 		if (clock() >= startTime + inputDelayForRotateBack){
 			subroutine_states[1] = 3;
 		}
 
 		//point away from enemy till end of windup
-		if (Player->subanimation == 0 && subroutine_states[1] == 2){
+		if (Player->subanimation == AttackSubanimationWindup && subroutine_states[1] == 2){
 			printf("away");
 			double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 			angle = fabs(angle - 180.0);//TODO this doesnt work for some angles
@@ -262,7 +271,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		}
 
 		//point towards enemy during active part of animation
-		else if (Player->subanimation == 0 && subroutine_states[1] == 3){
+		else if (Player->subanimation == AttackSubanimationWindup && subroutine_states[1] == 3){
 			printf("towards");
 			double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 			longTuple move = angleToJoystick(angle);
@@ -271,7 +280,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 		}
 
 		//end subanimation on recover animation
-		else if (Player->subanimation == 65793){
+		else if (Player->subanimation == AttackSubanimationRecover){
 			subroutine_states[1] = 0;
 			//release attack button and joystick
 			iReport->lButtons = 0x000000000;
@@ -301,6 +310,6 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 		printf("attack ");
 
 		//(always use ghost hits for normal attacks)
-		ghostHit(Player, Phantom, iReport);
+		//ghostHit(Player, Phantom, iReport);
 	}
 }

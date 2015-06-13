@@ -100,11 +100,16 @@ int main(void){
 		These subroutine checks ensures that it is continued.
 		*/
 
-		bool attackImminent = aboutToBeHit(&Player, &Enemy);
+		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
 
-		if (attackImminent || subroutine_states[0]){
+		//defense mind makes choice to defend or not(ex backstab metagame decisions).
+		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
+		if (attackImminent==2 || subroutine_states[0]){
 			dodge(&Player, &Enemy, &iReport);
 		}
+
+		//this is definitly too overeager
+		//attack mind make choice about IF to attack or not, and how to attack
 		if (!attackImminent || subroutine_states[1]){
 			attack(&Player, &Enemy, &iReport);
 		}

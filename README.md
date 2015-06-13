@@ -24,6 +24,8 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
+  the subanimation state address is different when two handing!  
+
   must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
   another animation id is the second swing  
 
@@ -38,3 +40,12 @@ TODO2:
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
+
+NOTES:  
+weight attached to windup is float from 1-0(weight is transition from 1 animation to another)(this is subanimation state)  
+windup is a move from id 0 to the attack id. when 0 reaches weight 0 or attackid reaches weight 1, the attack is now fully active  
+  
+speed  
+time is arbitrary time animation runs. counts up. determines now long attack is, must be some array somewhere.  
+over is number of times animation repeated  
+  
