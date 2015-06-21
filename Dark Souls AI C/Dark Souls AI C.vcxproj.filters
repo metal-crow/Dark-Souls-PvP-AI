@@ -17,11 +17,14 @@
     <Filter Include="VJoy">
       <UniqueIdentifier>{b8d0b07e-4394-4bc2-8e1c-266b2c58fc88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AICore\Core">
+    <Filter Include="AICore\Instinct">
       <UniqueIdentifier>{f1cd6a28-e8c9-4502-bf55-9e4b0b501463}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AICore\Minds">
+    <Filter Include="AICore\Neural Net">
       <UniqueIdentifier>{53d5f1a3-22c6-4d64-8b91-11a079aeb2b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AICore\FANN Neural Net">
+      <UniqueIdentifier>{f2001b4a-44bd-4db5-a82e-01645a92f6a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,10 +41,16 @@
       <Filter>HelperUtils</Filter>
     </ClCompile>
     <ClCompile Include="AIMethods.c">
-      <Filter>AICore\Core</Filter>
+      <Filter>AICore\Instinct</Filter>
     </ClCompile>
     <ClCompile Include="SubRoutines.c">
-      <Filter>AICore\Core</Filter>
+      <Filter>AICore\Instinct</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork.c">
+      <Filter>AICore\Neural Net</Filter>
+    </ClCompile>
+    <ClCompile Include="FANN network.c">
+      <Filter>AICore\FANN Neural Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +70,13 @@
       <Filter>VJoy</Filter>
     </ClInclude>
     <ClInclude Include="AIMethods.h">
-      <Filter>AICore\Core</Filter>
+      <Filter>AICore\Instinct</Filter>
     </ClInclude>
     <ClInclude Include="SubRoutines.h">
-      <Filter>AICore\Core</Filter>
+      <Filter>AICore\Instinct</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork.h">
+      <Filter>AICore\Neural Net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
