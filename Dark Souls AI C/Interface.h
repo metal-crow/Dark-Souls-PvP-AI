@@ -8,6 +8,7 @@
 #include "vjoyinterface.h"
 #include "public.h"
 #include "MemoryEdits.h"
+#include "CharacterStruct.h"
 
 #define PI 3.14159265
 #define XRIGHT 32768
@@ -26,6 +27,15 @@ typedef struct{
 	long first;
 	long second;
 } longTuple;
+
+//distance between two chars as the crow flies
+double distance(Character * Player, Character * Phantom);
+
+//the absolute value of the angle the opponent is off from straight ahead
+double angleDeltaFromFront(Character * Player, Character * Phantom);
+
+//speed the opponent is approaching
+double approachSpeed(Character * Player, Character * Phantom);
 
 //given player and enemy coordinates, get the angle between the two
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y);

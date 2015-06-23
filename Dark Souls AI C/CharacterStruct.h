@@ -91,7 +91,7 @@ static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x79
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
 //current animation weight (0 animation not started, 1 animation fully started)
-static const int Enemy_weightanimation_offsets[] = { 0x, 0x, 0x, 0x, 0x };
+static const int Enemy_weightanimation_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };
 static const int Player_weightanimation_offsets[] = { 0xFC, 0xCC, 0xC, 0x10, 0x714 };
 static const int Enemy_weightanimation_offsets_length = 5;
 static const int Player_weightanimation_offsets_length = 5;

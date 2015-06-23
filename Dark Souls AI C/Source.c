@@ -3,6 +3,9 @@
 #include "Interface.h"
 #include "AIMethods.h"
 #include "SubRoutines.h"
+#include "MindRoutines.h"
+
+#include "fann.h"
 
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
 #define  _CRT_SECURE_NO_WARNINGS
@@ -10,6 +13,12 @@
 //initalize the phantom and player
 Character Enemy;
 Character Player;
+
+//intialize extern variables for nerual net
+MindInput* defense_mind_input;
+volatile unsigned char DefenseChoice;
+MindInput* attack_mind_input;
+volatile unsigned char AttackChoice;
 
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
@@ -59,6 +68,29 @@ int main(void){
 	JOYSTICK_POSITION iReport;
 	iReport.bDevice = (BYTE)iInterface;
 
+    //load neural network and threads
+    defense_mind_input = malloc(sizeof(MindInput));
+    struct fann* defense_mind = fann_create_from_file("Defense_dark_souls_ai.net");
+    if (defense_mind == NULL){
+        printf("Defense_dark_souls_ai.net neural network file not found\n");
+        return EXIT_FAILURE;
+    }
+    defense_mind_input->mind = defense_mind;
+    defense_mind_input->exit = false;
+    HANDLE* defense_mind_thread = CreateThread(NULL, 0, DefenseMindProcess, NULL, 0, NULL);
+    DefenseChoice = 0;
+
+    attack_mind_input = malloc(sizeof(MindInput));
+    struct fann* attack_mind = fann_create_from_file("Attack_dark_souls_ai.net");
+    if (attack_mind == NULL){
+        printf("Attack_dark_souls_ai.net neural network file not found\n");
+        return EXIT_FAILURE;
+    }
+    attack_mind_input->mind = attack_mind;
+    attack_mind_input->exit = false;
+    HANDLE* attack_mind_thread = CreateThread(NULL, 0, AttackMindProcess, NULL, 0, NULL);
+    AttackChoice = 0;
+
 	//get current camera details to lock
 	readCamera(&processHandle,memorybase);
 
@@ -70,17 +102,29 @@ int main(void){
 	//TODO load vJoy driver(we ONLY want the driver loaded when program running)
 
 	while (1){
-		//lock the camera
+		//TODO lock the camera
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
 		ReadPlayer(&Enemy, &processHandle);
 		ReadPlayer(&Player, &processHandle);
 
-		/*printf("Enemy : ");
+        #if 0
+		printf("Enemy : ");
 		PrintPhantom(&Enemy);
 		printf("Player: ");
-		PrintPhantom(&Player);*/
+		PrintPhantom(&Player);
+        #endif
+
+        //update neural network thread data
+        defense_mind_input->input[0] = distance(&Player, &Enemy);
+        defense_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
+        defense_mind_input->input[2] = approachSpeed(&Player, &Enemy);
+
+        defense_mind_input->input[0] = distance(&Player, &Enemy);
+        defense_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
+        defense_mind_input->input[2] = approachSpeed(&Player, &Enemy);
+
 
 		// reset struct info
 		iReport.wAxisX = MIDDLE;
@@ -106,15 +150,17 @@ int main(void){
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
-		if (attackImminent==2 || subroutine_states[0]){
+        if (attackImminent == 2 || subroutine_states[0] || DefenseChoice){
 			dodge(&Player, &Enemy, &iReport);
+            DefenseChoice = false;//unset neural network desision
 		}
 
 		//this is definitly too overeager
 		//attack mind make choice about IF to attack or not, and how to attack
-		if (!attackImminent || subroutine_states[1]){
-			attack(&Player, &Enemy, &iReport);
-		}
+        if (!attackImminent || subroutine_states[1] || AttackChoice){
+            attack(&Player, &Enemy, &iReport);
+            AttackChoice = false;//unset neural network desision
+        }
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
 		UpdateVJD(iInterface, (PVOID)&iReport);

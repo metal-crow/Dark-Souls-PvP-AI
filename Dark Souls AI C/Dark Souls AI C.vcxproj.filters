@@ -23,8 +23,11 @@
     <Filter Include="AICore\Neural Net">
       <UniqueIdentifier>{53d5f1a3-22c6-4d64-8b91-11a079aeb2b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AICore\FANN Neural Net">
-      <UniqueIdentifier>{f2001b4a-44bd-4db5-a82e-01645a92f6a6}</UniqueIdentifier>
+    <Filter Include="AICore\Neural Net\FANN">
+      <UniqueIdentifier>{ce114979-65b6-4ade-aa7b-c1ca7a5a205c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AICore\Neural Net\Own">
+      <UniqueIdentifier>{0b713785-9ff4-42c3-acb5-00b5463daac3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,11 +49,14 @@
     <ClCompile Include="SubRoutines.c">
       <Filter>AICore\Instinct</Filter>
     </ClCompile>
-    <ClCompile Include="NeuralNetwork.c">
-      <Filter>AICore\Neural Net</Filter>
-    </ClCompile>
     <ClCompile Include="FANN network.c">
-      <Filter>AICore\FANN Neural Net</Filter>
+      <Filter>AICore\Neural Net\FANN</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork.c">
+      <Filter>AICore\Neural Net\Own</Filter>
+    </ClCompile>
+    <ClCompile Include="MindRoutines.c">
+      <Filter>AICore\Neural Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,8 +81,11 @@
     <ClInclude Include="SubRoutines.h">
       <Filter>AICore\Instinct</Filter>
     </ClInclude>
-    <ClInclude Include="NeuralNetwork.h">
+    <ClInclude Include="MindRoutines.h">
       <Filter>AICore\Neural Net</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork.h">
+      <Filter>AICore\Neural Net\Own</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

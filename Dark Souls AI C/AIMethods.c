@@ -2,17 +2,8 @@
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
-//get straight line distance between me and enemy
-static double distance(Character * Player, Character * Phantom){
-	double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
-	double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
-	return hypot(delta_x, delta_y);
-}
-
 /*determine what type of action the animation id is.
-
 i cant seem to find a pattern in the ids, so this is just a big switch statement
-
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
 0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created*/
@@ -178,7 +169,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 			AtkID>1
 			//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
 			//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
-			&& ((AtkID == 3) || (Phantom->weightanimation) == 1.0)
+			&& ((AtkID == 3) || (Phantom->weightanimation) >= 1.0)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){

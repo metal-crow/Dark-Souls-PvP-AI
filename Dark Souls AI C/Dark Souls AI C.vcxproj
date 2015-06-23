@@ -87,6 +87,7 @@
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="CharacterStruct.c" />
     <ClCompile Include="FANN network.c" />
+    <ClCompile Include="MindRoutines.c" />
     <ClCompile Include="NeuralNetwork.c" />
     <ClCompile Include="Interface.c" />
     <ClCompile Include="MemoryEdits.c" />
@@ -96,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="AIMethods.h" />
     <ClInclude Include="CharacterStruct.h" />
+    <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="MemoryEdits.h" />

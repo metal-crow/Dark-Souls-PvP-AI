@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "fann.h"
 
-int main()
+int main1()
 {
     struct fann *ann;
     struct fann_train_data *train_data, *test_data;

@@ -25,6 +25,13 @@ static const int camera_y_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x150 };
 static const int camera_x_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x144 };
 static const int camera_offsets_length = 5;
 
+//get straight line distance between me and enemy
+double distance(Character * Player, Character * Phantom){
+    double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
+    double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
+    return hypot(delta_x, delta_y);
+}
+
 int loadvJoy(UINT iInterface){
 	// Get the driver attributes (Vendor ID, Product ID, Version Number)
 	if (!vJoyEnabled()){

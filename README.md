@@ -49,3 +49,5 @@ speed
 time is arbitrary time animation runs. counts up. determines now long attack is, must be some array somewhere.  
 over is number of times animation repeated  
   
+
+  have a build flag which determines if the program uses my hadnwritten enural netowrk or someone elses library neural network
