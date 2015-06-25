@@ -150,16 +150,15 @@ int main(void){
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
-        if (attackImminent == 2 || subroutine_states[0] || DefenseChoice){
-			dodge(&Player, &Enemy, &iReport);
-            DefenseChoice = false;//unset neural network desision
+        if (attackImminent == 2 || subroutine_states[DodgeStateIndex] || DefenseChoice){
+            dodge(&Player, &Enemy, &iReport, DefenseChoice);
+            DefenseChoice = 0;//unset neural network desision
 		}
 
-		//this is definitly too overeager
 		//attack mind make choice about IF to attack or not, and how to attack
-        if (!attackImminent || subroutine_states[1] || AttackChoice){
-            attack(&Player, &Enemy, &iReport);
-            AttackChoice = false;//unset neural network desision
+        if (subroutine_states[AttackStateIndex] || (!attackImminent && AttackChoice)){
+            attack(&Player, &Enemy, &iReport, AttackChoice);
+            AttackChoice = 0;//unset neural network desision
         }
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
@@ -170,6 +169,8 @@ int main(void){
 	}
 
 	RelinquishVJD(iInterface);
+    defense_mind_input->exit = true;
+    attack_mind_input->exit = true;
 	CloseHandle(processHandle);
-	return 0;
+	return EXIT_SUCCESS;
 }

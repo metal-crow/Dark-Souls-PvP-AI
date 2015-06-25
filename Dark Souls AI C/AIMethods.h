@@ -18,9 +18,9 @@
 unsigned char aboutToBeHit(Character * Player, Character * Phantom);
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
+void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice);
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
+void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char AttackChoice);
 
 #endif

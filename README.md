@@ -50,4 +50,4 @@ time is arbitrary time animation runs. counts up. determines now long attack is,
 over is number of times animation repeated  
   
 
-  have a build flag which determines if the program uses my hadnwritten enural netowrk or someone elses library neural network
+  have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network
