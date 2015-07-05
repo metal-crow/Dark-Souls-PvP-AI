@@ -58,6 +58,9 @@
     <ClCompile Include="MindRoutines.c">
       <Filter>AICore\Neural Net</Filter>
     </ClCompile>
+    <ClCompile Include="InitalizeFANN.c">
+      <Filter>AICore\Neural Net\FANN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interface.h">

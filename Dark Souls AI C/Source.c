@@ -23,9 +23,9 @@ volatile unsigned char AttackChoice;
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
-	Enemy.weaponRange = 2.5;//temp hardcoding
+	Enemy.weaponRange = 3;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 2.5;
+	Player.weaponRange = 3;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
@@ -38,7 +38,7 @@ int main(void){
 	Enemy_base_add += memorybase;
 	player_base_add += memorybase;
 
-	//add the pointer offsets to the address
+	//add the pointer offsets to the address TODO optimize this via reading chunk of memory in then traversing pointer
 	Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
 	Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
 	Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
@@ -48,6 +48,7 @@ int main(void){
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
 	Enemy.weightanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_weightanimation_offsets_length, Enemy_weightanimation_offsets);
+    //Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
 	Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -57,7 +58,6 @@ int main(void){
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
 	Player.subanimation_address = FindPointerAddr(processHandle, player_base_add, Player_subanimation_offsets_length, Player_subanimation_offsets);
-	Player.weightanimation_address = FindPointerAddr(processHandle, player_base_add, Player_weightanimation_offsets_length, Player_weightanimation_offsets);
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device
@@ -68,6 +68,7 @@ int main(void){
 	JOYSTICK_POSITION iReport;
 	iReport.bDevice = (BYTE)iInterface;
 
+#if 0
     //load neural network and threads
     defense_mind_input = malloc(sizeof(MindInput));
     struct fann* defense_mind = fann_create_from_file("Defense_dark_souls_ai.net");
@@ -90,6 +91,7 @@ int main(void){
     attack_mind_input->exit = false;
     HANDLE* attack_mind_thread = CreateThread(NULL, 0, AttackMindProcess, NULL, 0, NULL);
     AttackChoice = 0;
+#endif
 
 	//get current camera details to lock
 	readCamera(&processHandle,memorybase);
@@ -116,15 +118,17 @@ int main(void){
 		PrintPhantom(&Player);
         #endif
 
+
+#if 0
         //update neural network thread data
         defense_mind_input->input[0] = distance(&Player, &Enemy);
         defense_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
-        defense_mind_input->input[2] = approachSpeed(&Player, &Enemy);
+        defense_mind_input->input[2] = Enemy.velocity;
 
-        defense_mind_input->input[0] = distance(&Player, &Enemy);
-        defense_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
-        defense_mind_input->input[2] = approachSpeed(&Player, &Enemy);
-
+        attack_mind_input->input[0] = distance(&Player, &Enemy);
+        attack_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
+        attack_mind_input->input[2] = Enemy.velocity;
+#endif
 
 		// reset struct info
 		iReport.wAxisX = MIDDLE;

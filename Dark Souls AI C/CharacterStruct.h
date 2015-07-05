@@ -29,14 +29,16 @@ typedef struct {
 	ullong l_weapon_address;
 	unsigned int l_weapon_id;
 	//hurtbox size(range) of weapon. Bows/Magic have high range
-	float weaponRange;
+	float weaponRange;//TODO
 	//subanimation state. Used to see if attack is finished
 	ullong subanimation_address;
 	unsigned int subanimation;
 	//subanimation weight. Used to see if hurtbox is active during attack animation
 	ullong weightanimation_address;
 	float weightanimation;
-
+    //velocity. used for backstab detection
+    ullong velocity_address;
+    float velocity;
 } Character;
 
 //print info about the character
@@ -45,11 +47,13 @@ void PrintPhantom(Character * c);
 //read memory for the character's variables
 void ReadPlayer(Character * c, HANDLE * processHandle);
 
+//TODO prune as many of these as possible. what needs to be kept for only one char?
+
 //basic values and offsets we use
 //the base address, which offsets are added to
 //this MUST be 64 bits to account for max possible address space
-static ullong Enemy_base_add = 0x00F7AC70;
-static ullong player_base_add = 0x00F7A644;
+static ullong Enemy_base_add = 0x00F7DC70;
+static ullong player_base_add = 0x00F7D644;
 //offsets and length for x location
 static const int Enemy_loc_x_offsets[] = { 0x4, 0x4, 0x2C, 0x260 };
 static const int Player_loc_x_offsets[] = { 0x3C, 0x330, 0x4, 0x20C, 0x3C0 };
@@ -90,10 +94,10 @@ static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
-//current animation weight (0 animation not started, 1 animation fully started)
-static const int Enemy_weightanimation_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };
-static const int Player_weightanimation_offsets[] = { 0xFC, 0xCC, 0xC, 0x10, 0x714 };
+//current animation weight (0 animation not started, 1 animation fully started). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
+static const int Enemy_weightanimation_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };//TODO find this
 static const int Enemy_weightanimation_offsets_length = 5;
-static const int Player_weightanimation_offsets_length = 5;
-
+//speed the opponent is approaching at. Player doesnt need to know their own. Just using if sprinting or not, actual velocity isnt important
+static const int Enemy_velocity_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };//TODO find this
+static const int Enemy_velocity_offsets_length = 5;
 #endif

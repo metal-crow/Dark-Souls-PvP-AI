@@ -167,9 +167,8 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		if (
 			//if enemy is in attack animation, 
 			AtkID>1
-			//this is the range attack edge case or attack animation about to generate hurtbox(check sub animation)
-			//TODO if i can know how far in the windup we are, i can utalize time in windup before hurtbox and still dodge in time
-			&& ((AtkID == 3) || (Phantom->weightanimation) >= 1.0)
+            //checking here if the hurtbox is created> based on attack ids where hurtbox is immediate, or animation weight till hurtbox
+			&& ((AtkID == 3) || (Phantom->weightanimation) <= 0.5)//play it safe, 0 is when hurtbox is actually activated
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){
@@ -213,15 +212,16 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         subroutine_states[DodgeStateIndex] = 0;
         subroutine_states[DodgeTypeIndex] = 0;
     }
-    printf("dodge\n");
+    printf("dodge roll\n");
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
+    printf("dodge %d\n", DefenseChoice);
 	//procede with subroutine if we are not in one already
 	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
-        subroutine_states[DodgeTypeIndex] = DefenseChoice;
+        subroutine_states[DodgeTypeIndex] = DefenseChoice ? DefenseChoice : 1;//default to 1 on instinct
 		subroutine_states[DodgeStateIndex] = 1;
 		//set time for this subroutine
 		startTime = clock();
@@ -234,7 +234,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         case 1:
             StandardRoll(Player, Phantom, iReport);
             break;
-        //do not dodge
+        //should never be reached, since we default to 1 if instinct dodging
         default:
             break;
         }
@@ -302,6 +302,7 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char AttackChoice){
+    printf("attack %d\n", AttackChoice);
 	//TODO need timing analysis. Opponent can move outside range during windup
 
     //procede with subroutine if we are not in one already
@@ -325,7 +326,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
         case 2:
             ghostHit(Player, Phantom, iReport);
             break;
-        //0 is dont attack
+        //should never reach, only way to get into method is >0 AttackChoice
         default:
             break;
         }

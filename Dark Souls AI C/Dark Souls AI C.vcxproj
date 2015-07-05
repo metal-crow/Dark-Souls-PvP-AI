@@ -87,6 +87,7 @@
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="CharacterStruct.c" />
     <ClCompile Include="FANN network.c" />
+    <ClCompile Include="InitalizeFANN.c" />
     <ClCompile Include="MindRoutines.c" />
     <ClCompile Include="NeuralNetwork.c" />
     <ClCompile Include="Interface.c" />

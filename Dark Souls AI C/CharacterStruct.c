@@ -10,6 +10,7 @@ void PrintPhantom(Character * c){
 
 void ReadPlayer(Character * c, HANDLE * processHandle){
 	HANDLE processHandle_nonPoint = *processHandle;
+    //TODO read large block that contains all data, then parse in process
 	//read x location
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
 	//read y location
@@ -30,5 +31,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
 	//read the current animation weight
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->weightanimation_address), &(c->weaponRange), 4, 0);
+    //player doesnt use this, and wont have the address set. enemy will
+    if (c->weightanimation_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->weightanimation_address), &(c->weightanimation), 4, 0);
+    }
+    //read the current velocity
+    //player doesnt use this, and wont have the address set. enemy will
+    if (c->velocity_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
+    }
 }
