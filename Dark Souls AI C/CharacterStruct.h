@@ -94,10 +94,13 @@ static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
-//current animation weight (0 animation not started, 1 animation fully started). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
-static const int Enemy_weightanimation_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };//TODO find this
+//current animation weight (format: ???. Changes between 1hd and 2 hd). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
+static const int Enemy_weightanimation_offsets[] = { 0x4, 0x4, 0x34C, 0x88, 0xF0 };
 static const int Enemy_weightanimation_offsets_length = 5;
-//speed the opponent is approaching at. Player doesnt need to know their own. Just using if sprinting or not, actual velocity isnt important
-static const int Enemy_velocity_offsets[] = { 0x0, 0x0, 0x0, 0x0, 0x0 };//TODO find this
+//speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
+//-0.04 slow walk
+//-0.13 walk
+//-0.16 - 18 sprint
+static const int Enemy_velocity_offsets[] = { 0xA0, 0x158, 0x5F4, 0x6C, 0x3BC };
 static const int Enemy_velocity_offsets_length = 5;
 #endif
