@@ -37,7 +37,7 @@ ullong GetModuleBase(const int ProcessID, const char * ModuleName){
 
 	Mod32.dwSize = sizeof(MODULEENTRY32);
 	while (Module32Next(hSnap, &Mod32)){
-		char szModule[20];//just go with 20
+		char szModule[20];//just go with 20 for name length
 		size_t charsConverted = 0;
 		wcstombs_s(&charsConverted, szModule, 20, Mod32.szModule, 19);
 		//if the module name matches the process name
@@ -55,7 +55,7 @@ ullong FindPointerAddr(HANDLE pHandle, const ullong baseaddr, const size_t lengt
 	ullong address = baseaddr;
 	size_t i = 0;
 	do{
-		ReadProcessMemory(pHandle, (LPCVOID)address, &address, length, NULL);
+		ReadProcessMemory(pHandle, (LPCVOID)address, &address, 4, NULL);
 		address += offsets[i];
 		i++;
 	} while (i < length);
