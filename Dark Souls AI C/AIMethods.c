@@ -168,7 +168,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 			//if enemy is in attack animation, 
 			AtkID>1
             //checking here if the hurtbox is created> based on attack ids where hurtbox is immediate, or animation weight till hurtbox
-			&& ((AtkID == 3) || (Phantom->weightanimation) <= 0.5)//play it safe, 0 is when hurtbox is actually activated
+			&& ((AtkID == 3) || (Phantom->weightanimation) <= -0.05)//around -0.1 hitbox is actually created
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){

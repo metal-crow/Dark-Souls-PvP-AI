@@ -94,7 +94,7 @@ static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
-//current animation weight (TODO format: ???. Changes between 1hd and 2 hd). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
+//current animation weight (format: positive is windup, negative is attack.). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
 static const int Enemy_weightanimation_offsets[] = { 0x4, 0x4, 0x34C, 0x88, 0xF0 };
 static const int Enemy_weightanimation_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
