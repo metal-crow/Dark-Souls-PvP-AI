@@ -49,9 +49,6 @@
     <ClCompile Include="SubRoutines.c">
       <Filter>AICore\Instinct</Filter>
     </ClCompile>
-    <ClCompile Include="FANN network.c">
-      <Filter>AICore\Neural Net\FANN</Filter>
-    </ClCompile>
     <ClCompile Include="NeuralNetwork.c">
       <Filter>AICore\Neural Net\Own</Filter>
     </ClCompile>

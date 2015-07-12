@@ -38,7 +38,7 @@ int main(void){
 	Enemy_base_add += memorybase;
 	player_base_add += memorybase;
 
-	//add the pointer offsets to the address TODO optimize this via reading chunk of memory in then traversing pointer
+	//add the pointer offsets to the address. This can be slow because its startup only
 	Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
 	Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
 	Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
@@ -47,8 +47,8 @@ int main(void){
 	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
-	Enemy.weightanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_weightanimation_offsets_length, Enemy_weightanimation_offsets);
-    //Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
+    Enemy.weightanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_weightanimation_offsets_length, Enemy_weightanimation_offsets);
+    Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
 	Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
