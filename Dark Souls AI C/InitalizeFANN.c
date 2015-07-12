@@ -48,7 +48,7 @@ HANDLE readingSetup(){
     Player.r_weapon_address = 0;
     Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
     Player.animation_address = 0;
-    Enemy.velocity_address = 0;
+    Player.velocity_address = 0;
 
     return processHandle;
 }
@@ -148,6 +148,9 @@ int main()
     HANDLE processHandle = readingSetup();
 
     CharState** stateBuffer = calloc(4, sizeof(CharState*));
+    //initalize so we dont read null
+    stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
+    stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
 
     HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
 
@@ -189,7 +192,7 @@ int main()
     }
 
     //save and clean up
-    fann_save(net, "cascade_train.net");
+    fann_save(net, "E:/Code Workspace/Dark Souls AI C/cascade_train.net");
 
     fann_destroy_train(data);
     fann_destroy(net);
