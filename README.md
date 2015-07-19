@@ -31,9 +31,7 @@ TODO:
   [low priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
   [low priority]	Find range of weapons(hitbox size,bows,etc)  
   [low priority]	Better Vjoy loading/unloading    
+  [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
-
-NOTES:  
-have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
