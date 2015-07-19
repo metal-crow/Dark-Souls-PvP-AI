@@ -24,11 +24,13 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  pointers have to be reread for characters because end acress change when invaing (low priority, can just not invade for now)
-  stamia management(low priority, very complex)
-  the subanimation state address is different when two handing!(high priority)  
-  must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?(low priority, use CE for now)  
-  Find range of weapons(hitbox size,bows,etc)(low priority)  
+  [high priority]	The subanimation state address is different when two handing!  
+  [medium priority, not huge slowdown for now]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
+  [low priority, can just not invade for now]	Pointers have to be reread for characters because end acress change when invaing  
+  [low priority, very complex]	Stamia management  
+  [low priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
+  [low priority]	Find range of weapons(hitbox size,bows,etc)  
+  [low priority]	Better Vjoy loading/unloading    
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
