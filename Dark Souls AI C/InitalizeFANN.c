@@ -11,6 +11,7 @@
 
 #include "fann.h"
 
+#pragma warning(disable: 4244)
 
 typedef struct {
     float loc_x;
@@ -24,18 +25,7 @@ typedef struct {
 Character Enemy;
 Character Player;
 
-HANDLE readingSetup(){
-    //get access to dark souls memory
-    char * processName = "DARKSOULS.exe";
-    //get the process id from the name
-    int processId = GetProcessIdFromName(processName);
-    //open the handle
-    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
-    //get the base address of the process and append all other addresses onto it
-    ullong memorybase = GetModuleBase(processId, processName);
-    Enemy_base_add += memorybase;
-    player_base_add += memorybase;
-
+void readPointers(HANDLE processHandle){
     Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
     Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
     Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
@@ -49,6 +39,21 @@ HANDLE readingSetup(){
     Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
     Player.animation_address = 0;
     Player.velocity_address = 0;
+}
+
+HANDLE readingSetup(){
+    //get access to dark souls memory
+    char * processName = "DARKSOULS.exe";
+    //get the process id from the name
+    int processId = GetProcessIdFromName(processName);
+    //open the handle
+    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
+    //get the base address of the process and append all other addresses onto it
+    ullong memorybase = GetModuleBase(processId, processName);
+    Enemy_base_add += memorybase;
+    player_base_add += memorybase;
+
+    readPointers(processHandle);
 
     return processHandle;
 }
@@ -104,13 +109,25 @@ float angleDeltaFromFrontFANN(CharState * Player, CharState * Phantom){
     }
 }
 
+float rotationDifferenceFromSelfFANN(CharState * Player, CharState * Phantom){
+    double delta = fabs((Player->rotation) - (Phantom->rotation));
+    return delta;
+}
+
 volatile bool listening = true;
+volatile bool inTraining = false;
 
 DWORD WINAPI ListentoContinue(void* data) {
     while (listening){
         char input = getchar();
-        if (input=='e'){
+        if (input=='e'){//exit
             listening = false;
+        } 
+        else if (input == 't'){//train
+            inTraining = true;
+        } 
+        else if (input == 'p'){//pause
+            inTraining = false;
         }
     }
     return 0;
@@ -120,12 +137,19 @@ DWORD WINAPI ListentoContinue(void* data) {
 
 #define backstab_animation 225
 
+#define LOADEXISTING
+
+
+//TODO decide on inputs
 int main()
 {
     //create neural net
     int num_input = 4;
     int num_output = 1;
 
+#ifdef LOADEXISTING
+    struct fann* net = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
+#else
     struct fann *net = fann_create_shortcut(2, num_input, num_output);//set up net without hidden layers. 4 inputs, 1 output
     fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
     fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
@@ -134,6 +158,7 @@ int main()
     fann_set_bit_fail_limit(net, (fann_type)0.9);
     fann_set_train_stop_function(net, FANN_STOPFUNC_BIT);
     fann_print_parameters(net);
+#endif
 
     //create training data
     unsigned int max_neurons = 30;
@@ -160,7 +185,12 @@ int main()
         //when we find the player is in a specific state(i.e backstab if we're training defense), get the last state of the enemy and use it here
         //also, ocasionally get an enemy state when player not in state, and use it
 
+        //mathmaticly impossible to not double count AND never miss with random ping times
+        //also cant check if the last buffer enemy was in backstab, because they could immediatly do another baskstab, and we'll miss a new one
+        //this works pretty well, never misses, rairly double counts
         Sleep(RRAND(2500, 5000));
+
+        readPointers(processHandle);
 
         //move buffer down
         if (stateBuffer[3] && stateBuffer[4]){
@@ -177,12 +207,16 @@ int main()
         bool backstabState = stateBuffer[1]->animation_id == backstab_animation;
 
         //check state and train
-        if (backstabState || (rand() < 4915)){// 4915/RAND_MAX is 15%
+        if (
+            ( backstabState || (rand() < 4915) )// 4915/RAND_MAX is 15%
+            && inTraining
+           )
+        {
 
             data->input[0][0] = distanceFANN(stateBuffer[2], stateBuffer[3]);
             data->input[0][1] = angleDeltaFromFrontFANN(stateBuffer[2], stateBuffer[3]);
             data->input[0][2] = stateBuffer[3]->velocity;//speed 
-            data->input[0][3] = stateBuffer[3]->rotation;//rotation enemy
+            data->input[0][3] = rotationDifferenceFromSelfFANN(stateBuffer[2], stateBuffer[3]);//rotation with respect to self rotation
             data->output[0][0] = backstabState ? 1 : 0;
 
             //train
@@ -192,7 +226,9 @@ int main()
     }
 
     //save and clean up
-    fann_save(net, "E:/Code Workspace/Dark Souls AI C/cascade_train.net");
+    fann_print_connections(net);
+
+    fann_save(net, "E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
 
     fann_destroy_train(data);
     fann_destroy(net);
