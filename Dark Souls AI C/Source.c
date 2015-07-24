@@ -13,7 +13,7 @@
 Character Enemy;
 Character Player;
 
-//intialize extern variables for nerual net
+//intialize extern variables for neural net
 MindInput* defense_mind_input;
 volatile unsigned char DefenseChoice;
 MindInput* attack_mind_input;
@@ -155,13 +155,13 @@ int main(void){
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
-        if (attackImminent == 2 || subroutine_states[DodgeStateIndex] || DefenseChoice){
+        if (attackImminent == 2 || inActiveDodgeSubroutine() || DefenseChoice){
             dodge(&Player, &Enemy, &iReport, DefenseChoice);
             DefenseChoice = 0;//unset neural network desision
 		}
 
 		//attack mind make choice about IF to attack or not, and how to attack
-        if (subroutine_states[AttackStateIndex] || (!attackImminent && AttackChoice)){
+        if (inActiveAttackSubroutine() || (!attackImminent && AttackChoice)){
             attack(&Player, &Enemy, &iReport, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }

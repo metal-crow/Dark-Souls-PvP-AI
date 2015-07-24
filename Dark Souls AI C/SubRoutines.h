@@ -20,4 +20,8 @@ extern long startTime;
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();
 
+bool inActiveDodgeSubroutine();
+
+bool inActiveAttackSubroutine();
+
 #endif

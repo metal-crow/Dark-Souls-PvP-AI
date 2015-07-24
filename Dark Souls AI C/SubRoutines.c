@@ -4,5 +4,14 @@ unsigned char subroutine_states[4] = { 0, 0, 0, 0 };
 long startTime;
 
 bool inActiveSubroutine(){
-    return (subroutine_states[DodgeStateIndex] || subroutine_states[AttackStateIndex]);
+    return (inActiveDodgeSubroutine() || inActiveAttackSubroutine());
+}
+
+//special case for preventing unneccicary redodge
+bool inActiveDodgeSubroutine(){
+    return subroutine_states[DodgeStateIndex]>1;
+}
+
+bool inActiveAttackSubroutine(){
+    return subroutine_states[AttackStateIndex];
 }
