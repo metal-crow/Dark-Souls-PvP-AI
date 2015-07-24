@@ -8,7 +8,6 @@
 #include "fann.h"
 
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
-#define  _CRT_SECURE_NO_WARNINGS
 
 //initalize the phantom and player
 Character Enemy;
@@ -38,6 +37,8 @@ int main(void){
 	Enemy_base_add += memorybase;
 	player_base_add += memorybase;
 
+    //TODO THESE HAVE TO BE REREAD, AS THE END ADDRESS CAN CHANGE
+    //MOVE TO SETUP METHOD in CharacterStruct
 	//add the pointer offsets to the address. This can be slow because its startup only
 	Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
 	Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
@@ -47,7 +48,7 @@ int main(void){
 	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
-    Enemy.weightanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_weightanimation_offsets_length, Enemy_weightanimation_offsets);
+    Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);

@@ -30,10 +30,10 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
-	//read the current animation weight
+	//read if hurtbox is active on enemy weapon
     //player doesnt use this, and wont have the address set. enemy will
-    if (c->weightanimation_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->weightanimation_address), &(c->weightanimation), 4, 0);
+    if (c->hurtboxActive_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &(c->hurtboxActive), 1, 0);
     }
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will

@@ -33,9 +33,9 @@ typedef struct {
 	//subanimation state. Used to see if attack is finished
 	ullong subanimation_address;
 	unsigned int subanimation;
-	//subanimation weight. Used to see if hurtbox is active during attack animation
-	ullong weightanimation_address;
-	float weightanimation;
+	//hurtbox state 
+    ullong hurtboxActive_address;
+	unsigned char hurtboxActive;
     //velocity. used for backstab detection
     ullong velocity_address;
     float velocity;
@@ -94,9 +94,9 @@ static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
 static const int Enemy_subanimation_offsets_length = 5;
 static const int Player_subanimation_offsets_length = 5;
-//current animation weight (format: positive is windup, negative is attack.). Only need to know enemy's startup weight. i.e how close to in full attack(hitbox) animation
-static const int Enemy_weightanimation_offsets[] = { 0x4, 0x4, 0x34C, 0x88, 0xF0 };
-static const int Enemy_weightanimation_offsets_length = 5;
+//if enemy's weapon's hurtbox is active
+static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
+static const int Enemy_hurtboxActive_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
 //-0.13 walk
