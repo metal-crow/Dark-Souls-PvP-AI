@@ -157,23 +157,20 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 }
 
 unsigned char aboutToBeHit(Character * Player, Character * Phantom){
-    //check their subanimation state to know to reset DodgeStateIndex. Wont dodge again until its reset
-    //only reset when their subanimation returns to default(always returns to befault on new animation)
-    if (Phantom->subanimation == AttackSubanimationRecover){
-        subroutine_states[DodgeStateIndex] = 0;
-        printf("Safe to redodge\n");
+    //dont have to check anything if already in dodge subroutine
+    if (inActiveDodgeSubroutine()){
+        return 0;
     }
 
 	//if they are outside of their attack range, we dont have to do anymore checks
-    //also check if we want to roll again, as 1 attack has compleated and we wont double roll
-    if (distance(Player, Phantom) <= Phantom->weaponRange && subroutine_states[DodgeStateIndex] == 0){
+    if (distance(Player, Phantom) <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
 		if (
 			//if enemy is in attack animation, 
 			AtkID>1
-            //checking here if the hurtbox is created based on attack ids where hurtbox is immediate and not used with subanimation, or subanimation state(attack subanimation is shortly before actually hurtbox)
+            //checking here if the hurtbox is created based on attack ids where hurtbox is immediate and not used with subanimation, or subanimation state(AttackSubanimationActive is pre hurtbox)
             && (AtkID == 3 || Phantom->subanimation == AttackSubanimationActive)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
@@ -188,7 +185,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		}
 	}
 
-	printf("not about to be hit\n");
+    printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
@@ -213,10 +210,11 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     }
 
     //end subanimation on recover animation
+    //TODO what if knocked out of animation?
     if (Player->subanimation == AttackSubanimationRecover){
         printf(" end sub ");
         subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 1;//set to this value to ensure we dont redodge in aboutToBeHit, but dont trigger still in dodge subroutine
+        subroutine_states[DodgeStateIndex] = 0;
     }
     printf("dodge roll\n");
 }
@@ -228,33 +226,21 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
         subroutine_states[DodgeTypeIndex] = DefenseChoice ? DefenseChoice : 1;//default to 1 on instinct
-		subroutine_states[DodgeStateIndex] = 2;
+		subroutine_states[DodgeStateIndex] = 1;
 		//set time for this subroutine
 		startTime = clock();
 	}
 
     //if we're in the dodge subroutine
     if (subroutine_states[DodgeStateIndex]){
-        printf("*dodge subroutine %d\n", subroutine_states[DodgeTypeIndex]);
-
-        //DodgeStateIndex is used to determine when roll is safe to exit and not repeat based on hurtbox
-        //if the hurtbox just becomes active
-        if (Phantom->hurtboxActive && subroutine_states[DodgeStateIndex] == 2){
-            subroutine_states[DodgeStateIndex] = 3;
-        }
-        //if the hurtbox has been removed
-        else if (!Phantom->hurtboxActive && subroutine_states[DodgeStateIndex] == 3){
-            subroutine_states[DodgeStateIndex] = 4;
-        }
-
         switch (subroutine_states[DodgeTypeIndex]){
-        //standard roll
-        case 1:
-            StandardRoll(Player, Phantom, iReport);
-            break;
-        //should never be reached, since we default to 1 if instinct dodging
-        default:
-            break;
+            //standard roll
+            case 1:
+                StandardRoll(Player, Phantom, iReport);
+                break;
+            //should never be reached, since we default to 1 if instinct dodging
+            default:
+                break;
         }
     }
 }

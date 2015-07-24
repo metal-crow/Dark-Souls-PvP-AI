@@ -33,7 +33,16 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	//read if hurtbox is active on enemy weapon
     //player doesnt use this, and wont have the address set. enemy will
     if (c->hurtboxActive_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &(c->hurtboxActive), 1, 0);
+        unsigned char hurtboxState;
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &hurtboxState, 1, 0);
+        //if the hurbox is deactivated after it had been activated
+        if (hurtboxState == 0 && c->animation_id == AttackSubanimationActiveDuringHurtbox){
+            c->animation_id = AttackSubanimationActiveAfterHurtbox;
+        }
+        //if we se hurtbox is active after the attack subanimation is started
+        else if (hurtboxState && c->animation_id == AttackSubanimationActive){
+            c->animation_id = AttackSubanimationActiveDuringHurtbox;
+        }
     }
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will

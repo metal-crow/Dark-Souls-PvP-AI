@@ -9,7 +9,7 @@ bool inActiveSubroutine(){
 
 //special case for preventing unneccicary redodge
 bool inActiveDodgeSubroutine(){
-    return subroutine_states[DodgeStateIndex]>1;
+    return subroutine_states[DodgeStateIndex];
 }
 
 bool inActiveAttackSubroutine(){
