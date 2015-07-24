@@ -1,4 +1,6 @@
 //program to train, teach, and create neural net
+#pragma warning(disable: 4244)
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +12,6 @@
 #include "CharacterStruct.h"
 
 #include "fann.h"
-
-#pragma warning(disable: 4244)
 
 typedef struct {
     float loc_x;
@@ -118,6 +118,7 @@ volatile bool listening = true;
 volatile bool inTraining = false;
 
 DWORD WINAPI ListentoContinue(void* data) {
+    printf("e to exit, t to train, p to pause\n");
     while (listening){
         char input = getchar();
         if (input=='e'){//exit
@@ -137,34 +138,28 @@ DWORD WINAPI ListentoContinue(void* data) {
 
 #define backstab_animation 225
 
-#define LOADEXISTING
+int num_input = 4;
+int num_output = 1;
 
-
+#define newFile
 //TODO decide on inputs
-int main()
+//listen and save data to train on to file
+int getTrainingData(void)
 {
-    //create neural net
-    int num_input = 4;
-    int num_output = 1;
-
-#ifdef LOADEXISTING
-    struct fann* net = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
+    FILE* fp;
+    //if file doesnt exist
+#ifdef newFile
+        printf("new training file\n");
+        fp = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "w");
+        //first line is number of training sets, number or inputs, and number of outputs
+        fprintf(fp, "## %d %d\n", num_input, num_output);
 #else
-    struct fann *net = fann_create_shortcut(2, num_input, num_output);//set up net without hidden layers. 4 inputs, 1 output
-    fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
-    fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
-    fann_set_activation_function_output(net, FANN_LINEAR);
-    fann_set_train_error_function(net, FANN_ERRORFUNC_LINEAR);
-    fann_set_bit_fail_limit(net, (fann_type)0.9);
-    fann_set_train_stop_function(net, FANN_STOPFUNC_BIT);
-    fann_print_parameters(net);
+    //else append new training data to it
+        printf("Appending to training file\n");
+        fp = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
 #endif
 
-    //create training data
-    unsigned int max_neurons = 30;
-    const float desired_error = (const float)0.05;
-
-    struct fann_train_data *data = fann_create_train(1, num_input, num_output);
+    unsigned int trainingLinesCount = 0;
 
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
@@ -208,22 +203,58 @@ int main()
 
         //check state and train
         if (
-            ( backstabState || (rand() < 4915) )// 4915/RAND_MAX is 15%
+            ( backstabState || (rand() < 1000) )
             && inTraining
            )
         {
+            float distance = distanceFANN(stateBuffer[2], stateBuffer[3]);
+            float angleDelta = angleDeltaFromFrontFANN(stateBuffer[2], stateBuffer[3]);
+            float rotationDelta = rotationDifferenceFromSelfFANN(stateBuffer[2], stateBuffer[3]);//rotation with respect to self rotation
 
-            data->input[0][0] = distanceFANN(stateBuffer[2], stateBuffer[3]);
-            data->input[0][1] = angleDeltaFromFrontFANN(stateBuffer[2], stateBuffer[3]);
-            data->input[0][2] = stateBuffer[3]->velocity;//speed 
-            data->input[0][3] = rotationDifferenceFromSelfFANN(stateBuffer[2], stateBuffer[3]);//rotation with respect to self rotation
-            data->output[0][0] = backstabState ? 1 : 0;
+            //write the input floats, then the output float
+            fprintf(fp, "%f %f %f %f %f\n", 
+                distance,
+                angleDelta,
+                stateBuffer[3]->velocity,
+                rotationDelta,
+                (backstabState ? 1.0 : 0.0)
+                );
+            trainingLinesCount++;
 
-            //train
-            printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", backstabState ? "true" : "false", data->input[0][0], data->input[0][1], data->input[0][2], data->input[0][3]);
-            fann_cascadetrain_on_data(net, data, max_neurons, 0, desired_error);
+            //save
+            printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", backstabState ? "true" : "false", distance, angleDelta, stateBuffer[3]->velocity, rotationDelta);
         }
     }
+
+    fprintf("## = %d\n", trainingLinesCount);
+
+    fclose(fp);
+
+    return 0;
+}
+
+//use the file to train the network
+int trainFromFile(void){
+    //create new, empty network
+    struct fann *net = fann_create_shortcut(2, num_input, num_output);//set up net without hidden layers. 4 inputs, 1 output
+    fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
+    fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
+    fann_set_activation_function_output(net, FANN_LINEAR);
+    fann_set_train_error_function(net, FANN_ERRORFUNC_LINEAR);
+    fann_set_bit_fail_limit(net, (fann_type)0.9);
+    fann_set_train_stop_function(net, FANN_STOPFUNC_BIT);
+    fann_print_parameters(net);
+
+    //load training data
+    unsigned int max_neurons = 30;
+    const float desired_error = (const float)0.05;
+
+    struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train");
+
+    //train network
+    fann_cascadetrain_on_data(net, data, max_neurons, 0, desired_error);
+
+    //TODO test trained network on test data
 
     //save and clean up
     fann_print_connections(net);
@@ -234,4 +265,8 @@ int main()
     fann_destroy(net);
 
     return 0;
+}
+
+int main(void){
+    getTrainingData();
 }

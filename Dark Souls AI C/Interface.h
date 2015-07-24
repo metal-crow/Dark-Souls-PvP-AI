@@ -31,7 +31,7 @@ typedef struct{
 //distance between two chars as the crow flies
 float distance(Character * Player, Character * Phantom);
 
-//the absolute value of the angle the opponent is off from straight ahead
+//the absolute value of the angle the opponent is off from straight ahead (returns radians, only used as neural net input)
 float angleDeltaFromFront(Character * Player, Character * Phantom);
 
 //given player and enemy coordinates, get the angle between the two

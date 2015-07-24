@@ -162,8 +162,6 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
-		//TODO dodging too mutch, need to find when enemy hurtbox stops
-		//also dodging too late(combustion) or too early(sword)
 		if (
 			//if enemy is in attack animation, 
 			AtkID>1

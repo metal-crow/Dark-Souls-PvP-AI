@@ -32,7 +32,7 @@ float distance(Character * Player, Character * Phantom){
     return hypot(delta_x, delta_y);
 }
 
-//the absolute value of the angle the opponent is off from straight ahead
+//the absolute value of the angle the opponent is off from straight ahead (returns radians, only used as neural net input)
 float angleDeltaFromFront(Character * Player, Character * Phantom){
     double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
     double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
