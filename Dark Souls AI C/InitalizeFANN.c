@@ -226,7 +226,7 @@ int getTrainingData(void)
         }
     }
 
-    fprintf("## = %d\n", trainingLinesCount);
+    fprintf(fp, "## = %d\n", trainingLinesCount);
 
     fclose(fp);
 
@@ -267,6 +267,7 @@ int trainFromFile(void){
     return 0;
 }
 
-int main(void){
+int main1(void){
     getTrainingData();
+    return 0;
 }
