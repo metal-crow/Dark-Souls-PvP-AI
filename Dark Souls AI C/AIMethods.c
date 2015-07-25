@@ -159,7 +159,7 @@ static unsigned char isAttackAnimation(unsigned char animation_id){
 unsigned char aboutToBeHit(Character * Player, Character * Phantom){
     //dont have to check anything if already in dodge subroutine
     if (inActiveDodgeSubroutine()){
-        return 0;
+        return 2;
     }
 
 	//if they are outside of their attack range, we dont have to do anymore checks
@@ -195,6 +195,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 #define inputDelayForStopDodge 50
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    //TODO angle should increase for closer distances
     //dodge at a 5 degree angle
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
     angle += 5;
@@ -204,7 +205,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     iReport->wAxisY = move.second;
 
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
-    long curTime = clock();
+    long curTime = clock(dd);
     if ((curTime >= startTime + inputDelayForDodge) && (curTime < startTime + inputDelayForStopDodge)){
         iReport->lButtons = circle;
     }

@@ -18,7 +18,7 @@ typedef struct {
 	float rotation;
 	//data for current animation id
 	ullong animation_address;
-	unsigned char animation_id;
+	unsigned int animation_id;
 	//hp
 	ullong hp_address;
 	unsigned int hp;
