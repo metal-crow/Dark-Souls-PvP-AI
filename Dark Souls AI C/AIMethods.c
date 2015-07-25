@@ -205,7 +205,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     iReport->wAxisY = move.second;
 
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
-    long curTime = clock(dd);
+    long curTime = clock();
     if ((curTime >= startTime + inputDelayForDodge) && (curTime < startTime + inputDelayForStopDodge)){
         iReport->lButtons = circle;
     }
