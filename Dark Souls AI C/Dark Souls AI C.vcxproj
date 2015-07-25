@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AIMethods.c" />
+    <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
     <ClCompile Include="InitalizeFANN.c" />
     <ClCompile Include="MindRoutines.c" />
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIMethods.h" />
+    <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />
     <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />

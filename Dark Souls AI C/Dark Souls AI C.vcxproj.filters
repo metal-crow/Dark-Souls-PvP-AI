@@ -58,6 +58,9 @@
     <ClCompile Include="InitalizeFANN.c">
       <Filter>AICore\Neural Net\FANN</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationMappings.c">
+      <Filter>AICore\Instinct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interface.h">
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="NeuralNetwork.h">
       <Filter>AICore\Neural Net\Own</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationMappings.h">
+      <Filter>AICore\Instinct</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

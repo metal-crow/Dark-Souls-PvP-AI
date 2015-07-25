@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include "SubRoutines.h"
 #include <time.h>
+#include "AnimationMappings.h"
 
 //return 2 if i am about to be hit by an attack by the enemy, 1 if an attack if coming soon and i should wait to dodge it, 0 otherwise
 unsigned char aboutToBeHit(Character * Player, Character * Phantom);
