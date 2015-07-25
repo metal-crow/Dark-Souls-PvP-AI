@@ -24,7 +24,8 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  [medium priority, not huge slowdown for now]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
+  [high priority] neural network training, test implementation in main program.
+  [low priority, currently sub-millisecond]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
   [low priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
   [low priority, very complex]	Stamia management  
   [low priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  

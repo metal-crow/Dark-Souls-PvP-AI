@@ -210,9 +210,8 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         iReport->lButtons = circle;
     }
 
-    //end subanimation on recover animation
-    //TODO what if knocked out of animation?
-    if (Player->subanimation == AttackSubanimationRecover){
+    //only check once we've gotten dodge in, to prevent premature exit. Can exit once dodge state in recoery or hit and subanimation reset
+    if ((curTime > startTime + inputDelayForStopDodge) && (Player->subanimation == AttackSubanimationRecover || Player->subanimation == AttackSubanimationWindup)){
         printf(" end sub ");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
