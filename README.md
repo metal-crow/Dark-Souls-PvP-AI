@@ -24,8 +24,6 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  [high priority]	Animation weight of weapon.  
-		-subanimation id is 256, roll then. When roll ends, check if hurtbox addr is still active. dont try to reroll until subanimation id resets to 0(always resets at ANY animation start)
   [medium priority, not huge slowdown for now]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
   [low priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
   [low priority, very complex]	Stamia management  
