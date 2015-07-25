@@ -8,17 +8,11 @@ because of this, have to specify if we need to look at subanimation
 unsigned char isAttackAnimation(unsigned char animation_id){
     switch (animation_id){
         //nothing
-        case 0:
-            return 0;
+        //case 0:
+        //    return 0;
         //could not use
-        case 21:
-            return 0;
-        //1 hand roll
-        case 32:
-            return 0;
-        //backstep 1h
-        case 38:
-            return 0;
+        //case 21:
+        //    return 0;
         //1h rolling attack
         case 41:
             return 2;
@@ -53,8 +47,8 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         case 67:
             return 3;
         //crossbow recover 2h
-        case 68:
-            return 0;
+        //case 68:
+        //    return 0;
         //crossbow windup 1h
         case 69:
             return 0;
@@ -62,17 +56,17 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         case 70:
             return 3;
         //crossbow recover 1h
-        case 71:
-            return 0;
+        //case 71:
+        //    return 0;
         //shield raise
-        case 76:
-            return 0;
+        //case 76:
+        //    return 0;
         //shield up
-        case 77:
-            return 0;
+        //case 77:
+        //    return 0;
         //shied lower
-        case 78:
-            return 0;
+        //case 78:
+        //    return 0;
         //parry
         case 86:
             return 1;//not a windup, but pretend it is to prevent attack
@@ -86,8 +80,8 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         case 107:
             return 2;
         //2h r1 bounce back
-        case 108:
-            return 0;
+        //case 108:
+        //    return 0;
         //2h r1 combo
         case 109:
             return 2;
@@ -117,44 +111,56 @@ unsigned char isAttackAnimation(unsigned char animation_id){
             return 1;
         //pyro ball throw
         case 174:
-            return 2;
-        //backstep 2h
-        case 100:
-            return 0;
+            return 3;
         //1 hand weapon
-        case 185:
-            return 0;
+        //case 185:
+        //    return 0;
         //1 hand weapon
-        case 188:
-            return 0;
+        //case 188:
+        //    return 0;
         //2 hand weapon
-        case 199:
-            return 0;
+        //case 199:
+        //    return 0;
         //2 hand weapon
-        case 203:
-            return 0;
+        //case 203:
+        //    return 0;
         //weapon switch r
-        case 209:
-            return 0;
+        //case 209:
+        //    return 0;
         //weapon switch r
-        case 213:
-            return 0;
+        //case 213:
+        //    return 0;
         //weapon switch l
-        case 217:
-            return 0;
+        //case 217:
+        //    return 0;
         //weapon switch l
-        case 221:
-            return 0;
+        //case 221:
+        //    return 0;
         //backstab
-        case 225:
-            return 0;
+        //case 225:
+        //    return 0;
         default:
-            printf("unknown animation id\n");
+            //printf("unknown animation id\n");
             return 0;
     }
 }
 
 
 unsigned char isDodgeAnimation(unsigned char animation_id){
-    return 0;
+    switch (animation_id){
+        //1 hand roll
+        case 32:
+            return 1;
+        //backstep 1h
+        case 38:
+            return 1;
+        //2 hand roll
+        case 94:
+            return 1;
+        //backstep 2h
+        case 100:
+            return 1;
+        default:
+            return 0;
+    }
 }
