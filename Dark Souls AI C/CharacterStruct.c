@@ -28,6 +28,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
 	//read what weapon they currently have in left hand
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
+
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
 	//read if hurtbox is active on enemy weapon
@@ -36,14 +37,23 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         unsigned char hurtboxState;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &hurtboxState, 1, 0);
         //if the hurbox is deactivated after it had been activated
-        if (hurtboxState == 0 && c->animation_id == AttackSubanimationActiveDuringHurtbox){
-            c->animation_id = AttackSubanimationActiveAfterHurtbox;
+        if (hurtboxState == 0 && c->subanimation == AttackSubanimationActiveDuringHurtbox){
+            c->subanimation = AttackSubanimationActiveAfterHurtbox;
         }
         //if we se hurtbox is active after the attack subanimation is started
-        else if (hurtboxState && c->animation_id == AttackSubanimationActive){
-            c->animation_id = AttackSubanimationActiveDuringHurtbox;
+        else if (hurtboxState && c->subanimation == AttackSubanimationActive){
+            c->subanimation = AttackSubanimationActiveDuringHurtbox;
         }
     }
+    //read if enemy windup subanimation is closing, and about to transition to hurtbox
+    if (c->windupClose_address){
+        unsigned char windupState;
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windupClose_address), &windupState, 1, 0);
+        if (windupState < 191 && c->subanimation == AttackSubanimationWindup){
+            c->subanimation = AttackSubanimationWindupClosing;
+        }
+    }
+
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will
     if (c->velocity_address){

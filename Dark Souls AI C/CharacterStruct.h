@@ -35,7 +35,8 @@ typedef struct {
 	unsigned int subanimation;
 	//hurtbox state 
     ullong hurtboxActive_address;
-	unsigned char hurtboxActive;
+    //windup state
+    ullong windupClose_address;
     //velocity. used for backstab detection
     ullong velocity_address;
     float velocity;
@@ -91,6 +92,7 @@ static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
 //the current subanimation being executed
 #define AttackSubanimationWindup 0
+#define AttackSubanimationWindupClosing 1
 #define AttackSubanimationActive 65792
 #define AttackSubanimationActiveDuringHurtbox 65790
 #define AttackSubanimationActiveAfterHurtbox 65791
@@ -102,6 +104,9 @@ static const int Player_subanimation_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;
+//if the enemy's windup is about to close
+static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x658, 0x5C, 0xEB };
+static const int Enemy_windupClose_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
 //-0.13 walk
