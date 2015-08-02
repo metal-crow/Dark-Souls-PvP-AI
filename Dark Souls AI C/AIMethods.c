@@ -17,28 +17,28 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 			//if enemy is in attack animation, 
 			AtkID>1
             //checking here if the hurtbox is created based on attack ids where hurtbox is immediate and not used with subanimation, or subanimation state(AttackSubanimationActive is pre hurtbox)
-            && (AtkID == 3 || Phantom->subanimation == AttackSubanimationActive)
+            && (AtkID == 3 || Phantom->subanimation == AttackSubanimationWindupClosing)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 			){
-			printf("about to be hit ");
+            printf("about to be hit subanimation:%d\n", Phantom->subanimation);
 			return 2;
 		}
 		//windup, attack coming
-		else if (AtkID){
-			printf("dont attack\n");
+        else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
+			//printf("dont attack\n");
 			return 1;
 		}
 	}
 
-    printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
 /* ------------- DODGE Actions ------------- */
 
 #define inputDelayForDodge 30
-#define inputDelayForStopDodge 50
+#define inputDelayForStopDodge 70
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     //TODO angle should increase for closer distances
@@ -56,20 +56,23 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         iReport->lButtons = circle;
     }
 
-    //only check once we've gotten dodge in, to prevent premature exit. Can exit once dodge state in recovry or hit and subanimation reset
-    //also check if in dodge type animation id, because we could get knocked into subroutine b4 dodge starts
-    if ((curTime > startTime + inputDelayForStopDodge) && 
-        (Player->subanimation == AttackSubanimationRecover || Player->subanimation == AttackSubanimationWindup || !isDodgeAnimation(Player->animation_id))){
-        printf(" end sub ");
+    if (
+        (curTime > startTime + inputDelayForStopDodge) &&
+        //if we've compleated the dodge move and we're in animation end state we can end
+        (Player->subanimation == AttackSubanimationRecover)// ||
+        //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
+        //!isDodgeAnimation(Player->animation_id))
+       ){
+        printf(" end dodge roll\n");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
-    printf("dodge roll\n");
+    //printf("dodge roll\n");
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
-    printf("dodge %d\n", DefenseChoice);
+    //printf("dodge %d\n", DefenseChoice);
 	//procede with subroutine if we are not in one already
 	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
@@ -101,15 +104,16 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	//always hold attack button
 	iReport->lButtons = r1;
+    long curTime = clock();
 
 	//cant angle joystick immediatly, at first couple frames this will register as kick
 	//wait time, then trigger next stage of routine
 	//printf(" %d ", (long)clock());
-	if (clock() >= startTime + inputDelayForKick){
+    if (curTime >= startTime + inputDelayForKick){
         subroutine_states[AttackStateIndex] = 2;
 	}
 	//start rotate back(Player->subanimation == 65792 marks point where we can NO longer turn back, CANT use that as flag, need to track internally)
-	if (clock() >= startTime + inputDelayForRotateBack){
+    if (curTime >= startTime + inputDelayForRotateBack){
         subroutine_states[AttackStateIndex] = 3;
 	}
 
@@ -133,7 +137,13 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 	}
 
 	//end subanimation on recover animation
-	else if (Player->subanimation == AttackSubanimationRecover){
+    if (
+        (curTime > startTime + inputDelayForRotateBack) &&
+        //if we've compleated the attack move and we're in animation end state we can end
+        (Player->subanimation == AttackSubanimationRecover ||
+        //or we end if not in attack type animation id, because we could get hit out of attack subroutine
+        !isAttackAnimation(Player->animation_id))
+    ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
 		//release attack button and joystick
@@ -145,11 +155,23 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 	printf("\n");
 }
 
+#define inputDelayForStopMove 90
+
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     //if we are not close enough, move towards 
-    longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
-    iReport->wAxisX = move.first;
-    iReport->wAxisY = move.second;
+    printf("move up\n");
+    long curTime = clock();
+    if (curTime < startTime + inputDelayForStopMove){
+        longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
+        iReport->wAxisX = move.first;
+        iReport->wAxisY = move.second;
+    }
+
+    if (curTime > startTime + inputDelayForStopMove){
+        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackTypeIndex] = 0;
+        printf("end sub\n");
+    }
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
