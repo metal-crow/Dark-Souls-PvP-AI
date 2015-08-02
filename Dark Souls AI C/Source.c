@@ -17,7 +17,7 @@ Character Player;
 MindInput* defense_mind_input;
 volatile unsigned char DefenseChoice;
 MindInput* attack_mind_input;
-volatile unsigned char AttackChoice;
+volatile unsigned char AttackChoice;// = 2;
 
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
@@ -49,6 +49,7 @@ int main(void){
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
     Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
+    Enemy.windupClose_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_windupClose_offsets_length, Enemy_windupClose_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
