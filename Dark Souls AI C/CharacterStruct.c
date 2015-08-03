@@ -31,19 +31,24 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
+    //no clue what 6 corrisponds to, but it should be a windup
+    if (c->subanimation == 6){
+        c->subanimation = AttackSubanimationWindup;
+    }
 	//read if hurtbox is active on enemy weapon
     //player doesnt use this, and wont have the address set. enemy will
     if (c->hurtboxActive_address){
         unsigned char hurtboxState;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &hurtboxState, 1, 0);
-        //if the hurbox is deactivated after it had been activated
-        if (hurtboxState == 0 && c->subanimation == AttackSubanimationActiveDuringHurtbox){
-            c->subanimation = AttackSubanimationActiveAfterHurtbox;
-        }
-        //if we se hurtbox is active after the attack subanimation is started
-        else if (hurtboxState && c->subanimation == AttackSubanimationActive){
+        //if the hurtbox is active
+        if (hurtboxState){
             c->subanimation = AttackSubanimationActiveDuringHurtbox;
         }
+        //if the hurtbox is deactivated after it had been activated
+        else if (hurtboxState == 0 && c->subanimation == AttackSubanimationActiveDuringHurtbox){
+            c->subanimation = AttackSubanimationActiveAfterHurtbox;
+        }
+       
     }
     //read if enemy windup subanimation is closing, and about to transition to hurtbox
     if (c->windupClose_address){

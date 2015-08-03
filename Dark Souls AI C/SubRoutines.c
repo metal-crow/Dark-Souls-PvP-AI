@@ -7,7 +7,6 @@ bool inActiveSubroutine(){
     return (inActiveDodgeSubroutine() || inActiveAttackSubroutine());
 }
 
-//special case for preventing unneccicary redodge
 bool inActiveDodgeSubroutine(){
     return subroutine_states[DodgeStateIndex];
 }

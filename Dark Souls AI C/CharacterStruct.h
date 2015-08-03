@@ -92,7 +92,7 @@ static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
 //the current subanimation being executed
 #define AttackSubanimationWindup 0
-#define AttackSubanimationWindupClosing 1
+#define AttackSubanimationWindupClosing 2
 #define AttackSubanimationActive 65792
 #define AttackSubanimationActiveDuringHurtbox 65790
 #define AttackSubanimationActiveAfterHurtbox 65791

@@ -4,9 +4,9 @@
 
 unsigned char aboutToBeHit(Character * Player, Character * Phantom){
     //dont have to check anything if already in dodge subroutine
-    if (inActiveDodgeSubroutine()){
-        return 2;
-    }
+    //if (inActiveDodgeSubroutine()){
+    //    return 2;
+    //}
 
 	//if they are outside of their attack range, we dont have to do anymore checks
     if (distance(Player, Phantom) <= Phantom->weaponRange){
@@ -14,14 +14,14 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
 		if (
-			//if enemy is in attack animation, 
-			AtkID>1
-            //checking here if the hurtbox is created based on attack ids where hurtbox is immediate and not used with subanimation, or subanimation state(AttackSubanimationActive is pre hurtbox)
-            && (AtkID == 3 || Phantom->subanimation == AttackSubanimationWindupClosing)
+            //if in an animation where subanimation is not used for hurtbox
+            (AtkID == 3 && Phantom->subanimation == AttackSubanimationWindup) ||
+            //or animation where it is
+            (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindupClosing)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
-			){
-            printf("about to be hit subanimation:%d\n", Phantom->subanimation);
+		){
+            printf("%ld about to be hit (anim id:%d) (suban id:%d)\n", clock(), Phantom->animation_id, Phantom->subanimation);
 			return 2;
 		}
 		//windup, attack coming
@@ -31,16 +31,17 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		}
 	}
 
-    //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    printf("%ld not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n",clock(), subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
 /* ------------- DODGE Actions ------------- */
 
-#define inputDelayForDodge 30
-#define inputDelayForStopDodge 70
+#define inputDelayForDodge 1
+#define inputDelayForStopDodge 40
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    printf("rolling\n");
     //TODO angle should increase for closer distances
     //dodge at a 5 degree angle
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
@@ -53,6 +54,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
     long curTime = clock();
     if ((curTime >= startTime + inputDelayForDodge) && (curTime < startTime + inputDelayForStopDodge)){
+        printf("circle\n");
         iReport->lButtons = circle;
     }
 
@@ -83,7 +85,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 	}
 
     //if we're in the dodge subroutine
-    if (subroutine_states[DodgeStateIndex]){
+    if (inActiveDodgeSubroutine()){
         switch (subroutine_states[DodgeTypeIndex]){
             //standard roll
             case 1:
@@ -189,7 +191,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
     }
 
     //if we're in the attack subroutine
-    if (subroutine_states[AttackStateIndex]){
+    if (inActiveAttackSubroutine()){
         //Differentiate different attack subroutines based on neural net decision
         switch (subroutine_states[AttackTypeIndex]){
         //to move towards the opponent

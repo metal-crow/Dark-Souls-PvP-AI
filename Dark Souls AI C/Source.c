@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
 #include "Interface.h"
@@ -20,6 +22,8 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice;// = 2;
 
 int main(void){
+    freopen("output.txt", "w", stdout);
+
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 3;//TODO temp hardcoding
