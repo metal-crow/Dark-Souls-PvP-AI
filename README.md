@@ -24,11 +24,9 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  [bug priority] when using combustion, and on recovery subanimation, subanimation randomly goes to windup then back to recoery, triggering another roll.  
+  [bug priority: LOW] when attacking, and on recovery subanimation, subanimation randomly goes to windup then back to recovery, triggering another roll.  
 
   [high priority] neural network training, test implementation in main program.  
-  [high priority] sometimes double rolling. issue with subanimation detection?  
-  [high priority] If broken out of dodge animation, instead of exiting roll i double roll. fix.   
   [high priority] verify ghost hit works  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  
@@ -40,6 +38,9 @@ TODO:
   [low priority]	Find range of weapons(hitbox size,bows,etc)  
   [low priority]	Better Vjoy loading/unloading    
   [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
+
+  [cannot fix] lag will sometimes made perfect dodges impossible b/c hurtbox will appear before the windup animation finishes  
+  [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   
 
 Using:   
 http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
