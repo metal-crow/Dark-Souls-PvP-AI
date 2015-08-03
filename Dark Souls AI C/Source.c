@@ -22,7 +22,7 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice;// = 2;
 
 int main(void){
-    freopen("output.txt", "w", stdout);
+    //freopen("output.txt", "w", stdout);
 
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));

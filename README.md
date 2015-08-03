@@ -24,7 +24,7 @@ l1: 0x000000010
 r1: 0x000000020
   
 TODO:  
-  [bug priority] subanimation detection for dodge isnt working, AttackSubanimationActive is too soon before hurtbox.  
+  [bug priority] when using combustion, and on recovery subanimation, subanimation randomly goes to windup then back to recoery, triggering another roll.  
 
   [high priority] neural network training, test implementation in main program.  
   [high priority] sometimes double rolling. issue with subanimation detection?  

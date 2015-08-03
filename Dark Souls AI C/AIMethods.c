@@ -15,13 +15,13 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 
 		if (
             //if in an animation where subanimation is not used for hurtbox
-            (AtkID == 3 && Phantom->subanimation == AttackSubanimationWindup) ||
+            (AtkID == 3 && Phantom->subanimation < AttackSubanimationActiveAfterHurtbox) ||
             //or animation where it is
             (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindupClosing)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
-            printf("%ld about to be hit (anim id:%d) (suban id:%d)\n", clock(), Phantom->animation_id, Phantom->subanimation);
+            printf("about to be hit (anim id:%d) (suban id:%d)\n", Phantom->animation_id, Phantom->subanimation);
 			return 2;
 		}
 		//windup, attack coming
@@ -31,7 +31,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		}
 	}
 
-    printf("%ld not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n",clock(), subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
@@ -65,7 +65,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
         //!isDodgeAnimation(Player->animation_id))
        ){
-        printf(" end dodge roll\n");
+        printf("end dodge roll\n");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
