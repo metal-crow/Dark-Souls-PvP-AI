@@ -50,13 +50,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         }
        
     }
-    //read if enemy windup subanimation is closing, and about to transition to hurtbox
-    if (c->windupClose_address){
-        unsigned char windupState;
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windupClose_address), &windupState, 1, 0);
-        if (windupState < 191 && c->subanimation == AttackSubanimationWindup){
-            c->subanimation = AttackSubanimationWindupClosing;
-        }
+    //read if windup subanimation is closing, and about to transition to hurtbox
+    unsigned char windupState;
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windupClose_address), &windupState, 1, 0);
+    if (windupState < 191 && c->subanimation == AttackSubanimationWindup){
+        c->subanimation = AttackSubanimationWindupClosing;
     }
 
     //read the current velocity

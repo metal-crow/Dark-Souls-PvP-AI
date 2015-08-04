@@ -104,9 +104,11 @@ static const int Player_subanimation_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;
-//if the enemy's windup is about to close
+//if windup is about to close
 static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x658, 0x5C, 0xEB };
+static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };
 static const int Enemy_windupClose_offsets_length = 5;
+static const int Player_windupClose_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
 //-0.13 walk
