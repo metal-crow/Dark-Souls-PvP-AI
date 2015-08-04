@@ -19,10 +19,10 @@ Character Player;
 MindInput* defense_mind_input;
 volatile unsigned char DefenseChoice;
 MindInput* attack_mind_input;
-volatile unsigned char AttackChoice;// = 2;
+volatile unsigned char AttackChoice;// 2;
 
 int main(void){
-    //freopen("output.txt", "w", stdout);
+    freopen("output.txt", "w", stdout);
 
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
@@ -64,6 +64,7 @@ int main(void){
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
 	Player.subanimation_address = FindPointerAddr(processHandle, player_base_add, Player_subanimation_offsets_length, Player_subanimation_offsets);
+    Player.windupClose_address = FindPointerAddr(processHandle, player_base_add, Player_windupClose_offsets_length, Player_windupClose_offsets);
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device
