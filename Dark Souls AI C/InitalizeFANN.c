@@ -10,6 +10,7 @@
 
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
+#include "AnimationMappings.h"
 
 #include "fann.h"
 
@@ -20,6 +21,7 @@ typedef struct {
     float rotation;
     unsigned char animation_id;
     float velocity;
+    unsigned int hp;
 }CharState;
 
 Character Enemy;
@@ -32,13 +34,15 @@ void readPointers(HANDLE processHandle){
     Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
     Enemy.animation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animation_offsets_length, Enemy_animation_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
+    Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
     Player.r_weapon_address = 0;
     Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
-    Player.animation_address = 0;
+    Player.animation_address = FindPointerAddr(processHandle, player_base_add, Player_animation_offsets_length, Player_animation_offsets);
     Player.velocity_address = 0;
+    Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
 }
 
 HANDLE readingSetup(){
@@ -85,6 +89,8 @@ CharState* ReadPlayerFANN(Character * c, HANDLE processHandle){
     if (c->velocity_address){
         ReadProcessMemory(processHandle, (LPCVOID)(c->velocity_address), &(state->velocity), 4, 0);
     }
+
+    ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(state->hp), 4, 0);
 
     return state;
 }
@@ -134,32 +140,22 @@ DWORD WINAPI ListentoContinue(void* data) {
     return 0;
 }
 
+
 #define RRAND(min,max) (min + rand() % (max - min))
-
 #define backstab_animation 225
-
 int num_input = 4;
 int num_output = 1;
 
-#define newFile
+
 //TODO decide on inputs
 //listen and save data to train on to file
-int getTrainingData(void)
+void getTrainingData(void)
 {
-    FILE* fp;
-    //if file doesnt exist
-#ifdef newFile
-        printf("new training file\n");
-        fp = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "w");
-        //first line is number of training sets, number or inputs, and number of outputs
-        fprintf(fp, "## %d %d\n", num_input, num_output);
-#else
-    //else append new training data to it
-        printf("Appending to training file\n");
-        fp = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-#endif
+    FILE* fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
+    FILE* fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
 
-    unsigned int trainingLinesCount = 0;
+    unsigned int trainingLinesCountDef = 0;
+    unsigned int trainingLinesCountAtk = 0;
 
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
@@ -183,7 +179,7 @@ int getTrainingData(void)
         //mathmaticly impossible to not double count AND never miss with random ping times
         //also cant check if the last buffer enemy was in backstab, because they could immediatly do another baskstab, and we'll miss a new one
         //this works pretty well, never misses, rairly double counts
-        Sleep(RRAND(2500, 5000));
+        Sleep(RRAND(2500, 4000));
 
         readPointers(processHandle);
 
@@ -199,11 +195,16 @@ int getTrainingData(void)
         stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
         stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
 
-        bool backstabState = stateBuffer[1]->animation_id == backstab_animation;
+        //trigger on backstab
+        bool bsActivateState = stateBuffer[1]->animation_id == backstab_animation;
+        //trigger on self attack or enemy attack and it resulted in a positive or negitive(hp change)
+        bool atkActivateState = 
+            (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)) &&
+            ((stateBuffer[3]->hp - stateBuffer[1]->hp)>35 || (stateBuffer[2]->hp - stateBuffer[0]->hp)>35);
 
         //check state and train
         if (
-            ( backstabState || (rand() < 1000) )
+            (bsActivateState || (rand() < 800))
             && inTraining
            )
         {
@@ -212,25 +213,52 @@ int getTrainingData(void)
             float rotationDelta = rotationDifferenceFromSelfFANN(stateBuffer[2], stateBuffer[3]);//rotation with respect to self rotation
 
             //write the input floats, then the output float
-            fprintf(fp, "%f %f %f %f %f\n", 
+            fprintf(fpdef, "%f %f %f %f %f\n", 
                 distance,
                 angleDelta,
                 stateBuffer[3]->velocity,
                 rotationDelta,
-                (backstabState ? 1.0 : 0.0)
+                (bsActivateState ? 1.0 : 0.0)
                 );
-            trainingLinesCount++;
+            trainingLinesCountDef++;
 
             //save
-            printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", backstabState ? "true" : "false", distance, angleDelta, stateBuffer[3]->velocity, rotationDelta);
+            printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", bsActivateState ? "true" : "false", distance, angleDelta, stateBuffer[3]->velocity, rotationDelta);
+        }
+
+        if (
+            atkActivateState
+            && inTraining
+            )
+        {
+            float result;
+            //bad outcome if we take damage
+            if ((stateBuffer[2]->hp - stateBuffer[0]->hp) > 35){
+                result = -1;
+            }
+            //if enemy takes damage good outcome is the animation we chose
+            else if ((stateBuffer[3]->hp - stateBuffer[1]->hp) > 35){
+                result = stateBuffer[2]->animation_id;
+            }
+
+            fprintf(fpatk, "%f %f %f\n",
+                stateBuffer[3]->animation_id,
+                stateBuffer[2]->animation_id,
+                result
+                );
+            trainingLinesCountAtk++;
+
+            //save
+            printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, stateBuffer[2]->animation_id, stateBuffer[3]->animation_id);
+
         }
     }
 
-    fprintf(fp, "## = %d\n", trainingLinesCount);
+    fprintf(fpdef, "## = %d\n", trainingLinesCountDef);
+    fprintf(fpatk, "## = %d\n", trainingLinesCountAtk);
 
-    fclose(fp);
-
-    return 0;
+    fclose(fpdef);
+    fclose(fpatk);
 }
 
 //use the file to train the network
@@ -251,6 +279,8 @@ int trainFromFile(void){
 
     struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train");
 
+    fann_scale_train_data(data, -1, 1);
+
     //train network
     fann_cascadetrain_on_data(net, data, max_neurons, 0, desired_error);
 
@@ -267,7 +297,43 @@ int trainFromFile(void){
     return 0;
 }
 
-int main1(void){
-    getTrainingData();
+void testData(void){
+    struct fann* defense_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
+
+    memset(&Enemy, 0, sizeof(Character));
+
+    HANDLE processHandle = readingSetup();
+
+    while (true){
+        CharState* enemy = ReadPlayerFANN(&Enemy, processHandle);
+        CharState* player = ReadPlayerFANN(&Player, processHandle);
+
+        //read inputs and scale to -1 - 1
+        float distance = distanceFANN(player, enemy);
+        distance = 2 * (distance - 0.3) / (5 - 0.3) - 1;
+
+        float angleDelta = angleDeltaFromFrontFANN(player, enemy);
+        angleDelta = 2 * (angleDelta) / (1.6) - 1;
+
+        float velocity = enemy->velocity;
+        velocity = 2 * (velocity - -0.4) / (1 - -0.4) - 1;
+
+        float rotationDelta = rotationDifferenceFromSelfFANN(player, enemy);//rotation with respect to self rotation
+        rotationDelta = 2 * (rotationDelta) / (3.8) - 1;
+
+        float input[4] = { distance, angleDelta, velocity, rotationDelta };
+        fann_type* out = fann_run(defense_mind, input);
+
+        if (*out < 3.0 && *out > 0.0){
+            printf("%f\n", *out);
+        }
+    }
+
+}
+
+int main(void){
+    //getTrainingData();
+    //trainFromFile();
+    testData();
     return 0;
 }
