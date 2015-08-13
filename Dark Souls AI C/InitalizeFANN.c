@@ -146,16 +146,11 @@ DWORD WINAPI ListentoContinue(void* data) {
 int num_input = 4;
 int num_output = 1;
 
-
-//TODO decide on inputs
-//listen and save data to train on to file
-void getTrainingData(void)
+void getTrainingDataforBackstab(void)
 {
     FILE* fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-    FILE* fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
 
     unsigned int trainingLinesCountDef = 0;
-    unsigned int trainingLinesCountAtk = 0;
 
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
@@ -197,10 +192,6 @@ void getTrainingData(void)
 
         //trigger on backstab
         bool bsActivateState = stateBuffer[1]->animation_id == backstab_animation;
-        //trigger on self attack or enemy attack and it resulted in a positive or negitive(hp change)
-        bool atkActivateState = 
-            (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)) &&
-            ((stateBuffer[3]->hp - stateBuffer[1]->hp)>35 || (stateBuffer[2]->hp - stateBuffer[0]->hp)>35);
 
         //check state and train
         if (
@@ -225,6 +216,58 @@ void getTrainingData(void)
             //save
             printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", bsActivateState ? "true" : "false", distance, angleDelta, stateBuffer[3]->velocity, rotationDelta);
         }
+    }
+
+    fprintf(fpdef, "## = %d\n", trainingLinesCountDef);
+
+    fclose(fpdef);
+}
+
+void getTrainingDataforAttack(void)
+{
+    FILE* fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
+
+    unsigned int trainingLinesCountAtk = 0;
+
+    //memset to ensure we dont have unusual char attributes at starting
+    memset(&Enemy, 0, sizeof(Character));
+    memset(&Player, 0, sizeof(Character));
+
+    HANDLE processHandle = readingSetup();
+
+    CharState** stateBuffer = calloc(4, sizeof(CharState*));
+    //initalize so we dont read null
+    stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
+    stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
+
+    HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
+
+    while (listening){
+        readPointers(processHandle);
+
+        //move buffer down
+        if (stateBuffer[3] && stateBuffer[4]){
+            free(stateBuffer[3]);
+            free(stateBuffer[2]);
+        }
+
+        stateBuffer[3] = stateBuffer[1];
+        stateBuffer[2] = stateBuffer[0];
+
+        stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
+        stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
+
+        if (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)){
+            do{
+                stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
+                stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
+            } while (!(((stateBuffer[3]->hp - stateBuffer[1]->hp) > 35 || (stateBuffer[2]->hp - stateBuffer[0]->hp) > 35)));
+        }
+
+        //trigger on self attack or enemy attack and it resulted in a positive or negitive(hp change)
+        bool atkActivateState =
+            (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)) &&
+            ((stateBuffer[3]->hp - stateBuffer[1]->hp)>35 || (stateBuffer[2]->hp - stateBuffer[0]->hp)>35);
 
         if (
             atkActivateState
@@ -242,22 +285,20 @@ void getTrainingData(void)
             }
 
             fprintf(fpatk, "%f %f %f\n",
-                stateBuffer[3]->animation_id,
-                stateBuffer[2]->animation_id,
+                (float)stateBuffer[3]->animation_id,
+                (float)stateBuffer[2]->animation_id,
                 result
                 );
             trainingLinesCountAtk++;
 
             //save
-            printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, stateBuffer[2]->animation_id, stateBuffer[3]->animation_id);
+            printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, (float)stateBuffer[2]->animation_id, (float)stateBuffer[3]->animation_id);
 
         }
     }
 
-    fprintf(fpdef, "## = %d\n", trainingLinesCountDef);
     fprintf(fpatk, "## = %d\n", trainingLinesCountAtk);
 
-    fclose(fpdef);
     fclose(fpatk);
 }
 
@@ -297,6 +338,9 @@ int trainFromFile(void){
     return 0;
 }
 
+
+#include <time.h>
+
 void testData(void){
     struct fann* defense_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
 
@@ -305,6 +349,8 @@ void testData(void){
     HANDLE processHandle = readingSetup();
 
     while (true){
+        long start = clock();
+
         CharState* enemy = ReadPlayerFANN(&Enemy, processHandle);
         CharState* player = ReadPlayerFANN(&Player, processHandle);
 
@@ -324,15 +370,17 @@ void testData(void){
         float input[4] = { distance, angleDelta, velocity, rotationDelta };
         fann_type* out = fann_run(defense_mind, input);
 
-        if (*out < 3.0 && *out > 0.0){
-            printf("%f\n", *out);
+        if (*out < 1.5 && *out > 0.5){
+            printf("%f ", *out);
         }
+
+        printf("%d\n", clock() - start);
     }
 
 }
 
 int main(void){
-    //getTrainingData();
+    //getTrainingDataforAttack();
     //trainFromFile();
     testData();
     return 0;
