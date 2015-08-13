@@ -31,7 +31,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 		}
 	}
 
-    printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
@@ -109,7 +109,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
-    //start rotate back(Player->subanimation == 65792 marks point where we can NO longer turn back, CANT use that as flag, need to track internally)
+    //start rotate back to enemy(TODO this is too late)
     if (Player->subanimation == AttackSubanimationWindupClosing){
         printf("towards\n");
         longTuple move = angleToJoystick(angle);
