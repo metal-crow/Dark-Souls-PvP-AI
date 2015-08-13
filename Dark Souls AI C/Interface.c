@@ -45,6 +45,11 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
     }
 }
 
+float rotationDifferenceFromSelf(Character * Player, Character * Phantom){
+    double delta = fabs((Player->rotation) - (Phantom->rotation));
+    return delta;
+}
+
 int loadvJoy(UINT iInterface){
 	// Get the driver attributes (Vendor ID, Product ID, Version Number)
 	if (!vJoyEnabled()){

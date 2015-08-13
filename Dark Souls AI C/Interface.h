@@ -37,6 +37,8 @@ float angleDeltaFromFront(Character * Player, Character * Phantom);
 //given player and enemy coordinates, get the angle between the two
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y);
 
+float rotationDifferenceFromSelf(Character * Player, Character * Phantom);
+
 /*this will return a tuple of 2 values each in the range 0x1-0x8000(32768).
 The first is the x direction, which has 1 as leftmost and 32768 as rightmost
 second is y, which has 1 as topmost and 32768 as bottommost
