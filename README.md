@@ -23,10 +23,29 @@ circle: 0x00000008
 l1: 0x000000010
 r1: 0x000000020
   
+
+attack when
+
+you can interrupt them and poise break
+(need to teach poise)
+
+when they're in their recovery animation
+(what about weapon speeds? can they recover faster then i can attack?)
+good spacing
+(need to teach spacing)
+
+
 TODO:  
+  //TODO counter strafe to dodge backstabs
+
+  [] Test ai with dummy attack(random)
+  [high priority] teach spacing
+  [high priority] teach poise
+
   [bug priority: LOW] when attacking, and on recovery subanimation, subanimation randomly goes to windup then back to recovery, triggering another roll.  
 
   [high priority] neural network training, test implementation in main program.  
+  [high priority] is neural network fast enough i dont have to thread it?
   [high priority] verify ghost hit works  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  

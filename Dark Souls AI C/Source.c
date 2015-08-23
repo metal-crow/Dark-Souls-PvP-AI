@@ -17,12 +17,12 @@ Character Player;
 
 //intialize extern variables for neural net
 MindInput* defense_mind_input;
-volatile unsigned char DefenseChoice;
+volatile unsigned char DefenseChoice = 0;
 MindInput* attack_mind_input;
-volatile unsigned char AttackChoice;// 2;
+volatile unsigned char AttackChoice = 0;
 
 int main(void){
-    freopen("output.txt", "w", stdout);
+    //freopen("output.txt", "w", stdout);
 
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
@@ -64,7 +64,9 @@ int main(void){
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
 	Player.subanimation_address = FindPointerAddr(processHandle, player_base_add, Player_subanimation_offsets_length, Player_subanimation_offsets);
+    Player.hurtboxActive_address = 0;
     Player.windupClose_address = FindPointerAddr(processHandle, player_base_add, Player_windupClose_offsets_length, Player_windupClose_offsets);
+    Player.velocity_address = 0;
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device
@@ -75,30 +77,11 @@ int main(void){
 	JOYSTICK_POSITION iReport;
 	iReport.bDevice = (BYTE)iInterface;
 
-#if 0
     //load neural network and threads
-    defense_mind_input = malloc(sizeof(MindInput));
-    struct fann* defense_mind = fann_create_from_file("Defense_dark_souls_ai.net");
-    if (defense_mind == NULL){
-        printf("Defense_dark_souls_ai.net neural network file not found\n");
-        return EXIT_FAILURE;
+    int error = ReadyThreads();
+    if (error){
+        return error;
     }
-    defense_mind_input->mind = defense_mind;
-    defense_mind_input->exit = false;
-    HANDLE* defense_mind_thread = CreateThread(NULL, 0, DefenseMindProcess, NULL, 0, NULL);
-    DefenseChoice = 0;
-
-    attack_mind_input = malloc(sizeof(MindInput));
-    struct fann* attack_mind = fann_create_from_file("Attack_dark_souls_ai.net");
-    if (attack_mind == NULL){
-        printf("Attack_dark_souls_ai.net neural network file not found\n");
-        return EXIT_FAILURE;
-    }
-    attack_mind_input->mind = attack_mind;
-    attack_mind_input->exit = false;
-    HANDLE* attack_mind_thread = CreateThread(NULL, 0, AttackMindProcess, NULL, 0, NULL);
-    AttackChoice = 0;
-#endif
 
 	//get current camera details to lock
 	readCamera(&processHandle,memorybase);
@@ -126,15 +109,29 @@ int main(void){
         #endif
 
 
-#if 0
+#if 1
         //update neural network thread data
-        defense_mind_input->input[0] = distance(&Player, &Enemy);
-        defense_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
-        defense_mind_input->input[2] = Enemy.velocity;
+        //get input and scale from -1 to 1 
+        float distanceInput = distance(&Player, &Enemy);
+        //min:0.3 max:5
+        defense_mind_input->input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
 
-        attack_mind_input->input[0] = distance(&Player, &Enemy);
-        attack_mind_input->input[1] = angleDeltaFromFront(&Player, &Enemy);
-        attack_mind_input->input[2] = Enemy.velocity;
+        float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
+        //min:0 max:1.6
+        defense_mind_input->input[1] = 2 * (angleDeltaInput) / (1.6) - 1;
+
+        //min:-0.18 max:-0.04
+        defense_mind_input->input[2] = 2 * (Enemy.velocity - -0.18) / (-0.04 - -0.18) - 1;
+
+        float rotationDeltaInput = rotationDifferenceFromSelf(&Player, &Enemy);
+        //min:0 max:3.8
+        defense_mind_input->input[3] = 2 * (rotationDeltaInput) / (3.8) - 1;
+
+        WakeThread(defense_mind_input);
+
+        //attack_mind_input->input[0] = ??
+
+        WakeThread(attack_mind_input);
 #endif
 
 		// reset struct info
@@ -159,12 +156,17 @@ int main(void){
 
 		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
 
+        WaitForThread(defense_mind_input);
+        printf("defense %d\n",DefenseChoice);
+
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == 2 || inActiveDodgeSubroutine() || DefenseChoice){
             dodge(&Player, &Enemy, &iReport, DefenseChoice);
             DefenseChoice = 0;//unset neural network desision
 		}
+
+        //WaitForThread(attack_mind_input);
 
 		//attack mind make choice about IF to attack or not, and how to attack
         if (inActiveAttackSubroutine() || (!attackImminent && AttackChoice)){

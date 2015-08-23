@@ -7,13 +7,17 @@
 #define MindRoutine_H
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <Windows.h>
 #include "fann.h"
 
 typedef struct{
     struct fann* mind;
-    volatile fann_type input[3];//distance, angleDeltaFromFront, approachSpeed;
+    volatile fann_type input[4];
     volatile bool exit;
+    CRITICAL_SECTION crit;
+    CONDITION_VARIABLE cond;
+    volatile bool runNetwork;
 } MindInput;
 
 extern MindInput* defense_mind_input;
@@ -28,5 +32,12 @@ extern MindInput* attack_mind_input;
 DWORD WINAPI AttackMindProcess(void* data);
 
 extern volatile unsigned char AttackChoice;
+
+//Helper Methods
+int ReadyThreads();
+
+void WaitForThread(MindInput* input);
+
+void WakeThread(MindInput* input);
 
 #endif

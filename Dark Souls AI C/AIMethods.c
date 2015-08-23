@@ -71,6 +71,33 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     //printf("dodge roll\n");
 }
 
+#define inputDelayForStopCircle 40
+
+void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    printf("Backstep\n");
+    long curTime = clock();
+
+    if (curTime < startTime + inputDelayForStopCircle){
+        iReport->lButtons = circle;
+    }
+
+    if (
+        (curTime > startTime + inputDelayForStopCircle)// &&
+        //if we've compleated the dodge move and we're in animation end state we can end
+        //(Player->subanimation == AttackSubanimationRecover)// ||
+        //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
+        //!isDodgeAnimation(Player->animation_id))
+        ){
+        printf("end backstep\n");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+    }
+}
+
+void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+
+}
+
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
     //printf("dodge %d\n", DefenseChoice);
@@ -89,6 +116,14 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
             //standard roll
             case 1:
                 StandardRoll(Player, Phantom, iReport);
+                break;
+            //backstep
+            case 2:
+                Backstep(Player, Phantom, iReport);
+                break;
+            //counter strafe
+            case 3:
+                CounterStrafe(Player, Phantom, iReport);
                 break;
             //should never be reached, since we default to 1 if instinct dodging
             default:

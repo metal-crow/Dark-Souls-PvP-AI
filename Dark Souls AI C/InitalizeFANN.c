@@ -362,7 +362,7 @@ void testData(void){
         angleDelta = 2 * (angleDelta) / (1.6) - 1;
 
         float velocity = enemy->velocity;
-        velocity = 2 * (velocity - -0.4) / (1 - -0.4) - 1;
+        velocity = 2 * (velocity - -0.18) / (-0.04 - -0.18) - 1;
 
         float rotationDelta = rotationDifferenceFromSelfFANN(player, enemy);//rotation with respect to self rotation
         rotationDelta = 2 * (rotationDelta) / (3.8) - 1;
@@ -379,9 +379,10 @@ void testData(void){
 
 }
 
-int main(void){
+int main1(void){
+    getTrainingDataforBackstab();
     //getTrainingDataforAttack();
     //trainFromFile();
-    testData();
+    //testData();
     return 0;
 }
