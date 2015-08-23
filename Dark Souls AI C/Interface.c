@@ -91,7 +91,7 @@ int loadvJoy(UINT iInterface){
 	BOOL AxisY = GetVJDAxisExist(iInterface, HID_USAGE_Y);
 	BOOL AxisZ = GetVJDAxisExist(iInterface, HID_USAGE_Z);
 	BOOL AxisRX = GetVJDAxisExist(iInterface, HID_USAGE_RX);
-	BOOL AxisRZ = GetVJDAxisExist(iInterface, HID_USAGE_RZ);
+	BOOL AxisRY = GetVJDAxisExist(iInterface, HID_USAGE_RY);
 	// Get the number of buttons and POV Hat switchessupported by this vJoy device
 	int nButtons = GetVJDButtonNumber(iInterface);
 	int ContPovNumber = GetVJDContPovNumber(iInterface);
@@ -106,7 +106,12 @@ int loadvJoy(UINT iInterface){
 	printf("Axis Y\t\t%s\n", AxisX ? "Yes" : "No");
 	printf("Axis Z\t\t%s\n", AxisX ? "Yes" : "No");
 	printf("Axis Rx\t\t%s\n", AxisRX ? "Yes" : "No");
-	printf("Axis Rz\t\t%s\n", AxisRZ ? "Yes" : "No");
+	printf("Axis Ry\t\t%s\n", AxisRY ? "Yes" : "No");
+
+    if (!AxisX || !AxisY || !AxisZ || !AxisRX || !AxisRY || nButtons < 10){
+        printf("Invalid config\n");
+        return EXIT_FAILURE;
+    }
 
 	// Acquire the target
 	if ((status == VJD_STAT_OWN) || ((status == VJD_STAT_FREE) && (!AcquireVJD(iInterface)))){
