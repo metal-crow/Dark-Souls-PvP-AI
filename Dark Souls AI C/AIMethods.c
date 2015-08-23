@@ -121,6 +121,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 
     else if (curTime < startTime + inputDelayForStopStrafe){
+        //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
         iReport->wAxisY = YTOP;
     }
@@ -208,12 +209,16 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 #define inputDelayForKick 50
 #define inputDelayForRotateBack 70
 
+//TODO can get locked in if samina runs out and this method is called repeatedly
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-	//always hold attack button
-	iReport->lButtons = r1;
     long curTime = clock();
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+
+    //hold attack button for a bit
+    if (curTime < startTime + inputDelayForKick){
+        iReport->lButtons = r1;
+    }
 
     //start rotate back to enemy(TODO this is too late)
     if (Player->subanimation == AttackSubanimationWindupClosing){
