@@ -12,7 +12,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
 
         fann_type* out = fann_run(defense_mind_input->mind, (fann_type*)&(defense_mind_input->input));
         if (*out < 1.5 && *out > 0.5){
-            DefenseChoice = 2;
+            DefenseChoice = 3;
         } else{
             DefenseChoice = 0;
         }
@@ -38,11 +38,12 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         //fann_type* out = fann_run(attack_mind_input->mind, (fann_type*)&(attack_mind_input->input));
         //AttackChoice = (unsigned char)(*out);
-        /*int r = rand();
-        if (r > RAND_MAX*0.80){
 
+        AttackChoice = 1;
+        //in range, attack
+        if (((float*)&(attack_mind_input->input))[0] < 3){
+            AttackChoice = 2;
         }
-        AttackChoice = rand() % 255;*/
 
         //prevent rerun
         attack_mind_input->runNetwork = false;
@@ -79,7 +80,7 @@ int ReadyThreads(){
         return EXIT_FAILURE;
     }
     attack_mind_input->mind = attack_mind;
-    attack_mind_input->exit = true;//false;
+    attack_mind_input->exit = false;
     InitializeConditionVariable(&(attack_mind_input->cond));
     InitializeCriticalSection(&(attack_mind_input->crit));
     EnterCriticalSection(&(attack_mind_input->crit));

@@ -94,8 +94,73 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
     }
 }
 
-void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+#define inputDelayForStopStrafe 800
 
+void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    printf("CounterStrafe\n");
+    long curTime = clock();
+
+    //Hvae to use keycodes because Vjoy doesnt work with r3 button
+    INPUT ip;
+    ip.type = INPUT_KEYBOARD;
+    ip.ki.time = 0;
+    ip.ki.wVk = 0; //We're doing scan codes instead
+    ip.ki.dwExtraInfo = 0;
+    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
+    ip.ki.wScan = 0x18;  //Set a unicode character to use (O)
+
+    //have to lock on to strafe
+    if (curTime < startTime + 30){
+        //iReport->lButtons = 0x0;// r3;
+        SendInput(1, &ip, sizeof(INPUT));
+    }
+    //need a delay for dark souls to respond
+    else if (curTime < startTime + 60){
+        ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+        SendInput(1, &ip, sizeof(INPUT));
+    }
+
+    else if (curTime < startTime + inputDelayForStopStrafe){
+        iReport->wAxisX = XLEFT;
+        iReport->wAxisY = YTOP;
+    }
+
+    //disable lockon
+    else if (curTime < startTime + inputDelayForStopStrafe + 30){
+        //iReport->lButtons = 0x0; //r3;
+        SendInput(1, &ip, sizeof(INPUT));
+    }
+    else if (curTime < startTime + inputDelayForStopStrafe + 60){
+        ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+        SendInput(1, &ip, sizeof(INPUT));
+    }
+
+    if (curTime > startTime + inputDelayForStopStrafe + 60){
+        printf("end CounterStrafe\n");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+    }
+}
+
+static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
+
+void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    printf("L1\n");
+    long curTime = clock();
+
+    if (curTime < startTime + 30){
+        double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+        longTuple move = angleToJoystick(angle);
+        iReport->wAxisX = move.first;
+        iReport->wAxisY = move.second;
+        iReport->lButtons = l1;
+    }
+
+    if (curTime > startTime + 30){
+        printf("end L1\n");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+    }
 }
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
@@ -124,6 +189,12 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
             //counter strafe
             case 3:
                 CounterStrafe(Player, Phantom, iReport);
+                break;
+            case 4:
+                MoveUp(Player, Phantom, iReport);
+                break;
+            case 5:
+                L1Attack(Player, Phantom, iReport);
                 break;
             //should never be reached, since we default to 1 if instinct dodging
             default:
@@ -172,10 +243,6 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
-		//release attack button and joystick
-		iReport->lButtons = 0x000000000;
-		iReport->wAxisX = MIDDLE;
-		iReport->wAxisY = MIDDLE;
 		printf("end sub\n");
 	}
 }
@@ -195,6 +262,8 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     if (curTime > startTime + inputDelayForStopMove){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeTypeIndex] = 0;
         printf("end sub\n");
     }
 }

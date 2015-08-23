@@ -15,13 +15,14 @@ Vjoy controller device config:
 	x,y,z,rx,ry,10 buttons,1 discrete pov
 
 vJoy button hex mappings(wtf is this done this way)  
-square: 0x00000001  
-triangle: 0x00000002  
-square and triangle: 0x00000003  
-cross: 0x00000004  
-circle: 0x00000008  
-l1: 0x000000010
-r1: 0x000000020
+square: 0x1  
+triangle: 0x2  
+square and triangle: 0x3  
+cross: 0x4  
+circle: 0x8  
+l1: 0x10
+r1: 0x20
+r2: 0x80
   
 
 attack when
@@ -36,7 +37,8 @@ good spacing
 
 
 TODO:  
-  //TODO counter strafe to dodge backstabs
+  //TODO what defensive mesure should i take once i detect a backstab?
+  //TODO what inputs should i give to teach attack neural net? 
 
   [] Test ai with dummy attack(random)
   [high priority] teach spacing
@@ -62,4 +64,4 @@ TODO:
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   
 
 Using:   
-http://vjoystick.sourceforge.net/ (note: figure out better way than just puting .dll in with .exe)(i dont know if i like the program)  
+http://vjoystick.sourceforge.net/  

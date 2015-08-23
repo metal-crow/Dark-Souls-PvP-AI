@@ -129,7 +129,7 @@ int main(void){
 
         WakeThread(defense_mind_input);
 
-        //attack_mind_input->input[0] = ??
+        attack_mind_input->input[0] = defense_mind_input->input[0];
 
         WakeThread(attack_mind_input);
 #endif
@@ -140,7 +140,7 @@ int main(void){
 		iReport.wAxisZ = MIDDLE;//this is l2 and r2
 		iReport.wAxisYRot = MIDDLE;
 		iReport.wAxisXRot = MIDDLE;
-		iReport.lButtons = 0x00000000;
+        iReport.lButtons = 0x0;
 
 		//basic logic initilization choice
 
@@ -157,7 +157,8 @@ int main(void){
 		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
-        printf("defense %d\n",DefenseChoice);
+        //DefenseChoice = 0;
+        //printf("defense %d\n",DefenseChoice);
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
@@ -166,7 +167,9 @@ int main(void){
             DefenseChoice = 0;//unset neural network desision
 		}
 
-        //WaitForThread(attack_mind_input);
+        WaitForThread(attack_mind_input);
+        AttackChoice = 0;
+        //printf("attack %d\n", AttackChoice);
 
 		//attack mind make choice about IF to attack or not, and how to attack
         if (inActiveAttackSubroutine() || (!attackImminent && AttackChoice)){
