@@ -160,7 +160,7 @@ int main(void){
 		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
-        DefenseChoice = 0;
+        //DefenseChoice = 0;
         //printf("defense %d\n",DefenseChoice);
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).

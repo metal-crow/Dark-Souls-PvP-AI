@@ -136,7 +136,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         SendInput(1, &ip, sizeof(INPUT));
     }
 
-    if (curTime > startTime + inputDelayForStopStrafe + 60){
+    if (curTime > startTime + inputDelayForStopStrafe + 70){
         printf("end CounterStrafe\n");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
