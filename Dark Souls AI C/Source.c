@@ -49,6 +49,7 @@ int main(void){
 	Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
 	Enemy.animation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animation_offsets_length, Enemy_animation_offsets);
 	Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
+    Enemy.stamina_address = 0;
 	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
 	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
@@ -61,6 +62,7 @@ int main(void){
 	Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
 	Player.animation_address = FindPointerAddr(processHandle, player_base_add, Player_animation_offsets_length, Player_animation_offsets);
 	Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
+    Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
 	Player.subanimation_address = FindPointerAddr(processHandle, player_base_add, Player_subanimation_offsets_length, Player_subanimation_offsets);
@@ -108,9 +110,9 @@ int main(void){
 		PrintPhantom(&Player);
         #endif
 
-
-#if 1
         //update neural network thread data
+
+        //Defense input: player distance, angle delta, velocity, rotation delta,
         //get input and scale from -1 to 1 
         float distanceInput = distance(&Player, &Enemy);
         //min:0.3 max:5
@@ -129,10 +131,11 @@ int main(void){
 
         WakeThread(defense_mind_input);
 
+        //Attack input: player distance
         attack_mind_input->input[0] = defense_mind_input->input[0];
+        attack_mind_input->input[3] = (float)Player.stamina;//send over for post check, neural network doesnt need to worry about, we can handle after
 
         WakeThread(attack_mind_input);
-#endif
 
 		// reset struct info
 		iReport.wAxisX = MIDDLE;
@@ -157,7 +160,7 @@ int main(void){
 		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
-        //DefenseChoice = 0;
+        DefenseChoice = 0;
         //printf("defense %d\n",DefenseChoice);
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
@@ -168,7 +171,7 @@ int main(void){
 		}
 
         WaitForThread(attack_mind_input);
-        AttackChoice = 0;
+        //AttackChoice = 0;
         //printf("attack %d\n", AttackChoice);
 
 		//attack mind make choice about IF to attack or not, and how to attack

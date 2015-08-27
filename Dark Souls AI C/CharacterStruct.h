@@ -22,6 +22,9 @@ typedef struct {
 	//hp
 	ullong hp_address;
 	unsigned int hp;
+    //stamina
+    ullong stamina_address;
+    int stamina;
 	//current Right hand weapon they are holding
 	ullong r_weapon_address;
 	unsigned int r_weapon_id;
@@ -80,6 +83,9 @@ static const int Enemy_hp_offsets[] = { 0x4, 0x4, 0x2D4 };
 static const int Player_hp_offsets[] = { 0x288, 0xC, 0x330, 0x4, 0x2D4 };
 static const int Enemy_hp_offsets_length = 3;
 static const int Player_hp_offsets_length = 5;
+//stamina
+static const int Player_stamina_offsets[] = { 0x288, 0xC, 0x330, 0x4, 0x2E4 };
+static const int Player_stamina_offsets_length = 5;
 //R weapon id
 static const int Enemy_r_weapon_offsets[] = { 0x4, 0x4, 0x34C, 0x654, 0x1F8 };
 static const int Player_r_weapon_offsets[] = { 0x3C, 0x30, 0xC, 0x654, 0x1F8 };

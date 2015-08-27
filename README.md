@@ -35,11 +35,23 @@ when they're in their recovery animation
 good spacing
 (need to teach spacing)
 
+Neural Networks:  
+Defense Network Inputs:  
+  -Player Distance from Enemy  
+  -The angle the enemy is off from directly in front of the player  
+  -The enemy velocity  
+  -The rotation difference between the enemy and the player  
+
+Attack Network Inputs:  
+  -Player distance from Enemy  
+  -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
+
 
 TODO:  
-  //TODO what defensive mesure should i take once i detect a backstab?
-  //TODO what inputs should i give to teach attack neural net? 
+  //TODO what inputs should i give to teach attack neural net?  
 
+  [high priority] make this strafe in the same direction as the enemy strafe  
+  [high priority] try to bs with neural network on and using strafing, train with that  
   [] Test ai with dummy attack(random)
   [high priority] teach spacing
   [high priority] teach poise
@@ -51,12 +63,12 @@ TODO:
   [high priority] verify ghost hit works  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  
-  [medium priority]	Stamia management  
   [medium priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
   [medium priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
 
   [low priority, currently sub-millisecond]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
   [low priority]	Find range of weapons(hitbox size,bows,etc)  
+  [low priority]	Stamia management(for dodge, attack handled)  
   [low priority]	Better Vjoy loading/unloading    
   [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
 
