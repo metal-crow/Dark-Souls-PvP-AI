@@ -43,7 +43,7 @@ Defense Network Inputs:
   -The rotation difference between the enemy and the player  
 
 Attack Network Inputs:  
-  -Player distance from Enemy  
+  -Player distance from Enemy(also send as non-ranged)  
   -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
 
 

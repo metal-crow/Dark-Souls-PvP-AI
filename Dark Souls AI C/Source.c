@@ -40,6 +40,7 @@ int main(void){
 	ullong memorybase = GetModuleBase(processId, processName);
 	Enemy_base_add += memorybase;
 	player_base_add += memorybase;
+    Player_Lock_on_base_add += memorybase;
 
     //TODO THESE HAVE TO BE REREAD, AS THE END ADDRESS CAN CHANGE
     //MOVE TO SETUP METHOD in CharacterStruct
@@ -56,6 +57,7 @@ int main(void){
     Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
     Enemy.windupClose_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_windupClose_offsets_length, Enemy_windupClose_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
+    Enemy.locked_on_address = 0;
 
 	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
 	Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -69,6 +71,7 @@ int main(void){
     Player.hurtboxActive_address = 0;
     Player.windupClose_address = FindPointerAddr(processHandle, player_base_add, Player_windupClose_offsets_length, Player_windupClose_offsets);
     Player.velocity_address = 0;
+    Player.locked_on_address = FindPointerAddr(processHandle, Player_Lock_on_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
 
 	//want to use controller input, instead of keyboard, as analog stick is more precise movement
 	UINT iInterface = 1;								// Default target vJoy device

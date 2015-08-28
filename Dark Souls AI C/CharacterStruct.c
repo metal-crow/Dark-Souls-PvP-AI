@@ -66,4 +66,8 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
     if (c->velocity_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
     }
+    //read if the player is locked on
+    if (c->locked_on_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
+    }
 }

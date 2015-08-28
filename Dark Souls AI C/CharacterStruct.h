@@ -43,6 +43,9 @@ typedef struct {
     //velocity. used for backstab detection
     ullong velocity_address;
     float velocity;
+    //if locked on. used for verification for counter strafe
+    ullong locked_on_address;
+    unsigned char locked_on;
 } Character;
 
 //print info about the character
@@ -121,4 +124,8 @@ static const int Player_windupClose_offsets_length = 5;
 //-0.16 - 18 sprint
 static const int Enemy_velocity_offsets[] = { 0x4, 0x4, 0x658, 0x5C, 0x3BC };
 static const int Enemy_velocity_offsets_length = 5;
+//if player is locked on. used for verification only
+static ullong Player_Lock_on_base_add = 0x000351F0;
+static const int Player_Lock_on_offsets[] = { 0x1C };
+static const int Player_Lock_on_offsets_length = 1;
 #endif
