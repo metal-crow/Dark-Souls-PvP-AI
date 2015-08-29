@@ -137,7 +137,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 
     //break early if we didnt lock on
-    if (curTime > startTime + inputDelayForStopStrafe + 60 || !Player->locked_on){
+    if (curTime > startTime + inputDelayForStopStrafe + 60 || (!Player->locked_on && curTime > startTime + 60)){
         printf("end CounterStrafe\n");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
