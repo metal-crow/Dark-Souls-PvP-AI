@@ -112,6 +112,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //have to lock on to strafe
     if (curTime < startTime + 30){
         //iReport->lButtons = 0x0;// r3;
+        printf("lockon\n");
         SendInput(1, &ip, sizeof(INPUT));
     }
     //need a delay for dark souls to respond
@@ -129,6 +130,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //disable lockon
     else if (curTime < startTime + inputDelayForStopStrafe + 30){
         //iReport->lButtons = 0x0; //r3;
+        printf("un lockon\n");
         SendInput(1, &ip, sizeof(INPUT));
     }
     else if (curTime < startTime + inputDelayForStopStrafe + 60){

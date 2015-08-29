@@ -42,13 +42,16 @@ Defense Network Inputs:
   -The enemy velocity  
   -The rotation difference between the enemy and the player  
 
+//TODO what inputs should i give to teach attack neural net?  
 Attack Network Inputs:  
   -Player distance from Enemy(also send as non-ranged)  
   -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
 
 
 TODO:  
-  //TODO what inputs should i give to teach attack neural net?  
+  bug with lock on
+  need to break out of counterstrafe if attacked 
+  r2 seem not to trigger dodge
 
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that  
