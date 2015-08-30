@@ -15,7 +15,10 @@ bool inActiveAttackSubroutine(){
     return subroutine_states[AttackStateIndex];
 }
 
-//temp: only override counterstrafe
-bool overRideSubroutine(unsigned char newSubroutineStateId){
-    return subroutine_states[DodgeStateIndex] == 3;
+//if we're currently strafing and get attacked, break strafe subroutine
+void ChecktoOverrideSubroutineShutdown(unsigned char attackImminent){
+    if (subroutine_states[DodgeTypeIndex] == 3 && attackImminent == 2){
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+    }
 }

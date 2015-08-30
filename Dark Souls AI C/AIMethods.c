@@ -3,11 +3,6 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
 unsigned char aboutToBeHit(Character * Player, Character * Phantom){
-    //dont have to check anything if already in dodge subroutine
-    if (inActiveDodgeSubroutine()){
-        return 2;
-    }
-
 	//if they are outside of their attack range, we dont have to do anymore checks
     if (distance(Player, Phantom) <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
@@ -169,7 +164,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
-	if (!inActiveSubroutine() || overRideSubroutine(DefenseChoice)){
+	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
         subroutine_states[DodgeTypeIndex] = DefenseChoice ? DefenseChoice : 1;//default to 1 on instinct
 		subroutine_states[DodgeStateIndex] = 1;

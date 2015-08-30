@@ -168,6 +168,7 @@ int main(void){
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == 2 || inActiveDodgeSubroutine() || DefenseChoice){
+            ChecktoOverrideSubroutineShutdown(attackImminent);
             dodge(&Player, &Enemy, &iReport, DefenseChoice);
             DefenseChoice = 0;//unset neural network desision
 		}

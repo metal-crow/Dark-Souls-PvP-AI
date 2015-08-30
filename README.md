@@ -49,9 +49,10 @@ Attack Network Inputs:
 
 
 TODO:  
-  bug with lock on
-  need to break out of counterstrafe if attacked 
+  bug with lock on[X]
+  need to break out of counterstrafe if attacked[X] 
   r2 seem not to trigger dodge
+  attacking causes wierd rotating in place, dodging not working?
 
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that  
