@@ -14,3 +14,8 @@ bool inActiveDodgeSubroutine(){
 bool inActiveAttackSubroutine(){
     return subroutine_states[AttackStateIndex];
 }
+
+//temp: only override counterstrafe
+bool overRideSubroutine(unsigned char newSubroutineStateId){
+    return subroutine_states[DodgeStateIndex] == 3;
+}

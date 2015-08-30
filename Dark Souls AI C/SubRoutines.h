@@ -24,4 +24,6 @@ bool inActiveDodgeSubroutine();
 
 bool inActiveAttackSubroutine();
 
+bool overRideSubroutine(unsigned char newSubroutineStateId);
+
 #endif

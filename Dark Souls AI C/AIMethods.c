@@ -169,9 +169,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
-    //printf("dodge %d\n", DefenseChoice);
-	//procede with subroutine if we are not in one already
-	if (!inActiveSubroutine()){
+	if (!inActiveSubroutine() || overRideSubroutine(DefenseChoice)){
 		//indicate we are in dodge subroutine
         subroutine_states[DodgeTypeIndex] = DefenseChoice ? DefenseChoice : 1;//default to 1 on instinct
 		subroutine_states[DodgeStateIndex] = 1;
