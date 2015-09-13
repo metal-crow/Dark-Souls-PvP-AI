@@ -205,7 +205,6 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 #define inputDelayForKick 50
 #define inputDelayForRotateBack 70
 
-//TODO can get locked in if samina runs out and this method is called repeatedly
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
@@ -213,6 +212,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     //hold attack button for a bit
     if (curTime < startTime + inputDelayForKick){
+        printf("r1\n");
         iReport->lButtons = r1;
     }
 
@@ -234,6 +234,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         iReport->wAxisY = move.second;
 	}
 
+    printf("subanimation %d\n", Player->subanimation);
+
 	//end subanimation on recover animation
     if (
         (curTime > startTime + inputDelayForRotateBack) &&
@@ -244,7 +246,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
-		printf("end sub\n");
+		printf("end sub ghost hit\n");
 	}
 }
 
