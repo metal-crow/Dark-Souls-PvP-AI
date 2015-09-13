@@ -201,7 +201,7 @@ void train(NeuralNet* net, double* input, double desiredOutput){
         Layer2Out[neuronnum] = Sigmoid(Layer2In[neuronnum]);
     }
 
-    //compute error for layer 2
+    //compute error for layer 2(only 1 neuron)
     double error = desiredOutput - Layer2Out[0];
     //find new weight based on each input
     Neuron* neuronL2 = net->neuronLayers[2]->neurons[0];
