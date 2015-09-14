@@ -104,7 +104,6 @@ static const int Player_l_weapon_offsets_length = 5;
 #define AttackSubanimationWindupClosing 2
 #define AttackSubanimationActive 65792
 #define AttackSubanimationActiveDuringHurtbox 65790
-#define AttackSubanimationActiveAfterHurtbox 65791
 #define AttackSubanimationRecover 65793
 static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
 static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };

@@ -22,6 +22,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 	c->rotation = (c->rotation + PI) * (180.0 / PI);
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
+    //if (c->hurtboxActive_address){
+    //    printf("animation %d", c->animation_id);
+    //}
 	//read hp
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     //read stamina
@@ -35,10 +38,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
 
 	//read the current subanimation
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->subanimation_address), &(c->subanimation), 4, 0);
-    //no clue what 6 corrisponds to, but it should be a windup
-    if (c->subanimation == 6){
-        c->subanimation = AttackSubanimationWindup;
-    }
+    //if (c->hurtboxActive_address){
+    //    printf("subanimation %d ", c->subanimation);
+    //}
 	//read if hurtbox is active on enemy weapon
     //player doesnt use this, and wont have the address set. enemy will
     if (c->hurtboxActive_address){
@@ -48,18 +50,18 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         if (hurtboxState){
             c->subanimation = AttackSubanimationActiveDuringHurtbox;
         }
-        //if the hurtbox is deactivated after it had been activated
-        else if (hurtboxState == 0 && c->subanimation == AttackSubanimationActiveDuringHurtbox){
-            c->subanimation = AttackSubanimationActiveAfterHurtbox;
-        }
-       
+        //printf("hurtboxState %d ", hurtboxState);
     }
     //read if windup subanimation is closing, and about to transition to hurtbox
     unsigned char windupState;
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windupClose_address), &windupState, 1, 0);
-    if (windupState < 191 && c->subanimation == AttackSubanimationWindup){
+    if (windupState > 47){
         c->subanimation = AttackSubanimationWindupClosing;
     }
+    //if (c->hurtboxActive_address){
+    //    printf("windupState %d ", windupState);
+    //    printf("rsubanimation %d\n", c->subanimation);
+    //}
 
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will
