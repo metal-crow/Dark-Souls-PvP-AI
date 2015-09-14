@@ -10,7 +10,7 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 
 		if (
             //if in an animation where subanimation is not used for hurtbox
-            (AtkID == 3 && Phantom->subanimation < AttackSubanimationActiveAfterHurtbox) ||
+            (AtkID == 3 && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox) ||
             //or animation where it is
             (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindupClosing)
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
@@ -55,9 +55,9 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     if (
         (curTime > startTime + inputDelayForStopDodge) &&
         //if we've compleated the dodge move and we're in animation end state we can end
-        (Player->subanimation == AttackSubanimationRecover)// ||
+        ((Player->subanimation == AttackSubanimationRecover) ||
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
-        //!isDodgeAnimation(Player->animation_id))
+        !isDodgeAnimation(Player->animation_id))
        ){
         printf("end dodge roll\n");
         subroutine_states[DodgeTypeIndex] = 0;
