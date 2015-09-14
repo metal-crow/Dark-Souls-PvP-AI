@@ -53,7 +53,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     }
 
     if (
-        (curTime > startTime + inputDelayForStopDodge) &&
+        (curTime > startTime + inputDelayForStopDodge + 50) &&
         //if we've compleated the dodge move and we're in animation end state we can end
         ((Player->subanimation == AttackSubanimationRecover) ||
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
