@@ -52,9 +52,10 @@ int main(void){
     Enemy.stamina_address = 0;
 	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
-	Enemy.subanimation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_subanimation_offsets_length, Enemy_subanimation_offsets);
+    Enemy.windup_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_windup_offsets_length, Enemy_windup_offsets);
     Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
     Enemy.windupClose_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_windupClose_offsets_length, Enemy_windupClose_offsets);
+    Enemy.recoveryState_address = 0;// FindPointerAddr(processHandle, Enemy_base_add, Enemy_recoverState_offsets_length, Enemy_recoverState_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
 
@@ -66,9 +67,10 @@ int main(void){
     Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
-	Player.subanimation_address = FindPointerAddr(processHandle, player_base_add, Player_subanimation_offsets_length, Player_subanimation_offsets);
+    Player.windup_address = 0;
     Player.hurtboxActive_address = 0;
-    Player.windupClose_address = FindPointerAddr(processHandle, player_base_add, Player_windupClose_offsets_length, Player_windupClose_offsets);
+    Player.windupClose_address = 0;// FindPointerAddr(processHandle, player_base_add, Player_windupClose_offsets_length, Player_windupClose_offsets);
+    Player.recoveryState_address = FindPointerAddr(processHandle, player_base_add, Player_recoverState_offsets_length, Player_recoverState_offsets);
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
 

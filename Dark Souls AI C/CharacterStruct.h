@@ -33,13 +33,16 @@ typedef struct {
 	unsigned int l_weapon_id;
 	//hurtbox size(range) of weapon. Bows/Magic have high range
 	float weaponRange;
-	//subanimation state. Used to see if attack is finished
-	ullong subanimation_address;
-	unsigned int subanimation;
+    //encompases the various states of an animation
+    unsigned int subanimation;
+	//windup state.
+    ullong windup_address;
 	//hurtbox state 
     ullong hurtboxActive_address;
-    //windup state
+    //windup closing state
     ullong windupClose_address;
+    //recovery state
+    ullong recoveryState_address;
     //velocity. used for backstab detection
     ullong velocity_address;
     float velocity;
@@ -100,23 +103,26 @@ static const int Player_l_weapon_offsets[] = { 0x3C, 0x30, 0xC, 0x654, 0x1B4 };
 static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
 //the current subanimation being executed
-#define AttackSubanimationWindup 0
-#define AttackSubanimationWindupClosing 2
-#define AttackSubanimationActive 65792
-#define AttackSubanimationActiveDuringHurtbox 65790
-#define AttackSubanimationRecover 65793
-static const int Enemy_subanimation_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x106 };
-static const int Player_subanimation_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
-static const int Enemy_subanimation_offsets_length = 5;
-static const int Player_subanimation_offsets_length = 5;
+#define AttackSubanimationWindup 00
+#define AttackSubanimationWindupClosing 02
+#define AttackSubanimationActiveDuringHurtbox 11
+#define AttackSubanimationRecover 20
+//windup state
+static const int Enemy_windup_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x107 };
+static const int Enemy_windup_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;
 //if windup is about to close
-static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x658, 0x5C, 0xEB };
-static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };
+static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x24, 0x5C, 0x16 };//{ 0x4, 0x4, 0x658, 0x5C, 0xEB };
+static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };//TODO
 static const int Enemy_windupClose_offsets_length = 5;
 static const int Player_windupClose_offsets_length = 5;
+//if in recover state
+static const int Enemy_recoverState_offsets[] = { 0x0 };//TODO
+static const int Player_recoverState_offsets[] = { 0x3C, 0x60, 0x168, 0x2C, 0x415 };
+static const int Enemy_recoverState_offsets_length = 5;
+static const int Player_recoverState_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
 //-0.13 walk

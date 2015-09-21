@@ -25,15 +25,15 @@ r1: 0x20
 r2: 0x80
   
 
-attack when
+attack when  
 
-you can interrupt them and poise break
-(need to teach poise)
+you can interrupt them and poise break  
+(need to teach poise)  
 
-when they're in their recovery animation
-(what about weapon speeds? can they recover faster then i can attack?)
-good spacing
-(need to teach spacing)
+when they're in their recovery animation  
+(what about weapon speeds? can they recover faster then i can attack?)  
+good spacing  
+(need to teach spacing)  
 
 Neural Networks:  
 Defense Network Inputs:  
@@ -49,21 +49,18 @@ Attack Network Inputs:
 
 
 TODO:  
-  bug with lock on[X]
-  need to break out of counterstrafe if attacked[X] 
-  r2 seem not to trigger dodge
-  attacking causes wierd rotating in place, dodging not working?
+  double rolling an issue. differentiate between windup 120 value and other 120 values in windup address.
 
   [high priority] make this strafe in the same direction as the enemy strafe  
-  [high priority] try to bs with neural network on and using strafing, train with that  
-  [] Test ai with dummy attack(random)
-  [high priority] teach spacing
-  [high priority] teach poise
+  [high priority] try to bs with neural network on and using strafing, train with that   
+  [] Test ai with dummy attack(random)  
+  [high priority] teach spacing [Kinda done]  
+  [high priority] teach poise  
 
   [bug priority: LOW] when attacking, and on recovery subanimation, subanimation randomly goes to windup then back to recovery, triggering another roll.  
 
   [high priority] neural network training, test implementation in main program.  
-  [high priority] is neural network fast enough i dont have to thread it?
+  [high priority] is neural network fast enough i dont have to thread it?  
   [high priority] verify ghost hit works  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  
