@@ -42,8 +42,8 @@ DWORD WINAPI AttackMindProcess(void* data){
         AttackChoice = 1;
         //in range, and have enough stamina, attack
         if (
-            (((float*)&(attack_mind_input->input))[0] < 0.3) && (((float*)&(attack_mind_input->input))[3] > 50)
-            && (rand()<RAND_MAX/5)
+            (((float*)&(attack_mind_input->input))[2] < 3) && (((float*)&(attack_mind_input->input))[3] > 50)
+            //&& (rand()<RAND_MAX/5)
            ){
             AttackChoice = 2;
         }

@@ -4,6 +4,7 @@ AI for playing (and winning) in dark souls pvp
 People who if you like this you should also follow:  
 https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!  
 https://github.com/OrdinaryMagician. Various projects in dark souls 2, and assembly master.   
+https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he found the Dark Souls 2 bullet params a week after it came out.  
   
 -reverse engineer dark souls plantom player pointer and struct  
 -code to read darksouls.exe's memory   
@@ -48,7 +49,8 @@ Attack Network Inputs:
   -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
 
 
-TODO:  
+TODO: 
+  code currently has clockwise as increasing(0,1,2), here its decreasing (0,360,359) 
   double rolling an issue. differentiate between windup 120 value and other 120 values in windup address.
 
   [high priority] make this strafe in the same direction as the enemy strafe  

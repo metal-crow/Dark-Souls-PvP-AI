@@ -136,8 +136,9 @@ int main(void){
         WakeThread(defense_mind_input);
 
         //Attack input: player distance
-        attack_mind_input->input[0] = defense_mind_input->input[0];
+        //attack_mind_input->input[0] = defense_mind_input->input[0];
         attack_mind_input->input[3] = (float)Player.stamina;//send over for post check, neural network doesnt need to worry about, we can handle after
+        attack_mind_input->input[2] = distanceInput;
 
         WakeThread(attack_mind_input);
 
