@@ -36,10 +36,8 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     printf("rolling\n");
-    //TODO angle should increase for closer distances
-    //dodge at a 5 degree angle
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-    angle += 5;
+    angle = fabs(angle - 180.0);
     //angle joystick
     longTuple move = angleToJoystick(angle);
     iReport->wAxisX = move.first;
@@ -217,7 +215,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     }
 
     //start rotate back to enemy(TODO this is too late)
-    if (Player->subanimation == AttackSubanimationWindupClosing){
+    //if (Player->subanimation == AttackSubanimationWindupClosing){
+    if (curTime >= startTime + inputDelayForKick + 10){
         printf("towards\n");
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
