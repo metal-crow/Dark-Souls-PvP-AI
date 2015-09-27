@@ -50,8 +50,10 @@ Attack Network Inputs:
 
 
 TODO: 
-  code currently has clockwise as increasing(0,1,2), here its decreasing (0,360,359) 
   double rolling an issue. differentiate between windup 120 value and other 120 values in windup address.
+  dodging kind of a mess in general. test on spears, great swords, etc
+
+  get dynamic weapon range working
 
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that   

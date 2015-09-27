@@ -130,52 +130,101 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
 
-	return angle;
+    return angle;
 }
 
-longTuple angleToJoystick(double angle){
+longTuple angleToJoystick_Clockwise(double angle){
+    return angleToJoystick_Clockwise(angle);
+}
+
+longTuple angleToJoystick_Clockwise(double angle){
+    longTuple tuple;
+
+    //top right quadrant
+    if (angle <= 90 && angle >= 0){
+        if (angle <= 45){
+            tuple.first = MIDDLE + ((angle * MIDDLE) / 45);
+            tuple.second = YTOP;
+        } else{
+            tuple.second = YTOP + (((angle - 45.0) * MIDDLE) / 45);
+            tuple.first = XRIGHT;
+        }
+    }
+    //bottom right quadrant
+    else if (angle <= 180 && angle >= 90){
+        double anglediff = fabs(angle - 90.0);
+        if (anglediff <= 45){
+            tuple.first = XRIGHT;
+            tuple.second = MIDDLE + ((anglediff * MIDDLE) / 45);
+        } else{
+            tuple.second = YBOTTOM;
+            tuple.first = XRIGHT - (((anglediff - 45.0) * MIDDLE) / 45);
+        }
+    }
+    //bottom left quadrant
+    else if (angle <= 270 && angle >= 180){
+        double anglediff = fabs(angle - 180.0);
+        if (anglediff <= 45){
+            tuple.first = MIDDLE - ((anglediff * MIDDLE) / 45);
+            tuple.second = YBOTTOM;
+        } else{
+            tuple.second = YBOTTOM - (((anglediff - 45.0) * MIDDLE) / 45);
+            tuple.first = XLEFT;
+        }
+        //top left quadrant
+    } else{
+        double anglediff = fabs(angle - 270.0);
+        if (anglediff <= 45){
+            tuple.first = XLEFT;
+            tuple.second = MIDDLE - ((anglediff * MIDDLE) / 45);
+        } else{
+            tuple.second = YTOP;
+            tuple.first = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
+        }
+    }
+
+    return tuple;
+}
+
+longTuple angleToJoystick_CounterClockwise(double angle){
 	longTuple tuple;
 
-	//top right quadrant
-	if (angle <= 90 && angle >= 0){
-		if (angle <= 45){
-			tuple.first = MIDDLE + ((angle * MIDDLE) / 45);
+    if (angle <= 360 && angle >= 270){
+        double anglediff = fabs(angle - 270.0);
+        if (anglediff >= 45){
+            tuple.first = MIDDLE + (((angle - 45.0) * MIDDLE) / 45);
 			tuple.second = YTOP;
 		} else{
-			tuple.second = YTOP + (((angle - 45.0) * MIDDLE) / 45);
+			tuple.second = YTOP + ((angle * MIDDLE) / 45);
 			tuple.first = XRIGHT;
 		}
 	}
-	//bottom right quadrant
-	else if (angle <= 180 && angle >= 90){
-		double anglediff = fabs(angle - 90.0);
-		if (anglediff <= 45){
-			tuple.first = XRIGHT;
-			tuple.second = MIDDLE + ((anglediff * MIDDLE) / 45);
-		} else{
-			tuple.second = YBOTTOM;
-			tuple.first = XRIGHT - (((anglediff - 45.0) * MIDDLE) / 45);
-		}
-	}
-	//bottom left quadrant
-	else if (angle <= 270 && angle >= 180){
+    else if (angle <= 270 && angle >= 180){
 		double anglediff = fabs(angle - 180.0);
-		if (anglediff <= 45){
-			tuple.first = MIDDLE - ((anglediff * MIDDLE) / 45);
+		if (anglediff >= 45){
+			tuple.first = XRIGHT;
+            tuple.second = MIDDLE + (((anglediff - 45.0) * MIDDLE) / 45);
+		} else{
+			tuple.second = YBOTTOM;
+			tuple.first = XRIGHT - ((anglediff * MIDDLE) / 45);
+		}
+	}
+    else if (angle <= 180 && angle >= 90){
+		double anglediff = fabs(angle - 90.0);
+		if (anglediff >= 45){
+            tuple.first = MIDDLE - (((anglediff - 45.0) * MIDDLE) / 45);
 			tuple.second = YBOTTOM;
 		} else{
-			tuple.second = YBOTTOM - (((anglediff - 45.0) * MIDDLE) / 45);
+			tuple.second = YBOTTOM - ((anglediff * MIDDLE) / 45);
 			tuple.first = XLEFT;
 		}
-	//top left quadrant
 	} else{
-		double anglediff = fabs(angle - 270.0);
-		if (anglediff <= 45){
+        if (angle >= 45){
 			tuple.first = XLEFT;
-			tuple.second = MIDDLE - ((anglediff * MIDDLE) / 45);
+            tuple.second = MIDDLE - (((angle - 45.0) * MIDDLE) / 45);
 		} else{
 			tuple.second = YTOP;
-			tuple.first = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
+            tuple.first = XLEFT + ((angle * MIDDLE) / 45);
 		}
 	}
 
