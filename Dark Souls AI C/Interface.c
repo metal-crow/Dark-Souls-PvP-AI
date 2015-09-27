@@ -133,10 +133,6 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
     return angle;
 }
 
-longTuple angleToJoystick(double angle){
-    return angleToJoystick_Clockwise(angle);
-}
-
 longTuple angleToJoystick_Clockwise(double angle){
     longTuple tuple;
 
@@ -229,6 +225,10 @@ longTuple angleToJoystick_CounterClockwise(double angle){
 	}
 
 	return tuple;
+}
+
+longTuple angleToJoystick(double angle){
+    return angleToJoystick_Clockwise(angle);
 }
 
 void readCamera(HANDLE * processHandle, ullong memorybase){
