@@ -133,7 +133,7 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
     return angle;
 }
 
-longTuple angleToJoystick_Clockwise(double angle){
+longTuple angleToJoystick(double angle){
     return angleToJoystick_Clockwise(angle);
 }
 
