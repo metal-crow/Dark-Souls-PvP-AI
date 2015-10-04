@@ -178,7 +178,7 @@ int main(void){
 		}
 
         WaitForThread(attack_mind_input);
-        AttackChoice = 0;
+        //AttackChoice = 0;
         //printf("attack %d\n", AttackChoice);
 
 		//attack mind make choice about IF to attack or not, and how to attack
