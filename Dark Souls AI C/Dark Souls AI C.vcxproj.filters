@@ -61,6 +61,9 @@
     <ClCompile Include="AnimationMappings.c">
       <Filter>AICore\Instinct</Filter>
     </ClCompile>
+    <ClCompile Include="GenerateHurtboxTimings.cpp">
+      <Filter>HelperUtils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interface.h">

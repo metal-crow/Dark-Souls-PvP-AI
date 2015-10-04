@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <Windows.h>
+#include "AnimationMappings.h"
 
 typedef unsigned long long ullong;
 
@@ -35,12 +36,14 @@ typedef struct {
 	float weaponRange;
     //encompases the various states of an animation
     unsigned int subanimation;
-	//windup state.
-    ullong windup_address;
+    //the current attack animation id
+    ullong attackAnimationId_address;
+	//animation timer.
+    ullong animationTimer_address;
 	//hurtbox state 
     ullong hurtboxActive_address;
-    //windup closing state
-    ullong windupClose_address;
+    //windup state
+    ullong windup_address;
     //recovery state
     ullong recoveryState_address;
     //velocity. used for backstab detection
@@ -113,15 +116,23 @@ static const int Enemy_windup_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;
+
 //if windup is about to close
-static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x24, 0x5C, 0x16 };//{ 0x4, 0x4, 0x658, 0x5C, 0xEB };
-static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };//TODO
-static const int Enemy_windupClose_offsets_length = 5;
-static const int Player_windupClose_offsets_length = 5;
+//TODO this one isnt the best either...
+//byte doesnt work. try 4 byte or float
+//static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x24, 0x5C, 0x16 };//{ 0x4, 0x4, 0x658, 0x5C, 0xEB };
+//static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };//TODO
+//static const int Enemy_windupClose_offsets_length = 5;
+//static const int Player_windupClose_offsets_length = 5;
+
+//time animation has been active
+static const int Enemy_animationTimer_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x4DC };
+static const int Enemy_animationTimer_offsets_length = 5;
+//current enemy attack animation id
+static const int Enemy_attackAnimationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
+static const int Enemy_attackAnimationID_offsets_length = 5;
 //if in recover state
-static const int Enemy_recoverState_offsets[] = { 0x0 };//TODO
 static const int Player_recoverState_offsets[] = { 0x3C, 0x60, 0x168, 0x2C, 0x415 };
-static const int Enemy_recoverState_offsets_length = 5;
 static const int Player_recoverState_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk

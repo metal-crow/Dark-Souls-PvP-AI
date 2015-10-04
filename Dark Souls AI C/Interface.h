@@ -20,9 +20,16 @@
 int loadvJoy(UINT iInterface);
 
 //ps3 controller mapping
-#define r1 0x000000020
-#define circle 0x00000008
+#define circle 0x8
+#define cross 0x4
+#define square 0x1
+#define triangle 0x2
+#define r1 0x20
 #define l1 0x10
+#define r2 0x80
+#define r3 0x200
+#define select 0x400
+#define start 0x800
 
 typedef struct{
 	long first;

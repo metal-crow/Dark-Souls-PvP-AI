@@ -13,17 +13,7 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
   
 Setup:  
 Vjoy controller device config:  
-	x,y,z,rx,ry,10 buttons,1 discrete pov
-
-vJoy button hex mappings(wtf is this done this way)  
-square: 0x1  
-triangle: 0x2  
-square and triangle: 0x3  
-cross: 0x4  
-circle: 0x8  
-l1: 0x10
-r1: 0x20
-r2: 0x80
+	x,y,z,rx,ry,15 buttons,1 discrete pov
   
 
 attack when  
@@ -50,8 +40,7 @@ Attack Network Inputs:
 
 
 TODO: 
-  double rolling an issue. differentiate between windup 120 value and other 120 values in windup address.
-  dodging kind of a mess in general. test on spears, great swords, etc
+  hurtbox for enemy not working on jumping attacks
 
   get dynamic weapon range working
 

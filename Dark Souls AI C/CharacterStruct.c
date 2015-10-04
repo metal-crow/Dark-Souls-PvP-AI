@@ -48,12 +48,19 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
             c->subanimation = AttackSubanimationActiveDuringHurtbox;
         }
     }
-    //read if windup subanimation is closing, and about to transition to hurtbox
-    if (c->windupClose_address){
-        unsigned char windupClosingState;
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windupClose_address), &windupClosingState, 1, 0);
-        if (windupClosingState <= 120){
-            c->subanimation = AttackSubanimationWindupClosing;
+    //read how long the animation has been active, check with current animation, see if hurtbox is about to activate
+    //what i want is a countdown till hurtbox is active
+    if (c->animationTimer_address){
+        int attackAnimationid;
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->attackAnimationId_address), &attackAnimationid, 4, 0);
+        if (attackAnimationid != -1){
+            float animationTimer;
+            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
+            float dodgeTimer = dodgeTimings(attackAnimationid);
+            //only bother to set this for a specific range
+            if ((animationTimer < dodgeTimer-0.2) && (animationTimer + 0.4 > dodgeTimer)){
+                c->subanimation = AttackSubanimationWindupClosing;
+            }
         }
     }
     //read if in recovery subanimation(can transition to another animation)
