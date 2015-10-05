@@ -22,13 +22,13 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
 int main(void){
-    //freopen("output.txt", "w", stdout);
+    freopen("output.txt", "w", stdout);
 
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
-	Enemy.weaponRange = 3;//TODO temp hardcoding
+	Enemy.weaponRange = 6;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 3;
+	Player.weaponRange = 6;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";

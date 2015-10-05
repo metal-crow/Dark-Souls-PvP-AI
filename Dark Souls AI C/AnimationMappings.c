@@ -775,6 +775,6 @@ float dodgeTimings(int attack_id){
     case 1354300: return 1.791999;
     default:      
         printf("ALERT: %d attack id not found\n", attack_id);
-        return 0.5;
+        return 0.2;
     }
 }

@@ -228,7 +228,7 @@ longTuple angleToJoystick_CounterClockwise(double angle){
 }
 
 longTuple angleToJoystick(double angle){
-    return angleToJoystick_Clockwise(angle);
+    return angleToJoystick_CounterClockwise(angle);
 }
 
 void readCamera(HANDLE * processHandle, ullong memorybase){

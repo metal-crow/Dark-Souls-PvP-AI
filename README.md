@@ -40,6 +40,10 @@ Attack Network Inputs:
 
 
 TODO: 
+  attack id not found  
+  6422,700,701,744301,423100,7586,680,7587   
+  need ignore list, like -1 id  
+  
   hurtbox for enemy not working on jumping attacks
 
   get dynamic weapon range working

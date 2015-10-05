@@ -53,7 +53,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
     if (c->animationTimer_address){
         int attackAnimationid;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->attackAnimationId_address), &attackAnimationid, 4, 0);
-        if (attackAnimationid != -1){
+        if (attackAnimationid > 100000){
             float animationTimer;
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
             float dodgeTimer = dodgeTimings(attackAnimationid);
