@@ -231,6 +231,7 @@ float dodgeTimings(int attack_id){
     case 273000: return 0.450292;
     case 273001: return 0.383688;
     case 273002: return 0.384479;
+    case 273010: return 0.354604;
     case 273300: return 0.550417;
     case 273301: return 0.551042;
     case 273310: return 0.483938;
@@ -343,6 +344,7 @@ float dodgeTimings(int attack_id){
     case 363000: return 0.554583;
     case 363001: return 0.554833;
     case 363002: return 0.555583;
+    case 363010: return 0.425125;
     case 363300: return 0.759166;
     case 363301: return 0.75675;
     case 363310: return 0.756;
@@ -775,6 +777,6 @@ float dodgeTimings(int attack_id){
     case 1354300: return 1.791999;
     default:      
         printf("ALERT: %d attack id not found\n", attack_id);
-        return 0.2;
+        return 0.3;
     }
 }
