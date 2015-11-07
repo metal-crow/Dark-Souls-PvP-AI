@@ -41,28 +41,25 @@ Attack Network Inputs:
 
 TODO: 
   attack id not found  
-  6422,700,701,744301,423100,7586,680,7587   
-  need ignore list, like -1 id  
-  
-  hurtbox for enemy not working on jumping attacks
+  744301,253301,485102,  
+  broken shield
 
-  get dynamic weapon range working
+  build ideal character for ai. high armor, high damage, fast weapon, fast roll/flip. no magic/pyro/miricles
+
+  [high] too prone to trading
+  [high] hurtbox for enemy not working on jumping attacks
+  [high] toggle escaping(cant dodge everything always, lag)
+  [high] get dynamic weapon range working
 
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that   
-  [] Test ai with dummy attack(random)  
-  [high priority] teach spacing [Kinda done]  
   [high priority] teach poise  
 
-  [bug priority: LOW] when attacking, and on recovery subanimation, subanimation randomly goes to windup then back to recovery, triggering another roll.  
-
-  [high priority] neural network training, test implementation in main program.  
-  [high priority] is neural network fast enough i dont have to thread it?  
-  [high priority] verify ghost hit works  
+  [high priority] fix ghost hit  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  
   [medium priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
-  [medium priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI. or 0. It changed?  
+  [medium priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI or 0 depending on map.
 
   [low priority, currently sub-millisecond]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
   [low priority]	Find range of weapons(hitbox size,bows,etc)  
