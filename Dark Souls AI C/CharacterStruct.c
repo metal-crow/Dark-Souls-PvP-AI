@@ -54,12 +54,18 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         int attackAnimationid;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->attackAnimationId_address), &attackAnimationid, 4, 0);
         if (attackAnimationid > 100000){
-            float animationTimer;
-            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
-            float dodgeTimer = dodgeTimings(attackAnimationid);
-            //only bother to set this for a specific range
-            if ((animationTimer < dodgeTimer-0.2) && (animationTimer + 0.4 > dodgeTimer)){
+            //if kick or parry, immediate dodge away (aid ends in 100)
+            if (attackAnimationid % 1000 == 100){
                 c->subanimation = AttackSubanimationWindupClosing;
+            }
+            else{
+                float animationTimer;
+                ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
+                float dodgeTimer = dodgeTimings(attackAnimationid);
+                //only bother to set this for a specific range
+                if ((animationTimer <= dodgeTimer - 0.2) && (animationTimer + 0.4 >= dodgeTimer)){
+                    c->subanimation = AttackSubanimationWindupClosing;
+                }
             }
         }
     }
