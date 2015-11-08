@@ -42,7 +42,6 @@ Attack Network Inputs:
 TODO: 
   attack id not found  
   744301,253301,485102,  
-  broken shield
 
   build ideal character for ai. high armor, high damage, fast weapon, fast roll/flip. no magic/pyro/miricles
 

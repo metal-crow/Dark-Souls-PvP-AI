@@ -9,10 +9,12 @@
 #include <stdbool.h>
 #include <Windows.h>
 #include "fann.h"
+#include "CharacterStruct.h"
 
 typedef struct{
     struct fann* mind;
     volatile fann_type input[4];
+    volatile void* nonNeuralNetworkInputs[4];
     volatile bool exit;
     CRITICAL_SECTION crit;
     CONDITION_VARIABLE cond;

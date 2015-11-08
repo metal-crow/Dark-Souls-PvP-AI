@@ -40,10 +40,11 @@ DWORD WINAPI AttackMindProcess(void* data){
         //AttackChoice = (unsigned char)(*out);
 
         AttackChoice = 1;
-        //in range, and have enough stamina, attack
         if (
-            (((float*)&(attack_mind_input->input))[2] < 6) && (((float*)&(attack_mind_input->input))[3] > 50)
-            && (rand()<RAND_MAX/5)
+            (attack_mind_input->input[0] < 3)  &&   //in range
+            ((int)(attack_mind_input->nonNeuralNetworkInputs[0]) > 50) &&  //have enough stamina
+            ((int)(attack_mind_input->nonNeuralNetworkInputs[1]) >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
+            (rand()<RAND_MAX/5)                                 //random limitor
            ){
             AttackChoice = 2;
         }

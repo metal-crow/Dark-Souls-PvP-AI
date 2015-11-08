@@ -68,6 +68,10 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
                 }
             }
         }
+        //shield break
+        else if (attackAnimationid == 164 || attackAnimationid == 162 || attackAnimationid == 160){
+            c->subanimation = AttackSubanimationActiveHurtboxOver;
+        }
     }
     //read if in recovery subanimation(can transition to another animation)
     if (c->recoveryState_address){

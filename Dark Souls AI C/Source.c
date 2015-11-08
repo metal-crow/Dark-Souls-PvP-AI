@@ -28,7 +28,7 @@ int main(void){
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 6;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 6;
+	Player.weaponRange = 3;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
@@ -136,10 +136,13 @@ int main(void){
 
         WakeThread(defense_mind_input);
 
-        //Attack input: player distance
+        //Attack input for neural network: distance
+        //Attack input for logical check: stamina, enemy animation id
         //attack_mind_input->input[0] = defense_mind_input->input[0];
-        attack_mind_input->input[3] = (float)Player.stamina;//send over for post check, neural network doesnt need to worry about, we can handle after
-        attack_mind_input->input[2] = distanceInput;
+        attack_mind_input->input[0] = distanceInput;
+
+        attack_mind_input->nonNeuralNetworkInputs[0] = Player.stamina;//send over for post check, neural network doesnt need to worry about, we can handle after
+        attack_mind_input->nonNeuralNetworkInputs[1] = Enemy.subanimation;
 
         WakeThread(attack_mind_input);
 
