@@ -72,6 +72,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         else if (attackAnimationid == 164 || attackAnimationid == 162 || attackAnimationid == 160){
             c->subanimation = AttackSubanimationActiveHurtboxOver;
         }
+        else{
+            c->subanimation = SubanimationNeutral;
+        }
     }
     //read if in recovery subanimation(can transition to another animation)
     if (c->recoveryState_address){
