@@ -172,7 +172,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice){
 	if (!inActiveSubroutine()){
 		//indicate we are in dodge subroutine
-        subroutine_states[DodgeTypeIndex] = DefenseChoice ? DefenseChoice : 1;//default to 1 on instinct
+        subroutine_states[DodgeTypeIndex] = (DefenseChoice>0) ? DefenseChoice : 1;//default to 1 on instinct
 		subroutine_states[DodgeStateIndex] = 1;
 		//set time for this subroutine
 		startTime = clock();
