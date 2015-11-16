@@ -184,7 +184,7 @@ int main(void){
         //printf("attack %d\n", AttackChoice);
 
 		//attack mind make choice about IF to attack or not, and how to attack
-        if (inActiveAttackSubroutine() || ((attackImminent>0) && AttackChoice)){
+        if (inActiveAttackSubroutine() || (!(attackImminent<0) && AttackChoice)){
             attack(&Player, &Enemy, &iReport, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }
