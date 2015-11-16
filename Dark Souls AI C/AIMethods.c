@@ -2,7 +2,10 @@
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
-unsigned char aboutToBeHit(Character * Player, Character * Phantom){
+extern volatile char DefenseChoice;
+extern volatile unsigned char AttackChoice;
+
+char aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range, we dont have to do anymore checks
     if (distance(Player, Phantom) <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
@@ -24,6 +27,11 @@ unsigned char aboutToBeHit(Character * Player, Character * Phantom){
 			//printf("dont attack\n");
 			return 1;
 		}
+        //return that we CANNOT be attacked (will overwrite strafe subanimation on return handling logic), and inform neural network the same
+        else if (BackstabSafe(Player, Phantom)){
+            DefenseChoice = -1;
+            return -1;
+        }
 	}
 
     //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
@@ -200,8 +208,9 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 
 /* ------------- ATTACK Actions ------------- */
 
-#define inputDelayForKick 50
-#define inputDelayForRotateBack 70
+#define inputDelayForStart 10//if we exit move forward and go into attack, need this to prevent kick
+#define inputDelayForKick 70
+#define inputDelayForRotateBack 90
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
@@ -209,15 +218,14 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
     //hold attack button for a bit
-    if (curTime < startTime + inputDelayForKick){
+    if ((curTime < startTime + inputDelayForKick) && (curTime > startTime + inputDelayForStart)){
         printf("r1\n");
         iReport->lButtons = r1;
     }
 
-    //start rotate back to enemy(TODO this is too late)
-    //if (Player->subanimation == AttackSubanimationWindupClosing){
-    if (curTime >= startTime + inputDelayForKick + 10){
-        printf("towards\n");
+    //start rotate back to enemy(TODO current temp hardcoding)
+    if (curTime >= startTime + inputDelayForKick){
+        printf("TOWARDS ATTACK. angle %f Player: (%d, %d), Enemy: (%d,%d)\n", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
@@ -225,13 +233,13 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 	//cant angle joystick immediatly, at first couple frames this will register as kick
     //after timeout, point away from enemy till end of windup
-    else if (curTime >= startTime + inputDelayForKick){
+    /*else if (curTime >= startTime + inputDelayForKick){
         printf("away\n");
         angle = fabs(angle - 180.0);//TODO this doesnt work for some angles
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
-	}
+	}*/
 
     printf("subanimation %d\n", Player->subanimation);
 

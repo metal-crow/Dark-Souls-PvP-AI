@@ -24,6 +24,6 @@ bool inActiveDodgeSubroutine();
 
 bool inActiveAttackSubroutine();
 
-void ChecktoOverrideSubroutineShutdown();
+void ChecktoOverrideSubroutineShutdown(char attackImminent);
 
 #endif

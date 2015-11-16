@@ -25,7 +25,7 @@ extern MindInput* defense_mind_input;
 
 DWORD WINAPI DefenseMindProcess(void* data);
 
-extern volatile unsigned char DefenseChoice;
+extern volatile char DefenseChoice;
 
 
 extern MindInput* attack_mind_input;

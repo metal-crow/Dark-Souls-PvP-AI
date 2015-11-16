@@ -43,13 +43,14 @@ TODO:
   attack id not found  
   744301,253301,485102,  
 
-  build ideal character for ai. high armor, high damage, fast weapon, fast roll/flip. no magic/pyro/miricles
+  turning away during some attacks
+ 
+  [high] hardcode that when behind enemys back, safe and should attack
 
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
   [high] toggle escaping(cant dodge everything always, lag)
   [high] get dynamic weapon range working
-
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that   
   [high priority] teach poise  
@@ -65,6 +66,7 @@ TODO:
   [low priority]	Stamia management(for dodge, attack handled)  
   [low priority]	Better Vjoy loading/unloading    
   [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
+  [low] fix camera to keep it locked for entire fight. y still messing up(not y, pitch or yaw?)
 
   [cannot fix] lag will sometimes made perfect dodges impossible b/c hurtbox will appear before the windup animation finishes  
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   

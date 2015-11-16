@@ -25,7 +25,7 @@ static const int camera_y_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x150 };
 static const int camera_x_rot_offsets[] = { 0x174, 0x4D4, 0x144, 0x320, 0x144 };
 static const int camera_offsets_length = 5;
 
-//get straight line distance between me and enemy
+//get straight line distance between player and enemy
 float distance(Character * Player, Character * Phantom){
     double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
     double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
@@ -33,6 +33,7 @@ float distance(Character * Player, Character * Phantom){
 }
 
 //the absolute value of the angle the opponent is off from straight ahead (returns radians, only used as neural net input)
+//TODO this only works from front 180, after which it mirrors. THIS TREATS FRONT SAME AS BACK. BAD.
 float angleDeltaFromFront(Character * Player, Character * Phantom){
     double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
     double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
@@ -43,6 +44,51 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
     } else{
         return atan(delta_x / delta_y);
     }
+}
+
+#define Degrees60InRadians 1.0472
+//pi:-y, 2pi/0:+y 3pi/4:-x pi/2:+x
+//TODO buggy, mostly working. On some angles it  detects over 60, or under 60. Issue with atan math.
+bool BackstabSafe_CounterClockwise(Character* Player, Character* Enemy){
+    float angle = Enemy->rotation;
+    float y_dist = Enemy->loc_y - Player->loc_y;
+    float x_dist = Enemy->loc_x - Player->loc_x;
+
+    if ((angle <= 360 && angle >= 315) || (angle <= 45 && angle >= 0)){
+        if (y_dist > 0){
+            double angle = fabs(atan(fabsf(x_dist) / fabsf(y_dist)));
+            return angle < Degrees60InRadians;
+        }
+        return false;
+    } else if (angle <= 315 && angle >= 225){
+        if (x_dist < 0){
+            double angle = fabs(atan(fabsf(y_dist) / fabsf(x_dist)));
+            return angle < Degrees60InRadians;
+        }
+        return false;
+    } else if (angle <= 225 && angle >= 135){
+        if (y_dist < 0){
+            double angle = fabs(atan(fabsf(x_dist) / fabsf(y_dist)));
+            return angle < Degrees60InRadians;
+        }
+        return false;
+    } else{
+        if (x_dist > 0){
+            double angle = fabs(atan(fabsf(y_dist) / fabsf(x_dist)));
+            return angle < Degrees60InRadians;
+        }
+        return false;
+    }
+}
+    
+//this tests if safe FROM backstabs
+bool BackstabSafe(Character* Player, Character* Enemy){
+    return backstabTest_CounterClockwise(Player, Enemy);
+}
+
+//check if player at corrrect angle to backstab
+bool CanBackstab(Character * Player, Character * Phantom){
+
 }
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom){
@@ -123,6 +169,7 @@ int loadvJoy(UINT iInterface){
 	return 0;
 }
 
+//given player and enemy coordinates, get the angle between the two
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y){
 	double delta_x = fabsf(player_x) - fabsf(phantom_x);
 	double delta_y = fabsf(phantom_y) - fabsf(player_y);
@@ -227,10 +274,16 @@ longTuple angleToJoystick_CounterClockwise(double angle){
 	return tuple;
 }
 
+/*this will return a tuple of 2 values each in the range 0x1-0x8000(32768).
+The first is the x direction, which has 1 as leftmost and 32768 as rightmost
+second is y, which has 1 as topmost and 32768 as bottommost
+
+MUST LOCK CAMERA for movement to work. it rotates with your movement direction, which messes with it.
+aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us*/
 longTuple angleToJoystick(double angle){
     return angleToJoystick_CounterClockwise(angle);
 }
-
+//get current camera details to lock
 void readCamera(HANDLE * processHandle, ullong memorybase){
 	camera = malloc(sizeof(CameraSett));
 	HANDLE pHandle = (*processHandle);
@@ -252,6 +305,7 @@ void readCamera(HANDLE * processHandle, ullong memorybase){
 	camera->rot_x_addr = FindPointerAddr(pHandle, camera_base, camera_offsets_length, camera_x_rot_offsets);
 }
 
+//set the camera to a fixed position and rotation.
 void lockCamera(HANDLE * processHandle){
 	//TODO do i need to attach to process in order to write?
 	HANDLE processHandle_nonPoint = *processHandle;

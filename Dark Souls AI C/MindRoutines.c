@@ -11,7 +11,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
 
         fann_type* out = fann_run(defense_mind_input->mind, (fann_type*)&(defense_mind_input->input));
-        if (*out < 1.5 && *out > 0.5){
+        if (*out < 1.5 && *out > 0.5 && DefenseChoice != -1){//-1 marker used for DEFINITLY SAFE
             DefenseChoice = 3;
         } else{
             DefenseChoice = 0;

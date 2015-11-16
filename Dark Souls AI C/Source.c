@@ -17,7 +17,7 @@ Character Player;
 
 //intialize extern variables for neural net
 MindInput* defense_mind_input;
-volatile unsigned char DefenseChoice = 0;
+volatile char DefenseChoice = 0;
 MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
@@ -165,7 +165,7 @@ int main(void){
 		These subroutine checks ensures that it is continued.
 		*/
 
-		unsigned char attackImminent = aboutToBeHit(&Player, &Enemy);
+		char attackImminent = aboutToBeHit(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
         //DefenseChoice = 0;
