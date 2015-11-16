@@ -20,7 +20,7 @@ toRead Enemy;
 volatile bool listening1 = true;
 
 DWORD WINAPI ListentoContinue1(void* data) {
-    printf("e to exit");
+    printf("e to exit\n");
     while (listening1){
         char input = getchar();
         if (input == 'e'){//exit
@@ -30,9 +30,9 @@ DWORD WINAPI ListentoContinue1(void* data) {
     return 0;
 }
 
-#define aidADD 0x06FFA2C0
-#define timerADD 0x0780249C
-#define hurtboxADD 0x06FFA2E7
+#define aidADD 0x06829860
+#define timerADD 0x070297DC
+#define hurtboxADD 0x0B6C4C24
 
 int mainHURTBOXTIMINGS(void)
 {
@@ -58,9 +58,9 @@ int mainHURTBOXTIMINGS(void)
         ReadProcessMemory(processHandle, (LPCVOID)(timerADD), &(Enemy.timer), 4, 0);
         ReadProcessMemory(processHandle, (LPCVOID)(hurtboxADD), &(Enemy.hurtbox), 1, 0);
         
-        if (Enemy.hurtbox && lastaid != Enemy.aid){
+        if (Enemy.hurtbox==1 && lastaid != Enemy.aid){
             fprintf(fpdef, "%d %f\n", Enemy.aid, Enemy.timer);
-            printf("%d calc:%f act:%f\n", Enemy.aid, Enemy.timer);
+            printf("%d time:%f\n", Enemy.aid, Enemy.timer);
             lastaid = Enemy.aid;
         }
 
@@ -69,4 +69,16 @@ int mainHURTBOXTIMINGS(void)
     fclose(fpdef);
     CloseHandle(processHandle);
     return EXIT_SUCCESS;
+}
+
+int main___(void){
+    char * processName = "DARKSOULS.exe";
+    //get the process id from the name
+    int processId = GetProcessIdFromName(processName);
+    //open the handle
+    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
+    unsigned char writing = 100;
+    printf("%d\n", WriteProcessMemory(processHandle, (LPVOID)(0x06CD94B4), &writing, 4, 0));
+    printf("%lu\n", GetLastError());
+    return 0;
 }

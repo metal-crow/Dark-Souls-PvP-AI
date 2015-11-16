@@ -83,12 +83,12 @@ bool BackstabSafe_CounterClockwise(Character* Player, Character* Enemy){
     
 //this tests if safe FROM backstabs
 bool BackstabSafe(Character* Player, Character* Enemy){
-    return backstabTest_CounterClockwise(Player, Enemy);
+    return BackstabSafe_CounterClockwise(Player, Enemy);
 }
 
 //check if player at corrrect angle to backstab
 bool CanBackstab(Character * Player, Character * Phantom){
-
+    return 0;
 }
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom){
