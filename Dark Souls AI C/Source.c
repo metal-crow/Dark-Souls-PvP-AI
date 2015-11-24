@@ -184,8 +184,8 @@ int main(void){
 
 		//attack mind make choice about IF to attack or not, and how to attack
         if (inActiveAttackSubroutine() || ((attackImminent<=0) && AttackChoice) || attackImminent<=-2){
-            //TODO for -2, perform backstab
-            attack(&Player, &Enemy, &iReport, AttackChoice);
+            unsigned char attackType = attackImminent == -2 ? 3 : AttackChoice;//standard attack if can backstab, otherwise go with neural net
+            attack(&Player, &Enemy, &iReport, attackType);
             AttackChoice = 0;//unset neural network desision
         }
 

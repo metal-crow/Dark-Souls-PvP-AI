@@ -262,6 +262,28 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 	}
 }
 
+static void standardR1(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    long curTime = clock();
+
+    //hold attack button for a bit
+    if ((curTime < startTime + inputDelayForKick) && (curTime > startTime + inputDelayForStart)){
+        iReport->lButtons = r1;
+    }
+
+    //end subanimation on recover animation
+    if (
+        (curTime > startTime + inputDelayForRotateBack) &&
+        //if we've compleated the attack move and we're in animation end state we can end
+        (Player->subanimation == AttackSubanimationRecover)// ||
+        //or we end if not in attack type animation id, because we could get hit out of attack subroutine
+        //!isAttackAnimation(Player->animation_id))
+        ){
+        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackTypeIndex] = 0;
+        printf("end sub standard r1\n");
+    }
+}
+
 #define inputDelayForStopMove 90
 
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
@@ -308,6 +330,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
         //ghost hits for normal attacks
         case 2:
             ghostHit(Player, Phantom, iReport);
+            break;
+        case 3:
+            standardR1(Player, Phantom, iReport);
             break;
         //should never reach, only way to get into method is >0 AttackChoice
         default:
