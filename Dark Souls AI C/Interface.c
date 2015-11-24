@@ -64,7 +64,7 @@ static bool InBackstabRange(float enemy, float player){
 }
 
 //check if player behind enemy, and if they're in +-60 degree bs window
-char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
+char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;
     float x_dist = Enemy->loc_x - Player->loc_x;
@@ -74,8 +74,8 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
     if ((angle <= 360 && angle >= 315) || (angle <= 45 && angle >= 0)){
         //player is behind them
         if (y_dist > 0){
-            //player is in backstab rotation
-            if (InBackstabRange(angle, Player->rotation)){
+            //player is in backstab rotation and distance in allowable range
+            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
                 return 2;
             }
             return 1;
@@ -83,7 +83,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
         return 0;
     } else if (angle <= 315 && angle >= 225){
         if (x_dist < 0){
-            if (InBackstabRange(angle, Player->rotation)){
+            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
                 return 2;
             }
             return 1;
@@ -91,7 +91,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
         return 0;
     } else if (angle <= 225 && angle >= 135){
         if (y_dist < 0){
-            if (InBackstabRange(angle, Player->rotation)){
+            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
                 return 2;
             }
             return 1;
@@ -99,7 +99,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
         return 0;
     } else{
         if (x_dist > 0){
-            if (InBackstabRange(angle, Player->rotation)){
+            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
                 return 2;
             }
             return 1;
@@ -109,8 +109,8 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
 }
     
 //this tests if safe FROM backstabs and able TO backstab
-char BackstabDetection(Character* Player, Character* Enemy){
-    return BackstabDetection_CounterClockwise(Player, Enemy);
+char BackstabDetection(Character* Player, Character* Enemy, float distance){
+    return BackstabDetection_CounterClockwise(Player, Enemy, distance);
 }
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom){

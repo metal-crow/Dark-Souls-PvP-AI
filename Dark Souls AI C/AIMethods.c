@@ -4,7 +4,9 @@
 
 char aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range, we dont have to do anymore checks
-    if (distance(Player, Phantom) <= Phantom->weaponRange){
+    float distanceByLine = distance(Player, Phantom);
+    //BUG: if the enemy weapon range is < 1.5, dont get advantage of this can backstab check.
+    if (distanceByLine <= Phantom->weaponRange){
 		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
@@ -27,14 +29,15 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 		}
         //return that we CANNOT be attacked
         else{
-            char BackStabStateDetected = BackstabDetection(Player, Phantom);
+            char BackStabStateDetected = BackstabDetection(Player, Phantom, distanceByLine);
             if (BackStabStateDetected){
                 //will overwrite strafe subanimation
                 OverrideStrafeSubroutine();
-                return (-BackStabStateDetected);//change to negative for this upper level handling
+                return (-BackStabStateDetected);//change to negative for this upper level handling. -1 is effectivly same as 0.
             }
         }
 	}
+
 
     //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
