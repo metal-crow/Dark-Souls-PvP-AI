@@ -46,49 +46,71 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
     }
 }
 
-#define Degrees60InRadians 1.0472
-//pi:-y, 2pi/0:+y 3pi/4:-x pi/2:+x
-//TODO buggy, mostly working. On some angles it  detects over 60, or under 60. Issue with atan math.
-bool BackstabSafe_CounterClockwise(Character* Player, Character* Enemy){
+//handles rollover from 360 to 0
+//player is +-60 degrees relative to the enemy rotation (yes, thats all to it)
+static bool InBackstabRange(float enemy, float player){
+    float enemypos = enemy + 60;
+    enemypos = enemypos <= 360 ? enemypos : enemypos - 360;
+    float enemyneg = enemy - 60;
+    enemyneg = enemyneg >= 0 ? enemyneg : enemyneg + 360;
+
+    //dont have to worry about 0 problem
+    if (enemyneg < enemypos){
+        return enemyneg <= player && player <= enemypos;
+    } else{
+        //split into two sides across the 0 mark, check if player in either
+        return (enemyneg <= player && player <= 360) || (0 <= player && player <= enemypos);
+    }
+}
+
+//check if player behind enemy, and if they're in +-60 degree bs window
+char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;
     float x_dist = Enemy->loc_x - Player->loc_x;
 
+    //if enemy in 1st segmented area
+    //each segment is 90 degrees
     if ((angle <= 360 && angle >= 315) || (angle <= 45 && angle >= 0)){
+        //player is behind them
         if (y_dist > 0){
-            double angle = fabs(atan(fabsf(x_dist) / fabsf(y_dist)));
-            return angle < Degrees60InRadians;
+            //player is in backstab rotation
+            if (InBackstabRange(angle, Player->rotation)){
+                return 2;
+            }
+            return 1;
         }
-        return false;
+        return 0;
     } else if (angle <= 315 && angle >= 225){
         if (x_dist < 0){
-            double angle = fabs(atan(fabsf(y_dist) / fabsf(x_dist)));
-            return angle < Degrees60InRadians;
+            if (InBackstabRange(angle, Player->rotation)){
+                return 2;
+            }
+            return 1;
         }
-        return false;
+        return 0;
     } else if (angle <= 225 && angle >= 135){
         if (y_dist < 0){
-            double angle = fabs(atan(fabsf(x_dist) / fabsf(y_dist)));
-            return angle < Degrees60InRadians;
+            if (InBackstabRange(angle, Player->rotation)){
+                return 2;
+            }
+            return 1;
         }
-        return false;
+        return 0;
     } else{
         if (x_dist > 0){
-            double angle = fabs(atan(fabsf(y_dist) / fabsf(x_dist)));
-            return angle < Degrees60InRadians;
+            if (InBackstabRange(angle, Player->rotation)){
+                return 2;
+            }
+            return 1;
         }
-        return false;
+        return 0;
     }
 }
     
-//this tests if safe FROM backstabs
-bool BackstabSafe(Character* Player, Character* Enemy){
-    return BackstabSafe_CounterClockwise(Player, Enemy);
-}
-
-//check if player at corrrect angle to backstab
-bool CanBackstab(Character * Player, Character * Phantom){
-    return 0;
+//this tests if safe FROM backstabs and able TO backstab
+char BackstabDetection(Character* Player, Character* Enemy){
+    return BackstabDetection_CounterClockwise(Player, Enemy);
 }
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom){

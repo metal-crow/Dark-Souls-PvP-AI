@@ -41,9 +41,7 @@ float distance(Character * Player, Character * Phantom);
 
 float angleDeltaFromFront(Character * Player, Character * Phantom);
 
-bool BackstabSafe(Character * Player, Character * Phantom);
-
-bool CanBackstab(Character * Player, Character * Phantom);
+char BackstabDetection(Character * Player, Character * Phantom);
 
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y);
 

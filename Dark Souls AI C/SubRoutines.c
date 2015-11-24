@@ -16,11 +16,8 @@ bool inActiveAttackSubroutine(){
 }
 
 //if we're currently strafing and get attacked, break strafe subroutine
-void ChecktoOverrideSubroutineShutdown(char attackImminent){
-    if (
-        subroutine_states[DodgeTypeIndex] == 3 && 
-        ((attackImminent == 2) || (attackImminent == -1))
-        ){
+void OverrideStrafeSubroutine(){
+    if (subroutine_states[DodgeTypeIndex] == 3){
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }

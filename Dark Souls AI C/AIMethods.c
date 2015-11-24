@@ -2,9 +2,6 @@
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
-extern volatile char DefenseChoice;
-extern volatile unsigned char AttackChoice;
-
 char aboutToBeHit(Character * Player, Character * Phantom){
 	//if they are outside of their attack range, we dont have to do anymore checks
     if (distance(Player, Phantom) <= Phantom->weaponRange){
@@ -19,6 +16,7 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 			//and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
+            OverrideStrafeSubroutine();
             printf("about to be hit (anim id:%d) (suban id:%d)\n", Phantom->animation_id, Phantom->subanimation);
 			return 2;
 		}
@@ -27,10 +25,14 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 			//printf("dont attack\n");
 			return 1;
 		}
-        //return that we CANNOT be attacked (will overwrite strafe subanimation on return handling logic), and inform neural network the same
-        else if (BackstabSafe(Player, Phantom)){
-            DefenseChoice = -1;
-            return -1;
+        //return that we CANNOT be attacked
+        else{
+            char BackStabStateDetected = BackstabDetection(Player, Phantom);
+            if (BackStabStateDetected){
+                //will overwrite strafe subanimation
+                OverrideStrafeSubroutine();
+                return (-BackStabStateDetected);//change to negative for this upper level handling
+            }
         }
 	}
 

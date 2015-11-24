@@ -95,3 +95,15 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
     }
 }
+
+void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle){
+    c->loc_x = 1044;
+    c->loc_y = 864;
+    c->rotation = 360;//facing kinda towards bonfire, same as pi/-pi
+    c->animation_id = 4294967295;
+    c->hp = 1800;
+    c->r_weapon_id = 301015;
+    c->l_weapon_id = 900000;
+    c->subanimation = SubanimationNeutral;
+    c->velocity = 0;
+}

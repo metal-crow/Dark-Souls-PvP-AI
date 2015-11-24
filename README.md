@@ -44,6 +44,7 @@ TODO:
   744301,253301,485102,  
 
   turning away during some attacks
+  fix using o instead of l3
  
   [high] hardcode that when behind enemys back, safe and should attack
 
