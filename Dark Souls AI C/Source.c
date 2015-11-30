@@ -121,7 +121,7 @@ int main(void){
         //get input and scale from -1 to 1 
         float distanceInput = distance(&Player, &Enemy);
         //min:0.3 max:5
-        defense_mind_input->nonNeuralNetworkInputs[0] = (void*)distanceInput;
+        defense_mind_input->nonNeuralNetworkInputs[0] = distanceInput;
         defense_mind_input->input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
 
         float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
