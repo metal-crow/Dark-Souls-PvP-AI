@@ -42,11 +42,12 @@ Attack Network Inputs:
 TODO: 
   attack id not found  
   744301,253301,485102,  
+  754301 (flamberg 2 hand)
+
+  gui for viewing of ai states
 
   turning away during some attacks
   fix using o instead of l3
- 
-  [high] hardcode that when behind enemys back, safe and should attack
 
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
@@ -73,4 +74,5 @@ TODO:
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   
 
 Using:   
-http://vjoystick.sourceforge.net/  
+http://vjoystick.sourceforge.net/ (VJOY)  
+http://leenissen.dk/ (FANN)  
