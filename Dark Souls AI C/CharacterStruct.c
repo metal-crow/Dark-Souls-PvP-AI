@@ -3,25 +3,24 @@
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
 
-
-void PrintPhantom(Character * c){
-	printf("X: %.03f Y: %.03f Rotation: %.03f Animation id: %i SubId: %u\n", c->loc_x, c->loc_y, c->rotation, c->animation_id, c->subanimation);
-}
-
-void ReadPlayer(Character * c, HANDLE * processHandle){
+void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
 	HANDLE processHandle_nonPoint = *processHandle;
     //TODO read large block that contains all data, then parse in process
 	//read x location
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
+    guiPrint("%d,2:X:%f", Character, c->loc_x);
 	//read y location
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
+    guiPrint("%d,3:Y:%f", Character, c->loc_y);
 	//read rotation of player
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
 	//Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
 	//convert to radians, then to degrees
 	c->rotation = (c->rotation + PI) * (180.0 / PI);
+    guiPrint("%d,4:Rotation:%f", Character, c->rotation);
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
+    guiPrint("%d,5:Animation Id:%du", Character, c->animation_id);
     //if (c->hurtboxActive_address){
     //    printf("animation %d", c->animation_id);
     //}
@@ -30,11 +29,14 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
     //read stamina
     if (c->stamina_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
+        guiPrint("%d,6:Stamina:%d", Character, c->stamina);
     }
 	//read what weapon they currently have in right hand
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
+    guiPrint("%d,7:R Weapon:%du", Character, c->r_weapon_id);
 	//read what weapon they currently have in left hand
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
+    guiPrint("%d,8:L Weapon:%du", Character, c->l_weapon_id);
 
 	//read if animation in windup
     if (c->windup_address){
@@ -53,6 +55,8 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
     if (c->animationTimer_address){
         int attackAnimationid;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->attackAnimationId_address), &attackAnimationid, 4, 0);
+        guiPrint("%d,9:Attack Id:%d", Character, attackAnimationid);
+
         if (attackAnimationid > 100000){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (attackAnimationid % 1000 == 100){
@@ -84,15 +88,18 @@ void ReadPlayer(Character * c, HANDLE * processHandle){
             c->subanimation = AttackSubanimationRecover;
         }
     }
+    guiPrint("%d,10:Subanimation:%du", Character, c->subanimation);
 
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will
     if (c->velocity_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
+        guiPrint("%d,11:Velocity:%f", Character, c->velocity);
     }
     //read if the player is locked on
     if (c->locked_on_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
+        guiPrint("%d,12:Locked On:%u", Character, c->locked_on);
     }
 }
 

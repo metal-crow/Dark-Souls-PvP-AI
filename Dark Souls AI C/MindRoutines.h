@@ -6,6 +6,7 @@
 #ifndef MindRoutine_H
 #define MindRoutine_H
 
+#include "gui.h"
 #include <stdbool.h>
 #include <Windows.h>
 #include "fann.h"

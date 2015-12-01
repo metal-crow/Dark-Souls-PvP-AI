@@ -19,12 +19,12 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
             OverrideStrafeSubroutine();
-            printf("about to be hit (anim id:%d) (suban id:%d)\n", Phantom->animation_id, Phantom->subanimation);
+            guiPrint(LocationDetection",0:about to be hit (anim id:%d) (suban id:%d)", Phantom->animation_id, Phantom->subanimation);
 			return 2;
 		}
 		//windup, attack coming
         else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
-			//printf("dont attack\n");
+			//guiPrint(LocationDetection",0:dont attack");
 			return 1;
 		}
         //return that we CANNOT be attacked
@@ -39,7 +39,7 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 	}
 
 
-    //printf("not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)\n", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    //guiPrint(LocationDetection",0:not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
@@ -48,7 +48,7 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 #define inputDelayForStopDodge 40
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    printf("rolling\n");
+    guiPrint(LocationState",1:rolling");
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
     angle = fabs(angle - 180.0);
     //angle joystick
@@ -59,7 +59,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
     long curTime = clock();
     if (curTime < startTime + inputDelayForStopDodge){
-        printf("circle\n");
+        guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
     }
 
@@ -70,17 +70,17 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
         !isDodgeAnimation(Player->animation_id))
        ){
-        printf("end dodge roll\n");
+        guiPrint(LocationState",1:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
-    //printf("dodge roll\n");
+    //guiPrint(LocationState",0:dodge roll\n");
 }
 
 #define inputDelayForStopCircle 40
 
 void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    printf("Backstep\n");
+    guiPrint(LocationState",0:Backstep");
     long curTime = clock();
 
     if (curTime < startTime + inputDelayForStopCircle){
@@ -94,7 +94,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
         //!isDodgeAnimation(Player->animation_id))
         ){
-        printf("end backstep\n");
+        guiPrint(LocationState",0:end backstep");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
@@ -103,7 +103,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define inputDelayForStopStrafe 800
 
 void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    printf("CounterStrafe\n");
+    guiPrint(LocationState",0:CounterStrafe");
     long curTime = clock();
 
     //Hvae to use keycodes because Vjoy doesnt work with r3 button
@@ -118,7 +118,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //have to lock on to strafe
     if (curTime < startTime + 30){
         //iReport->lButtons = 0x0;// r3;
-        printf("lockon\n");
+        guiPrint(LocationState",1:lockon");
         SendInput(1, &ip, sizeof(INPUT));
     }
     //need a delay for dark souls to respond
@@ -136,7 +136,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //disable lockon
     else if (curTime < startTime + inputDelayForStopStrafe + 30){
         //iReport->lButtons = 0x0; //r3;
-        printf("un lockon\n");
+        guiPrint(LocationState",1:un lockon");
         SendInput(1, &ip, sizeof(INPUT));
     }
     else if (curTime < startTime + inputDelayForStopStrafe + 60){
@@ -146,7 +146,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
 
     //break early if we didnt lock on
     if (curTime > startTime + inputDelayForStopStrafe + 60 || (!Player->locked_on && curTime > startTime + 60)){
-        printf("end CounterStrafe\n");
+        guiPrint(LocationState",0:end CounterStrafe");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
@@ -155,7 +155,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
 
 void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    printf("L1\n");
+    guiPrint(LocationState",0:L1");
     long curTime = clock();
 
     if (curTime < startTime + 30){
@@ -167,7 +167,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
     }
 
     if (curTime > startTime + 30){
-        printf("end L1\n");
+        guiPrint(LocationState",0:end L1");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
@@ -224,13 +224,13 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     //hold attack button for a bit
     if ((curTime < startTime + inputDelayForKick) && (curTime > startTime + inputDelayForStart)){
-        printf("r1\n");
+        guiPrint(LocationState",1:r1");
         iReport->lButtons = r1;
     }
 
     //start rotate back to enemy(TODO current temp hardcoding)
     if (curTime >= startTime + inputDelayForKick){
-        printf("TOWARDS ATTACK. angle %f Player: (%d, %d), Enemy: (%d,%d)\n", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
+        guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%d, %d), Enemy: (%d,%d)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
@@ -239,14 +239,12 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 	//cant angle joystick immediatly, at first couple frames this will register as kick
     //after timeout, point away from enemy till end of windup
     /*else if (curTime >= startTime + inputDelayForKick){
-        printf("away\n");
+        guiPrint(LocationState",1:away");
         angle = fabs(angle - 180.0);//TODO this doesnt work for some angles
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
 	}*/
-
-    printf("subanimation %d\n", Player->subanimation);
 
 	//end subanimation on recover animation
     if (
@@ -258,7 +256,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
-		printf("end sub ghost hit\n");
+        guiPrint(LocationState",0:end sub ghost hit");
 	}
 }
 
@@ -280,7 +278,7 @@ static void standardR1(Character * Player, Character * Phantom, JOYSTICK_POSITIO
         ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
-        printf("end sub standard r1\n");
+        guiPrint(LocationState",0:end sub standard r1");
     }
 }
 
@@ -288,7 +286,7 @@ static void standardR1(Character * Player, Character * Phantom, JOYSTICK_POSITIO
 
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     //if we are not close enough, move towards 
-    printf("move up\n");
+    guiPrint(LocationState",0:move up");
     long curTime = clock();
     if (curTime < startTime + inputDelayForStopMove){
         longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
@@ -301,13 +299,13 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         subroutine_states[AttackTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
         subroutine_states[DodgeTypeIndex] = 0;
-        printf("end sub\n");
+        guiPrint(LocationState",0:end sub");
     }
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char AttackChoice){
-    //printf("attack %d\n", AttackChoice);
+    guiPrint(LocationState",0:attack %d", AttackChoice);
 	//TODO need timing analysis. Opponent can move outside range during windup
 
     //procede with subroutine if we are not in one already

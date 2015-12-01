@@ -66,7 +66,7 @@ int ReadyThreads(){
     defense_mind_input = malloc(sizeof(MindInput));
     struct fann* defense_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/Defense_dark_souls_ai.net");
     if (defense_mind == NULL){
-        printf("Defense_dark_souls_ai.net neural network file not found\n");
+        guiPrint(LocationState",0:Defense_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;
     }
     defense_mind_input->mind = defense_mind;
@@ -81,7 +81,7 @@ int ReadyThreads(){
     attack_mind_input = malloc(sizeof(MindInput));
     struct fann* attack_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/Attack_dark_souls_ai.net");
     if (attack_mind == NULL){
-        printf("Attack_dark_souls_ai.net neural network file not found\n");
+        guiPrint(LocationState",0:Attack_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;
     }
     attack_mind_input->mind = attack_mind;
@@ -102,7 +102,7 @@ void WaitForThread(MindInput* input){
     while (input->runNetwork == true){
         bool result = SleepConditionVariableCS(&(input->cond), &(input->crit), 10);
         if (!result){
-            printf("Timeout in reaquiring thread\n");
+            guiPrint(LocationState",0:Timeout in reaquiring thread");
             break;
         }
     }

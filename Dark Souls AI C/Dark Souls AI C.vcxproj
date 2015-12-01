@@ -88,6 +88,7 @@
     <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
     <ClCompile Include="GenerateHurtboxTimings.cpp" />
+    <ClCompile Include="gui.c" />
     <ClCompile Include="InitalizeFANN.c" />
     <ClCompile Include="MindRoutines.c" />
     <ClCompile Include="NeuralNetwork.c" />
@@ -100,6 +101,7 @@
     <ClInclude Include="AIMethods.h" />
     <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />
+    <ClInclude Include="gui.h" />
     <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="Interface.h" />

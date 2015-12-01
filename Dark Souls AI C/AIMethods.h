@@ -3,6 +3,7 @@
 
 //this composes the INSTINCT of the ai mind. Basic interations/actions/reactions that are high accuracy, very fast, but not very complex.
 
+#include "gui.h"
 #include "CharacterStruct.h"
 #include "Interface.h"
 #include <math.h>

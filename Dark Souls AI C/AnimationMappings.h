@@ -1,5 +1,7 @@
 #ifndef AnimationMappings_H
 #define AnimationMappings_H
+
+#include "gui.h"
 #include <stdio.h>
 
 unsigned char isAttackAnimation(unsigned char animation_id);

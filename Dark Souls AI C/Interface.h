@@ -2,6 +2,7 @@
 #define Interface_H
 
 #include <stdio.h>
+#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include <Windows.h>
 #include <math.h>
 #include <stdbool.h>

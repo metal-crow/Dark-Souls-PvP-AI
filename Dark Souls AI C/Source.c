@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "gui.h"
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
 #include "Interface.h"
@@ -22,8 +23,6 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
 int main(void){
-    freopen("output.txt", "w", stdout);
-
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 6;//TODO temp hardcoding
@@ -90,6 +89,9 @@ int main(void){
         return error;
     }
 
+    //start gui
+    guiStart();
+
 	//get current camera details to lock
 	readCamera(&processHandle,memorybase);
 
@@ -105,15 +107,8 @@ int main(void){
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
-		ReadPlayer(&Enemy, &processHandle);
-		ReadPlayer(&Player, &processHandle);
-
-        #if 0
-		printf("Enemy : ");
-		PrintPhantom(&Enemy);
-		printf("Player: ");
-		PrintPhantom(&Player);
-        #endif
+        ReadPlayer(&Enemy, &processHandle, 0);
+        ReadPlayer(&Player, &processHandle, 1);
 
         //update neural network thread data
 
@@ -201,5 +196,6 @@ int main(void){
     defense_mind_input->exit = true;
     attack_mind_input->exit = true;
 	CloseHandle(processHandle);
+    guiClose();
 	return EXIT_SUCCESS;
 }

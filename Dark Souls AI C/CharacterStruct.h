@@ -1,6 +1,7 @@
 #ifndef CharacterStruct_H
 #define CharacterStruct_H
 
+#include "gui.h"
 #include <stdio.h>
 #include <Windows.h>
 #include "AnimationMappings.h"
@@ -54,11 +55,8 @@ typedef struct {
     unsigned char locked_on;
 } Character;
 
-//print info about the character
-void PrintPhantom(Character * c);
-
 //read memory for the character's variables
-void ReadPlayer(Character * c, HANDLE * processHandle);
+void ReadPlayer(Character * c, HANDLE * processHandle, int Character);
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle);
 

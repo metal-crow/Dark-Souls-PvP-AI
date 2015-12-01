@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include <Windows.h>
 #include <stdio.h>
 #include "CharacterStruct.h"
@@ -71,7 +72,7 @@ int mainHURTBOXTIMINGS(void)
     return EXIT_SUCCESS;
 }
 
-int main___(void){
+int mainWRITINGMEMORY(void){
     char * processName = "DARKSOULS.exe";
     //get the process id from the name
     int processId = GetProcessIdFromName(processName);

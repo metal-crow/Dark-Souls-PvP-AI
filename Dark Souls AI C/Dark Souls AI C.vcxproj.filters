@@ -29,6 +29,9 @@
     <Filter Include="AICore\Neural Net\Own">
       <UniqueIdentifier>{0b713785-9ff4-42c3-acb5-00b5463daac3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{88ec01be-7698-47b6-820f-1090f3602f68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.c">
@@ -64,6 +67,9 @@
     <ClCompile Include="GenerateHurtboxTimings.cpp">
       <Filter>HelperUtils</Filter>
     </ClCompile>
+    <ClCompile Include="gui.c">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interface.h">
@@ -95,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="AnimationMappings.h">
       <Filter>AICore\Instinct</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
