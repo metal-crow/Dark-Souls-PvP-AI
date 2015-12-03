@@ -10,10 +10,10 @@
 
 #define ENABLEGUI 1
 #define ENABLEPRINT 1
-#define REDIRECTTOFILE 0
+#define REDIRECTTOFILE 1
 
-#define LocationMemoryEnemy "0"
-#define LocationMemoryPlayer "1"
+#define LocationMemoryEnemy 0
+#define LocationMemoryPlayer 1
 #define LocationDetection "2"
 #define LocationState "3"
 

@@ -107,8 +107,8 @@ int main(void){
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
-        ReadPlayer(&Enemy, &processHandle, 0);
-        ReadPlayer(&Player, &processHandle, 1);
+        ReadPlayer(&Enemy, &processHandle, LocationMemoryEnemy);
+        ReadPlayer(&Player, &processHandle, LocationMemoryPlayer);
 
         //update neural network thread data
 
@@ -164,6 +164,7 @@ int main(void){
 		char attackImminent = aboutToBeHit(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
+        guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
         //DefenseChoice = 0;
         //printf("defense %d\n",DefenseChoice);
 
@@ -175,6 +176,7 @@ int main(void){
 		}
 
         WaitForThread(attack_mind_input);
+        guiPrint(LocationDetection",2:Attack Neural Network decided %d", AttackChoice);
         //AttackChoice = 0;
         //printf("attack %d\n", AttackChoice);
 

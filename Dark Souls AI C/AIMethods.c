@@ -24,13 +24,14 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 		}
 		//windup, attack coming
         else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
-			//guiPrint(LocationDetection",0:dont attack");
+			guiPrint(LocationDetection",0:dont attack");
 			return 1;
 		}
         //return that we CANNOT be attacked
         else{
             char BackStabStateDetected = BackstabDetection(Player, Phantom, distanceByLine);
             if (BackStabStateDetected){
+                guiPrint(LocationDetection",0:backstab detection result %d", BackStabStateDetected);
                 //will overwrite strafe subanimation
                 OverrideStrafeSubroutine();
                 return (-BackStabStateDetected);//change to negative for this upper level handling. -1 is effectivly same as 0.
@@ -39,7 +40,7 @@ char aboutToBeHit(Character * Player, Character * Phantom){
 	}
 
 
-    //guiPrint(LocationDetection",0:not about to be hit (dodge subr st:%d) (anim id:%d) (suban id:%d)", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
 	return 0;
 }
 
@@ -74,7 +75,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
-    //guiPrint(LocationState",0:dodge roll\n");
+    guiPrint(LocationState",0:dodge roll\n");
 }
 
 #define inputDelayForStopCircle 40
@@ -230,7 +231,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     //start rotate back to enemy(TODO current temp hardcoding)
     if (curTime >= startTime + inputDelayForKick){
-        guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%d, %d), Enemy: (%d,%d)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
+        guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%f, %f), Enemy: (%f,%f)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;

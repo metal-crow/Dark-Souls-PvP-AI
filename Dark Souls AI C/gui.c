@@ -67,32 +67,3 @@ void guiClose(){
     closesocket(s);
     WSACleanup();
 }
-
-//testing memory mapped file
-int mainMEMORYMAP(){
-    HANDLE hMapFile;
-    LPCTSTR pBuf;
-
-    char name[] = "TESTmapped";
-
-    hMapFile = CreateFileMapping(
-        INVALID_HANDLE_VALUE,    // use paging file
-        NULL,                    // default security
-        PAGE_READWRITE,          // read/write access
-        0,                       // maximum object size (high-order DWORD)
-        MAXSTRINGSIZE,                // maximum object size (low-order DWORD)
-        name);                 // name of mapping object
-
-    pBuf = (LPTSTR)MapViewOfFile(hMapFile,   // handle to map object
-        FILE_MAP_ALL_ACCESS, // read/write permission
-        0,
-        0,
-        MAXSTRINGSIZE);
-
-    char testmessage[] = "a first message";
-    Sleep(5000);
-
-    CopyMemory((PVOID)pBuf, testmessage, 16);
-
-    return 0;
-}
