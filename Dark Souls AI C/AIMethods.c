@@ -107,25 +107,14 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     guiPrint(LocationState",0:CounterStrafe");
     long curTime = clock();
 
-    //Hvae to use keycodes because Vjoy doesnt work with r3 button
-    INPUT ip;
-    ip.type = INPUT_KEYBOARD;
-    ip.ki.time = 0;
-    ip.ki.wVk = 0; //We're doing scan codes instead
-    ip.ki.dwExtraInfo = 0;
-    ip.ki.dwFlags = KEYEVENTF_SCANCODE;
-    ip.ki.wScan = 0x18;  //Set a unicode character to use (O)
-
     //have to lock on to strafe
     if (curTime < startTime + 30){
-        //iReport->lButtons = 0x0;// r3;
+        iReport->lButtons = r3;
         guiPrint(LocationState",1:lockon");
-        SendInput(1, &ip, sizeof(INPUT));
     }
     //need a delay for dark souls to respond
     else if (curTime < startTime + 60){
-        ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-        SendInput(1, &ip, sizeof(INPUT));
+        iReport->lButtons = 0;
     }
 
     else if (curTime < startTime + inputDelayForStopStrafe){
@@ -136,13 +125,11 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
 
     //disable lockon
     else if (curTime < startTime + inputDelayForStopStrafe + 30){
-        //iReport->lButtons = 0x0; //r3;
+        iReport->lButtons = r3;
         guiPrint(LocationState",1:un lockon");
-        SendInput(1, &ip, sizeof(INPUT));
     }
     else if (curTime < startTime + inputDelayForStopStrafe + 60){
-        ip.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-        SendInput(1, &ip, sizeof(INPUT));
+        iReport->lButtons = 0;
     }
 
     //break early if we didnt lock on

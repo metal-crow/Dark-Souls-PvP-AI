@@ -34,9 +34,7 @@ Attack Network Inputs:
   754301 (flamberg 2 hand)
 
   turning away during some attacks
-  fix using o instead of l3
   kicking instead of attacking
-  handle magic,miricles hurtbox
 
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
