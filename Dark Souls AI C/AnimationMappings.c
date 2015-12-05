@@ -96,6 +96,38 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //2h r2
         case 115:
             return 2;
+        //miricle projectile windup
+        case 143:
+            return 0;
+        //miricle projectile cast
+        case 144:
+            return 2;
+        //miricle AOE windup
+        case 145:
+            return 0;
+        //miricle AOE cast
+        case 146:
+            return 2;
+        //miricle ground attack windup
+        case 155:
+            return 0;
+        //miricle ground attack cast
+        case 156:
+            return 3;
+        //magic cast windup
+        //TODO includes all dark magic casts and normal magic casts, + homing soul masses 
+        case 157:
+            return 0;
+        //magic cast fire
+        case 158:
+            return 3;
+        //homing dark magic windup 
+        case 159:
+            return 0;
+        //homing dark magic ready
+        //TODO this is not fire!
+        case 160:
+            return 3;
         //firestorm windup
         case 163:
             return 0;//is a windup, but want to attack during it
@@ -170,6 +202,8 @@ unsigned char isDodgeAnimation(unsigned char animation_id){
 
 float dodgeTimings(int attack_id){
     switch (attack_id){
+    case 6517: return 1.1;
+    case 6522: return 0.3;
     case 203000: return 0.324;
     case 203001: return 0.229667;
     case 203002: return 0.324;

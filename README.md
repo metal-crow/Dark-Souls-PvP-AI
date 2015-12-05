@@ -13,20 +13,9 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
   
 Setup:  
 Vjoy controller device config:  
-	x,y,z,rx,ry,15 buttons,1 discrete pov
-  
+	x,y,z,rx,ry,15 buttons,1 discrete pov  
 
-attack when  
-
-you can interrupt them and poise break  
-(need to teach poise)  
-
-when they're in their recovery animation  
-(what about weapon speeds? can they recover faster then i can attack?)  
-good spacing  
-(need to teach spacing)  
-
-Neural Networks:  
+## Neural Networks:  
 Defense Network Inputs:  
   -Player Distance from Enemy  
   -The angle the enemy is off from directly in front of the player  
@@ -39,15 +28,15 @@ Attack Network Inputs:
   -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
 
 
-TODO: 
+## TODO: 
   attack id not found  
   744301,253301,485102,  
   754301 (flamberg 2 hand)
 
-  gui for viewing of ai states
-
   turning away during some attacks
   fix using o instead of l3
+  kicking instead of attacking
+  handle magic,miricles hurtbox
 
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
@@ -72,7 +61,7 @@ TODO:
 
   [cannot fix] lag will sometimes made perfect dodges impossible b/c hurtbox will appear before the windup animation finishes  
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   
-
-Using:   
+  
+## Using:   
 http://vjoystick.sourceforge.net/ (VJOY)  
 http://leenissen.dk/ (FANN)  
