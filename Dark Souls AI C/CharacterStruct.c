@@ -103,9 +103,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
     }
 }
 
-void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle){
-    c->loc_x = 1044;
-    c->loc_y = 864;
+void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
+    c->loc_x = 1045.967773;
+    c->loc_y = 864.3547974;
     c->rotation = 360;//facing kinda towards bonfire, same as pi/-pi
     c->animation_id = 4294967295;
     c->hp = 1800;

@@ -58,7 +58,7 @@ typedef struct {
 //read memory for the character's variables
 void ReadPlayer(Character * c, HANDLE * processHandle, int Character);
 
-void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle);
+void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...);
 
 //TODO prune as many of these as possible. what needs to be kept for only one char?
 

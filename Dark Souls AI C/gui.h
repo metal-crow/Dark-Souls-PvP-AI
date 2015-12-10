@@ -16,6 +16,7 @@
 #define LocationMemoryPlayer 1
 #define LocationDetection "2"
 #define LocationState "3"
+#define LocationJoystick "4"
 
 int guiStart();
 

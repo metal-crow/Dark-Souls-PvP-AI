@@ -188,6 +188,7 @@ int main(void){
         }
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
+        guiPrint(LocationJoystick",0:AxisX:%d\nAxisY:%d\nButtons:%d", iReport.wAxisX, iReport.wAxisY, iReport.lButtons);
 		UpdateVJD(iInterface, (PVOID)&iReport);
 
 		//SetForegroundWindow(h);

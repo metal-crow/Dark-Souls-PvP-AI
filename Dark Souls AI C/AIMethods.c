@@ -120,7 +120,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     else if (curTime < startTime + inputDelayForStopStrafe){
         //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
-        iReport->wAxisY = YTOP;
+        iReport->wAxisY = MIDDLE / 2;//3/4 pushed up
     }
 
     //disable lockon
@@ -254,15 +254,16 @@ static void standardR1(Character * Player, Character * Phantom, JOYSTICK_POSITIO
     //hold attack button for a bit
     if ((curTime < startTime + inputDelayForKick) && (curTime > startTime + inputDelayForStart)){
         iReport->lButtons = r1;
+        guiPrint(LocationState",1:only r1");
     }
 
     //end subanimation on recover animation
     if (
         (curTime > startTime + inputDelayForRotateBack) &&
         //if we've compleated the attack move and we're in animation end state we can end
-        (Player->subanimation == AttackSubanimationRecover)// ||
+        ((Player->subanimation == AttackSubanimationRecover) ||
         //or we end if not in attack type animation id, because we could get hit out of attack subroutine
-        //!isAttackAnimation(Player->animation_id))
+        !isAttackAnimation(Player->animation_id))
         ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;

@@ -1,8 +1,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -28,23 +27,19 @@ class GuiPane extends JPanel{
     private JTextArea[] MemoryPlayer_Params=new JTextArea[11];
 
     private JPanel Detection=new JPanel();
-    private JTextArea[] Detection_Params=new JTextArea[4];
+    private JTextArea[] Detection_Params=new JTextArea[5];
     private JPanel AIState=new JPanel();
     private JTextArea[] AIState_Params=new JTextArea[2];
 
+    private JPanel JoystickInfo=new JPanel();
+    private JTextArea[] JoystickInfo_Params=new JTextArea[2];
+    
     public GuiPane(int height, int width){
         this.width=width;
         this.height=height;
-        setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
-        c.weighty = 1;
+        setLayout(new GridLayout(3,2));
         
-        c.gridheight = 2;
-        c.gridx = 0;
-        c.gridy = 0;
-        add(MemoryEnemy, c);
+        add(MemoryEnemy);
         //for each area, set the title and add the labels which will be changed on update
         MemoryEnemy.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         MemoryEnemy.setLayout(new BoxLayout(MemoryEnemy, BoxLayout.Y_AXIS));
@@ -58,9 +53,24 @@ class GuiPane extends JPanel{
             MemoryEnemy_Params[p].setMinimumSize(new Dimension(width/2,height/2));
             MemoryEnemy.add(MemoryEnemy_Params[p]);
         }
+        
+        add(Detection);
+        Detection.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        Detection.setLayout(new BoxLayout(Detection, BoxLayout.Y_AXIS));
+        JLabel Detection_title = new JLabel("CURRENT DETECTED STATES");
+        Detection_title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        Detection.add(Detection_title);
+        Detection.setMinimumSize(new Dimension(width/2,height/4));
+        for(int p=0;p<Detection_Params.length;p++){
+            Detection_Params[p] = new JTextArea(" ");
+            Detection_Params[p].setEditable(false);
+            Detection_Params[p].setLineWrap(true);
+            Detection_Params[p].setWrapStyleWord(true);
+            Detection_Params[p].setMinimumSize(new Dimension(width/2,height/4));
+            Detection.add(Detection_Params[p]);
+        }
 
-        c.gridy = 2;
-        add(MemoryPlayer, c);
+        add(MemoryPlayer);
         MemoryPlayer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         MemoryPlayer.setLayout(new BoxLayout(MemoryPlayer, BoxLayout.Y_AXIS));
         JLabel Player_memory_title = new JLabel("PLAYER MEMORY DATA");
@@ -74,27 +84,7 @@ class GuiPane extends JPanel{
             MemoryPlayer.add(MemoryPlayer_Params[p]);
         }
         
-        c.gridx=1;
-        c.gridy=0;
-        c.gridheight=1;
-        add(Detection,c);
-        Detection.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        Detection.setLayout(new BoxLayout(Detection, BoxLayout.Y_AXIS));
-        JLabel Detection_title = new JLabel("CURRENT DETECTED STATES");
-        Detection_title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        Detection.add(Detection_title);
-        Detection.setMinimumSize(new Dimension(width/2,height/4));
-        for(int p=0;p<Detection_Params.length;p++){
-            Detection_Params[p] = new JTextArea(" ");
-            Detection_Params[p].setEditable(false);
-            Detection_Params[p].setMinimumSize(new Dimension(width/2,height/4));
-            Detection.add(Detection_Params[p]);
-        }
-        
-        c.gridx=1;
-        c.gridy=1;
-        c.gridheight=3;
-        add(AIState,c);
+        add(AIState);
         AIState.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         AIState.setLayout(new BoxLayout(AIState, BoxLayout.Y_AXIS));
         JLabel AI_state_title = new JLabel("CURRENT AI STATES");
@@ -108,6 +98,20 @@ class GuiPane extends JPanel{
             AIState_Params[p].setWrapStyleWord(true);
             AIState_Params[p].setMinimumSize(new Dimension(width/2,3*height/4));
             AIState.add(AIState_Params[p]);
+        }
+        
+        add(JoystickInfo);
+        JoystickInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        JoystickInfo.setLayout(new BoxLayout(JoystickInfo, BoxLayout.Y_AXIS));
+        JLabel JoystickInfo_title = new JLabel("JOYSTICK INFO");
+        JoystickInfo_title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JoystickInfo.add(JoystickInfo_title);
+        for(int p=0;p<JoystickInfo_Params.length;p++){
+            JoystickInfo_Params[p] = new JTextArea(" ");
+            JoystickInfo_Params[p].setEditable(false);
+            JoystickInfo_Params[p].setLineWrap(true);
+            JoystickInfo_Params[p].setWrapStyleWord(true);
+            JoystickInfo.add(JoystickInfo_Params[p]);
         }
     }
     
@@ -135,6 +139,8 @@ class GuiPane extends JPanel{
             case 3:
                 AIState_Params[position].setText(data);
                 break;
+            case 4:
+                JoystickInfo_Params[position].setText(data);
         }
     }
  }

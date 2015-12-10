@@ -30,12 +30,13 @@ Attack Network Inputs:
 
 ## TODO: 
   attack id not found  
-  744301,253301,485102,  
+  744301,253301,485102(r weapon 309005, moonlight gs),  
   754301 (flamberg 2 hand)
 
   turning away during some attacks
   kicking instead of attacking
 
+  [high] use more than 1 attack types, dynamic range for weapon attacks  
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
   [high] toggle escaping(cant dodge everything always, lag)
