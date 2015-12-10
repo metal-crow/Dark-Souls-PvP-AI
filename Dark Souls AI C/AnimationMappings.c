@@ -225,6 +225,18 @@ unsigned char isVulnerableAnimation(int animation_id){
         //out of casts
         case 6299:
             return 1;
+        //use item
+        case 7500:
+            return 1;
+        //use humanity
+        case 7501:
+            return 1;
+        //could not use
+        case 7510:
+            return 1;
+        //throw
+        case 7550:
+            return 0;
         default:
             return 0;
     }
@@ -233,6 +245,7 @@ unsigned char isVulnerableAnimation(int animation_id){
 
 float dodgeTimings(int attack_id){
     switch (attack_id){
+    case 6422: return 0.3;
     case 6517: return 1.1;
     case 6522: return 0.3;
     case 203000: return 0.324;
