@@ -57,7 +57,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->attackAnimationId_address), &attackAnimationid, 4, 0);
         guiPrint("%d,7:Attack Id:%d", Character, attackAnimationid);
 
-        if (attackAnimationid > 1000){
+        if (isVulnerableAnimation(attackAnimationid))
+        {
+            c->subanimation = AttackSubanimationActiveHurtboxOver;
+        }
+        else if (attackAnimationid > 1000){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (attackAnimationid % 1000 == 100){
                 c->subanimation = AttackSubanimationWindupClosing;
@@ -71,10 +75,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
                     c->subanimation = AttackSubanimationWindupClosing;
                 }
             }
-        }
-        //shield break
-        else if (attackAnimationid == 164 || attackAnimationid == 162 || attackAnimationid == 160){
-            c->subanimation = AttackSubanimationActiveHurtboxOver;
         }
         else{
             c->subanimation = SubanimationNeutral;

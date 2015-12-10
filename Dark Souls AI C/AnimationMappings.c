@@ -72,8 +72,14 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //parry
         case 86:
             return 1;//not a windup, but pretend it is to prevent attack
+        //1h r1 into r2 combo
+        case 88:
+            return 2;
         //1h r2
         case 89:
+            return 2;
+        //1h r2 combo
+        case 90:
             return 2;
         //rolling attack 2h
         case 103:
@@ -93,8 +99,14 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //jumping 2 hand
         case 113:
             return 2;
+        //2h r1 into r2 combo
+        case 114:
+            return 2;
         //2h r2
         case 115:
+            return 2;
+        //2h r2 combo
+        case 116:
             return 2;
         //miricle projectile windup
         case 143:
@@ -193,6 +205,25 @@ unsigned char isDodgeAnimation(unsigned char animation_id){
             return 1;
         //backstep 2h
         case 100:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+unsigned char isVulnerableAnimation(int animation_id){
+    switch (animation_id){
+        //shield break heavy
+        case 164:
+            return 1;
+        //shield break medium
+        case 162:
+            return 1;
+        //shield break light
+        case 160:
+            return 1;
+        //out of casts
+        case 6299:
             return 1;
         default:
             return 0;
