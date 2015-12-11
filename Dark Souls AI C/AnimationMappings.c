@@ -27,6 +27,9 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //1h r1 swing 3
         case 49:
             return 2;
+        //1h kick or kick special attack
+        case 52:
+            return 2;
         //jumping 1 hand
         case 53:
             return 2;
@@ -95,6 +98,9 @@ unsigned char isAttackAnimation(unsigned char animation_id){
             return 2;
         //2h r1 combo
         case 110:
+            return 2;
+        //2h kick replacement
+        case 112:
             return 2;
         //jumping 2 hand
         case 113:

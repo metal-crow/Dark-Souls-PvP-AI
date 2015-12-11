@@ -29,7 +29,10 @@ Attack Network Inputs:
 
 
 ## TODO: 
-  kicking instead of attacking  
+  
+  [bug] kicking instead of attacking  
+
+  [TOP priority] should attack even when enemy attacking, just determine their direciton and attack to their side or behind.  
 
   [high] use more than 1 attack types, dynamic range for weapon attacks  
   [high] too prone to trading

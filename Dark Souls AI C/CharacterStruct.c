@@ -21,9 +21,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
 	//read current animation id
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animation_address), &(c->animation_id), 2, 0);
     guiPrint("%d,3:Animation Id:%d", Character, c->animation_id);
-    //if (c->hurtboxActive_address){
-    //    printf("animation %d", c->animation_id);
-    //}
 	//read hp
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     //read stamina
@@ -62,7 +59,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
             c->subanimation = AttackSubanimationActiveHurtboxOver;
         }
         //cant be much higher b/c need spell attack timings
-        else if (attackAnimationid > 1000){
+        else if (attackAnimationid > 1000 && isAttackAnimation(c->animation_id) == 2){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (attackAnimationid % 1000 == 100){
                 c->subanimation = AttackSubanimationWindupClosing;
