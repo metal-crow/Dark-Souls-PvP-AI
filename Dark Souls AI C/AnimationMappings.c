@@ -265,6 +265,7 @@ float dodgeTimings(int attack_id){
     case 233001: return 0.442;
     case 233002: return 0.442;
     case 233300: return 0.714;
+    case 233301: return 0.720937;
     case 233310: return 0.34;
     case 233500: return 0.51;
     case 233900: return 2.494666;
@@ -296,6 +297,7 @@ float dodgeTimings(int attack_id){
     case 263001: return 0.864;
     case 263002: return 0.96;
     case 263300: return 0.912;
+    case 263301: return 0.91175;
     case 263310: return 0.912;
     case 263500: return 0.648;
     case 263900: return 2.999999;
@@ -303,6 +305,7 @@ float dodgeTimings(int attack_id){
     case 264001: return 0.744;
     case 264002: return 0.744;
     case 264300: return 0.912;
+    case 264301: return 0.9135;
     case 264310: return 0.912;
     case 264500: return 0.696;
     case 264900: return 2.999999;
@@ -491,6 +494,7 @@ float dodgeTimings(int attack_id){
     case 514310: return 0.8175;
     case 514900: return 0.483771;
     case 533300: return 0.578;
+    case 533301: return 0.590938;
     case 533310: return 0.646;
     case 534300: return 0.578;
     case 534310: return 0.51;
@@ -537,11 +541,13 @@ float dodgeTimings(int attack_id){
     case 603301: return 0.818125;
     case 603310: return 0.717792;
     case 604300: return 0.717792;
+    case 604301: return 0.727375;
     case 604310: return 0.685;
     case 613300: return 1.12125;
     case 613301: return 1.118208;
     case 613310: return 1.118666;
     case 614300: return 0.985125;
+    case 614301: return 0.992625;
     case 614310: return 0.984833;
     case 623300: return 1.252708;
     case 623301: return 1.262916;
@@ -556,6 +562,7 @@ float dodgeTimings(int attack_id){
     case 643301: return 1.831165;
     case 643310: return 1.832415;
     case 644300: return 1.831665;
+    case 644301: return 1.830375;
     case 644310: return 1.832749;
     case 653300: return 0.790083;
     case 653301: return 0.790083;
@@ -584,6 +591,7 @@ float dodgeTimings(int attack_id){
     case 703301: return 1.919999;
     case 703310: return 1.917999;
     case 723300: return 0.529;
+    case 723301: return 0.524437;
     case 723310: return 0.461;
     case 724300: return 0.584;
     case 724310: return 0.426;
@@ -603,6 +611,7 @@ float dodgeTimings(int attack_id){
     case 773300: return 0.792;
     case 773310: return 0.588;
     case 783300: return 1.931999;
+    case 783301: return 1.91475;
     case 784300: return 2.095999;
     case 793300: return 1.12;
     case 793305: return 1.12;
@@ -634,9 +643,11 @@ float dodgeTimings(int attack_id){
     case 954300: return 1.056;
     case 954310: return 1.056;
     case 963300: return 1.896001;
+    case 963301: return 1.897438;
     case 964301: return 1.851072;
     case 964310: return 1.85053;
     case 973300: return 1.651999;
+    case 973301: return 1.653063;
     case 974300: return 1.651999;
     case 983300: return 0.917354;
     case 983301: return 0.917646;
@@ -690,6 +701,7 @@ float dodgeTimings(int attack_id){
     case 1043301: return 1.051291;
     case 1043310: return 1.051541;
     case 1044300: return 0.986125;
+    case 1044301: return 0.979;
     case 1044310: return 0.985;
     case 1053300: return 1.286124;
     case 1053301: return 1.286541;
@@ -802,6 +814,7 @@ float dodgeTimings(int attack_id){
     case 1243301: return 1.051625;
     case 1243310: return 0.685208;
     case 1244300: return 1.254166;
+    case 1244301: return 1.249875;
     case 1244310: return 1.25325;
     case 1253300: return 1.185333;
     case 1253301: return 1.186166;

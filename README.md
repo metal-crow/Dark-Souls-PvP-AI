@@ -29,7 +29,6 @@ Attack Network Inputs:
 
 
 ## TODO: 
-  missed attack types: r1's combo'd into r2's (1 r1, then 1 r2)  
   turning away during some attacks  
   kicking instead of attacking  
 
