@@ -12,10 +12,6 @@
 
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
 
-//initalize the phantom and player
-Character Enemy;
-Character Player;
-
 //intialize extern variables for neural net
 MindInput* defense_mind_input;
 volatile char DefenseChoice = 0;
@@ -27,7 +23,7 @@ int main(void){
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 6;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 5;
+	Player.weaponRange = 3;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";

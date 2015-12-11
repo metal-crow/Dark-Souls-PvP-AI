@@ -16,7 +16,7 @@ typedef struct{
     unsigned char hurtbox;
 }toRead;
 
-toRead Enemy;
+toRead EnemyHurtboxTimings;
 
 volatile bool listening1 = true;
 
@@ -41,7 +41,7 @@ int mainHURTBOXTIMINGS(void)
 
     unsigned char wait = 0;
 
-    memset(&Enemy, 0, sizeof(toRead));
+    memset(&EnemyHurtboxTimings, 0, sizeof(toRead));
 
     //get access to dark souls memory
     char * processName = "DARKSOULS.exe";
@@ -55,14 +55,14 @@ int mainHURTBOXTIMINGS(void)
     int lastaid = -1;
 
     while (listening1){
-        ReadProcessMemory(processHandle, (LPCVOID)(aidADD), &(Enemy.aid), 4, 0);
-        ReadProcessMemory(processHandle, (LPCVOID)(timerADD), &(Enemy.timer), 4, 0);
-        ReadProcessMemory(processHandle, (LPCVOID)(hurtboxADD), &(Enemy.hurtbox), 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(aidADD), &(EnemyHurtboxTimings.aid), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(timerADD), &(EnemyHurtboxTimings.timer), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(hurtboxADD), &(EnemyHurtboxTimings.hurtbox), 1, 0);
         
-        if (Enemy.hurtbox==1 && lastaid != Enemy.aid){
-            fprintf(fpdef, "%d %f\n", Enemy.aid, Enemy.timer);
-            printf("%d time:%f\n", Enemy.aid, Enemy.timer);
-            lastaid = Enemy.aid;
+        if (EnemyHurtboxTimings.hurtbox == 1 && lastaid != EnemyHurtboxTimings.aid){
+            fprintf(fpdef, "%d %f\n", EnemyHurtboxTimings.aid, EnemyHurtboxTimings.timer);
+            printf("%d time:%f\n", EnemyHurtboxTimings.aid, EnemyHurtboxTimings.timer);
+            lastaid = EnemyHurtboxTimings.aid;
         }
 
     }

@@ -55,6 +55,10 @@ typedef struct {
     unsigned char locked_on;
 } Character;
 
+//initalize the phantom and player
+Character Enemy;
+Character Player;
+
 //read memory for the character's variables
 void ReadPlayer(Character * c, HANDLE * processHandle, int Character);
 

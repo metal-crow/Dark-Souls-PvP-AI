@@ -40,14 +40,18 @@ DWORD WINAPI AttackMindProcess(void* data){
         //fann_type* out = fann_run(attack_mind_input->mind, (fann_type*)&(attack_mind_input->input));
         //AttackChoice = (unsigned char)(*out);
 
-        AttackChoice = 1;
-        if (
-            (attack_mind_input->input[0] <= 5)  &&   //in range
+        if (attack_mind_input->input[0] > Player.weaponRange){//not in range
+            AttackChoice = 1;
+        }
+        else if (
             ((int)(attack_mind_input->nonNeuralNetworkInputs[0]) > 50) &&  //have enough stamina
             ((int)(attack_mind_input->nonNeuralNetworkInputs[1]) >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){
             AttackChoice = 2;
+        }
+        else{
+            AttackChoice = 0;
         }
 
         //prevent rerun

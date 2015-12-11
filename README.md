@@ -29,14 +29,13 @@ Attack Network Inputs:
 
 
 ## TODO: 
-  turning away during some attacks  
   kicking instead of attacking  
 
   [high] use more than 1 attack types, dynamic range for weapon attacks  
   [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
   [high] toggle escaping(cant dodge everything always, lag)
-  [high] get dynamic weapon range working
+  [high] get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that   
   [high priority] teach poise  
