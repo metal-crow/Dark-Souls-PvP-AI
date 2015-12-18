@@ -15,7 +15,8 @@
 extern unsigned char subroutine_states[4];
 
 //for timing certain operations(delay op by 1 sec)
-extern long startTime;
+extern long startTimeAttack;
+extern long startTimeDefense;
 
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();

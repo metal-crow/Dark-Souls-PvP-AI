@@ -59,6 +59,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int Character){
             c->subanimation = AttackSubanimationActiveHurtboxOver;
         }
         //cant be much higher b/c need spell attack timings
+        //also check that this is an attack that involves subanimation
         else if (attackAnimationid > 1000 && isAttackAnimation(c->animation_id) == 2){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (attackAnimationid % 1000 == 100){

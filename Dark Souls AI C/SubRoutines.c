@@ -1,7 +1,9 @@
 #include "SubRoutines.h"
 
 unsigned char subroutine_states[4] = { 0, 0, 0, 0 };
-long startTime;
+//allow attack and defense subroutines to operate independently
+long startTimeAttack;
+long startTimeDefense;
 
 bool inActiveSubroutine(){
     return (inActiveDodgeSubroutine() || inActiveAttackSubroutine());

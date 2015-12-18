@@ -12,13 +12,20 @@
 #include <time.h>
 #include "AnimationMappings.h"
 
-//return 2 if i am about to be hit by an attack by the enemy, 1 if an attack if coming soon and i should wait to dodge it, 0 otherwise
-char aboutToBeHit(Character * Player, Character * Phantom);
+//return 2 if i am about to be hit by an attack by the enemy
+//1 if an attack if coming soon and i should wait to dodge it
+//0 if no danger
+//-1 if should override attack neural net and perform bs
+#define ImminentHit 2
+#define EnemyInWindup 1
+#define EnemyNeutral 0
+#define InBSPosition -1
+char EnemyStateProcessing(Character * Player, Character * Phantom);
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char DefenseChoice);
+void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice);
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, unsigned char AttackChoice);
+void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
 
 #endif

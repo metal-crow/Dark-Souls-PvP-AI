@@ -1,6 +1,7 @@
 #include "Interface.h"
 #include <stdio.h>//printf
 
+#define OolicelMap 1
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
 //store camera settings
@@ -48,10 +49,11 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
 
 //handles rollover from 360 to 0
 //player is +-60 degrees relative to the enemy rotation (yes, thats all to it)
+#define BackstabDegreeRange 59
 static bool InBackstabRange(float enemy, float player){
-    float enemypos = enemy + 60;
+    float enemypos = enemy + BackstabDegreeRange;
     enemypos = enemypos <= 360 ? enemypos : enemypos - 360;
-    float enemyneg = enemy - 60;
+    float enemyneg = enemy - BackstabDegreeRange;
     enemyneg = enemyneg >= 0 ? enemyneg : enemyneg + 360;
 
     //dont have to worry about 0 problem
@@ -64,7 +66,8 @@ static bool InBackstabRange(float enemy, float player){
 }
 
 //check if player behind enemy, and if they're in +-60 degree bs window
-char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
+#define BackstabRange 1.5
+unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;
     float x_dist = Enemy->loc_x - Player->loc_x;
@@ -75,7 +78,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, flo
         //player is behind them
         if (y_dist > 0){
             //player is in backstab rotation and distance in allowable range
-            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
+            if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
             return 1;
@@ -83,7 +86,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, flo
         return 0;
     } else if (angle <= 315 && angle >= 225){
         if (x_dist < 0){
-            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
+            if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
             return 1;
@@ -91,7 +94,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, flo
         return 0;
     } else if (angle <= 225 && angle >= 135){
         if (y_dist < 0){
-            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
+            if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
             return 1;
@@ -99,7 +102,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, flo
         return 0;
     } else{
         if (x_dist > 0){
-            if (InBackstabRange(angle, Player->rotation) && distance <= 1.5){
+            if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
             return 1;
@@ -109,7 +112,7 @@ char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, flo
 }
     
 //this tests if safe FROM backstabs and able TO backstab
-char BackstabDetection(Character* Player, Character* Enemy, float distance){
+unsigned char BackstabDetection(Character* Player, Character* Enemy, float distance){
     return BackstabDetection_CounterClockwise(Player, Enemy, distance);
 }
 
@@ -193,8 +196,13 @@ int loadvJoy(UINT iInterface){
 
 //given player and enemy coordinates, get the angle between the two
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y){
+#if OolicelMap
 	double delta_x = fabsf(player_x) - fabsf(phantom_x);
 	double delta_y = fabsf(phantom_y) - fabsf(player_y);
+#else
+    double delta_x = fabsf(phantom_x) - fabsf(player_x);
+    double delta_y = fabsf(player_y) - fabsf(phantom_y);
+#endif
 
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
@@ -304,7 +312,11 @@ second is y, which has 1 as topmost and 32768 as bottommost
 MUST LOCK CAMERA for movement to work. it rotates with your movement direction, which messes with it.
 aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us*/
 longTuple angleToJoystick(double angle){
+#if OolicelMap
     return angleToJoystick_CounterClockwise(angle);
+#else
+    return angleToJoystick_Clockwise(angle);
+#endif
 }
 //get current camera details to lock
 void readCamera(HANDLE * processHandle, ullong memorybase){

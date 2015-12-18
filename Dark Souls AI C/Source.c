@@ -157,29 +157,27 @@ int main(void){
 		These subroutine checks ensures that it is continued.
 		*/
 
-		char attackImminent = aboutToBeHit(&Player, &Enemy);
+        char attackImminent = EnemyStateProcessing(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
         //DefenseChoice = 0;
-        //printf("defense %d\n",DefenseChoice);
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
-        if (attackImminent == 2 || inActiveDodgeSubroutine() || (DefenseChoice>0)){
-            dodge(&Player, &Enemy, &iReport, DefenseChoice);
+        if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
+            dodge(&Player, &Enemy, &iReport, attackImminent, DefenseChoice);
             DefenseChoice = 0;//unset neural network desision
 		}
 
         WaitForThread(attack_mind_input);
         guiPrint(LocationDetection",2:Attack Neural Network decided %d", AttackChoice);
         //AttackChoice = 0;
-        //printf("attack %d\n", AttackChoice);
 
 		//attack mind make choice about IF to attack or not, and how to attack
-        if (inActiveAttackSubroutine() || ((attackImminent<=0) && AttackChoice) || attackImminent<=-2){
-            unsigned char attackType = attackImminent == -2 ? 3 : AttackChoice;//standard attack if can backstab, otherwise go with neural net
-            attack(&Player, &Enemy, &iReport, attackType);
+        //enter when we either have a Attack neural net action or a attackImminent action
+        if (inActiveAttackSubroutine() || (attackImminent != ImminentHit || AttackChoice)){
+            attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }
 

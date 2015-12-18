@@ -30,12 +30,22 @@ Attack Network Inputs:
 
 ## TODO: 
   
-  [bug] kicking instead of attacking  
+  know when they're attack is out of range but i can attack and hit them (reserch 0:29), no that shoukld be happening anyway
+  bs during attack : 46
+  go after/follow them during their rolls, roll catch : 57  
+  can do 1:12 with better timing, not enough recover time after attack to dodge 2nd hit
+  ideal bs at 1:30
+
+  read enemy animaiton type id when in backstab
+  [bug] kicking instead of attacking sometimess  
 
   [TOP priority] should attack even when enemy attacking, just determine their direciton and attack to their side or behind.  
+  see aimethods:25. see enemy windup, determine what side/direction it is coming from. immediatly start executing subroutine strafe arround to back in opposing direction. 
+  This is attack desicion. WHen we reach back, the auto-bs detection should kick in.
+  [TOP] too prone to trading  
 
+  [high] more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
   [high] use more than 1 attack types, dynamic range for weapon attacks  
-  [high] too prone to trading
   [high] hurtbox for enemy not working on jumping attacks
   [high] toggle escaping(cant dodge everything always, lag)
   [high] get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
@@ -54,7 +64,7 @@ Attack Network Inputs:
   [low priority]	Stamia management(for dodge, attack handled)  
   [low priority]	Better Vjoy loading/unloading    
   [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
-  [low] fix camera to keep it locked for entire fight. y still messing up(not y, pitch or yaw?)
+  [low] fix camera to keep it locked for entire fight. Do NOT alter when locked on
 
   [cannot fix] lag will sometimes made perfect dodges impossible b/c hurtbox will appear before the windup animation finishes  
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   

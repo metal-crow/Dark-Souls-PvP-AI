@@ -9,7 +9,7 @@
 #pragma comment(lib, "Ws2_32.lib") //load winsock library
 
 #define ENABLEGUI 1
-#define ENABLEPRINT 1
+#define ENABLEPRINT 0
 #define REDIRECTTOFILE 1
 
 #define LocationMemoryEnemy 0

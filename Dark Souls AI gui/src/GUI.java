@@ -50,7 +50,6 @@ class GuiPane extends JPanel{
         for(int p=0;p<MemoryEnemy_Params.length;p++){
             MemoryEnemy_Params[p] = new JTextArea(" ");
             MemoryEnemy_Params[p].setEditable(false);
-            MemoryEnemy_Params[p].setMinimumSize(new Dimension(width/2,height/2));
             MemoryEnemy.add(MemoryEnemy_Params[p]);
         }
         
@@ -80,7 +79,6 @@ class GuiPane extends JPanel{
         for(int p=0;p<MemoryPlayer_Params.length;p++){
             MemoryPlayer_Params[p] = new JTextArea(" ");
             MemoryPlayer_Params[p].setEditable(false);
-            MemoryPlayer_Params[p].setMinimumSize(new Dimension(width/2,height/2));
             MemoryPlayer.add(MemoryPlayer_Params[p]);
         }
         
@@ -141,6 +139,7 @@ class GuiPane extends JPanel{
                 break;
             case 4:
                 JoystickInfo_Params[position].setText(data);
+                break;
         }
     }
  }

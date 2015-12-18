@@ -73,8 +73,8 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //case 78:
         //    return 0;
         //parry
-        case 86:
-            return 1;//not a windup, but pretend it is to prevent attack
+        //case 86:
+        //    return 0;
         //1h r1 into r2 combo
         case 88:
             return 2;
@@ -192,7 +192,7 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //case 225:
         //    return 0;
         default:
-            guiPrint(LocationDetection",3:unknown animation id");
+            guiPrint(LocationDetection",3:unknown animation id %d", animation_id);
             return 0;
     }
 }
