@@ -11,6 +11,7 @@
 #include <Windows.h>
 #include "fann.h"
 #include "CharacterStruct.h"
+#include "SubRoutines.h"
 
 typedef struct{
     struct fann* mind;

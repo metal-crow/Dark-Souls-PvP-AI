@@ -161,7 +161,7 @@ int main(void){
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
-        //DefenseChoice = 0;
+        DefenseChoice = 0;
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
@@ -172,7 +172,7 @@ int main(void){
 
         WaitForThread(attack_mind_input);
         guiPrint(LocationDetection",2:Attack Neural Network decided %d", AttackChoice);
-        //AttackChoice = 0;
+        AttackChoice = 0;
 
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action

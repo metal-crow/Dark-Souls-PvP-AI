@@ -17,9 +17,10 @@ bool inActiveAttackSubroutine(){
     return subroutine_states[AttackStateIndex];
 }
 
-//if we're currently strafing and get attacked, break strafe subroutine
-void OverrideStrafeSubroutine(){
-    if (subroutine_states[DodgeTypeIndex] == 3){
+void OverrideLowPrioritySubroutines(){
+    if (
+        subroutine_states[DodgeTypeIndex] == CounterStrafeId
+        ){
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }

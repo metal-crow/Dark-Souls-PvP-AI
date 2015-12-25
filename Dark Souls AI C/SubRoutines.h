@@ -18,6 +18,17 @@ extern unsigned char subroutine_states[4];
 extern long startTimeAttack;
 extern long startTimeDefense;
 
+//Dodge Ids
+#define StandardRollId 1
+#define BackstepId 2
+#define CounterStrafeId 3
+#define L1AttackId 5
+#define ReverseRollBSId 6
+//Attack Ids
+#define MoveUpId 1
+#define GhostHitId 2
+#define BackstabId 3
+
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();
 
@@ -25,6 +36,8 @@ bool inActiveDodgeSubroutine();
 
 bool inActiveAttackSubroutine();
 
-void OverrideStrafeSubroutine();
+//handles aborting low priority subroutines in case of immediate nesiccary change
+//NOTE ensure this isnt called and then the same overridden subroutine isnt retriggered
+void OverrideLowPrioritySubroutines();
 
 #endif

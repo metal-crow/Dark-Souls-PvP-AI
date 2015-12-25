@@ -17,7 +17,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
-            OverrideStrafeSubroutine();
+            OverrideLowPrioritySubroutines();
             guiPrint(LocationDetection",0:about to be hit (anim id:%d) (suban id:%d)", Phantom->animation_id, Phantom->subanimation);
             return ImminentHit;
 		}
@@ -33,9 +33,8 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
     unsigned char BackStabStateDetected = BackstabDetection(Player, Phantom, distanceByLine);
     if (BackStabStateDetected){
         guiPrint(LocationDetection",0:backstab detection result %d", BackStabStateDetected);
-        //will overwrite strafe subanimation
-        OverrideStrafeSubroutine();
-        //change to negative for upper level handling. 
+        //will overwrite strafe subroutine
+        OverrideLowPrioritySubroutines();
         if (BackStabStateDetected == 2){
             return InBSPosition;
         } else{
@@ -169,7 +168,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define TimeDeltaForGameRegisterAction 120
 
 //reverse roll through enemy attack and roll behind their back
-static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
     guiPrint(LocationState",0:Reverse Roll BS");
     long curTime = clock();
 
@@ -205,7 +204,12 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 
     //TODO point towards enemy
 
-    if (curTime > startTimeDefense + 3000){
+    if (
+        (curTime > startTimeDefense + 3000) ||
+        //early enemrgency abort in case enemy attack while we try to go for bs after roll
+        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && (attackInfo == ImminentHit))
+        )
+    {
         guiPrint(LocationState",0:end ReverseRollBS");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
@@ -220,8 +224,9 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         switch (attackInfo){
             //reverse roll on any attack
             case ImminentHit:
-                subroutine_states[DodgeTypeIndex] = 6;
+                subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 break;
+            //only defines backstab detection handling
             default:
                 subroutine_states[DodgeTypeIndex] = DefenseChoice;
                 break;
@@ -232,29 +237,21 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 	}
 
     switch (subroutine_states[DodgeTypeIndex]){
-        //standard roll
-        case 1:
+        case StandardRollId:
             StandardRoll(Player, Phantom, iReport);
             break;
-        //backstep
-        case 2:
+        case BackstepId:
             Backstep(Player, Phantom, iReport);
             break;
-        //counter strafe
-        case 3:
+        case CounterStrafeId:
             CounterStrafe(Player, Phantom, iReport);
             break;
-        case 4:
-            MoveUp(Player, Phantom, iReport);
+        case ReverseRollBSId:
+            ReverseRollBS(Player, Phantom, iReport, attackInfo);
             break;
-        case 5:
-            L1Attack(Player, Phantom, iReport);
-            break;
-        case 6:
-            ReverseRollBS(Player, Phantom, iReport);
-            break;
-        //should never be reached, since we default to 1 if instinct dodging
+        //should never be reached, since we default if instinct dodging
         default:
+            guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
             break;
     }
 }
@@ -365,7 +362,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
         switch (attackInfo){
             //we are in a position to bs
             case InBSPosition:
-                subroutine_states[AttackTypeIndex] = 3;
+                subroutine_states[AttackTypeIndex] = BackstabId;
                 break;
             default:
                 subroutine_states[AttackTypeIndex] = AttackNeuralNetChoice;
@@ -383,15 +380,15 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
         //Differentiate different attack subroutines based on neural net decision
         switch (subroutine_states[AttackTypeIndex]){
             //to move towards the opponent
-            case 1:
+            case MoveUpId:
                 MoveUp(Player, Phantom, iReport);
                 break;
             //ghost hits for normal attacks
-            case 2:
+            case GhostHitId:
                 ghostHit(Player, Phantom, iReport);
                 break;
             //backstab
-            case 3:
+            case BackstabId:
                 backStab(Player, Phantom, iReport);
                 break;
             default:

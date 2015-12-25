@@ -38,7 +38,7 @@ int guiStart(){
     //malloc data sending buffer and zero
     buffer = calloc(MAXSTRINGSIZE, sizeof(char));
 
-#if REDIRECTTOFILE
+#if ENABLEPRINT && REDIRECTTOFILE
     freopen("output.txt", "w", stdout);
 #endif
     return 0;

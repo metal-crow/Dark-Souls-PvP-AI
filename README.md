@@ -29,7 +29,7 @@ Attack Network Inputs:
 
 
 ## TODO: 
-  
+
   know when they're attack is out of range but i can attack and hit them (reserch 0:29), no that shoukld be happening anyway
   bs during attack : 46
   go after/follow them during their rolls, roll catch : 57  

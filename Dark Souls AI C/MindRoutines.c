@@ -13,7 +13,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         fann_type* out = fann_run(defense_mind_input->mind, (fann_type*)&(defense_mind_input->input));
         if (*out < 1.5 && *out > 0.5
             && (float)defense_mind_input->nonNeuralNetworkInputs[0] < 5){//hardcode bs distance
-            DefenseChoice = 3;
+            DefenseChoice = CounterStrafeId;
         } else{
             DefenseChoice = 0;
         }
@@ -41,14 +41,14 @@ DWORD WINAPI AttackMindProcess(void* data){
         //AttackChoice = (unsigned char)(*out);
 
         if (attack_mind_input->input[0] > Player.weaponRange){//not in range
-            AttackChoice = 1;
+            AttackChoice = MoveUpId;
         }
         else if (
             ((int)(attack_mind_input->nonNeuralNetworkInputs[0]) > 50) &&  //have enough stamina
             ((int)(attack_mind_input->nonNeuralNetworkInputs[1]) >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){
-            AttackChoice = 2;
+            AttackChoice = GhostHitId;
         }
         else{
             AttackChoice = 0;
