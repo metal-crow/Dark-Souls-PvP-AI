@@ -23,7 +23,7 @@ int main(void){
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 6;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 3;
+	Player.weaponRange = 2.3;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
@@ -63,7 +63,7 @@ int main(void){
     Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
 	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
 	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
-    Player.animationTimer_address = 0;
+    Player.animationTimer_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer_offsets_length, Player_animationTimer_offsets);
     Player.animationId_address = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
     Player.hurtboxActive_address = 0;
     Player.readyState_address = FindPointerAddr(processHandle, player_base_add, Player_readyState_offsets_length, Player_readyState_offsets);

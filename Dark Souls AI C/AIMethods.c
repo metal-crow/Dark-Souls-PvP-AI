@@ -285,7 +285,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     //start rotate back to enemy
     //TODO dont have Player subanimation
-    if (true){
+    if (Player->subanimation == AttackSubanimationWindupGhostHit){
         guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%f, %f), Enemy: (%f,%f)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;

@@ -29,11 +29,11 @@ Attack Network Inputs:
 
 
 ## TODO: 
+  conserve more stamina when attacking desicion.
   should check enemy weapon speed, take into acound when deterrmining if roll or reverse roll bs.
-
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  
-
+  [TOP priority] fix ghost hit  
   [TOP priority] should attack even when enemy attacking, just determine their direciton and attack to their side or behind.  
   see aimethods:25. see enemy windup, determine what side/direction it is coming from. immediatly start executing subroutine strafe arround to back in opposing direction. 
   This is attack desicion. WHen we reach back, the auto-bs detection should kick in.
@@ -47,8 +47,6 @@ Attack Network Inputs:
   [high priority] make this strafe in the same direction as the enemy strafe  
   [high priority] try to bs with neural network on and using strafing, train with that   
   [high priority] teach poise  
-
-  [high priority] fix ghost hit  
 
   [medium priority] get dynamic angle change while rolling to roll bs.  
   [medium priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  

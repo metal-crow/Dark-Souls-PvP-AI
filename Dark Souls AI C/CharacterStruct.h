@@ -111,6 +111,7 @@ static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
 //the current subanimation being executed
 #define AttackSubanimationWindup 00
+#define AttackSubanimationWindupGhostHit 01
 #define AttackSubanimationWindupClosing 02
 #define AttackSubanimationActiveDuringHurtbox 11
 #define AttackSubanimationActiveHurtboxOver 12
@@ -126,6 +127,8 @@ static const int Enemy_hurtboxActive_offsets_length = 5;
 //time animation has been active
 static const int Enemy_animationTimer_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x4DC };
 static const int Enemy_animationTimer_offsets_length = 5;
+static const int Player_animationTimer_offsets[] = { 0x3C, 0x60, 0x4, 0x20, 0x54C };
+static const int Player_animationTimer_offsets_length = 5;
 //current animation id
 static const int Enemy_animationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
 static const int Enemy_animationID_offsets_length = 5;

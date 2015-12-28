@@ -58,17 +58,12 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterGUIId){
     else if (isDodgeAnimation(c->animationType_id)){
         c->subanimation = DodgeSubanimation;
     }
-    else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation
-        c->subanimation = SubanimationNeutral;
-    }
 
     //read how long the animation has been active, check with current animation, see if hurtbox is about to activate
     //what i want is a countdown till hurtbox is active
-    if (c->animationTimer_address && 
-        //cant be much higher b/c need spell attack timings
-        //also check that this is an attack that involves subanimation
-        animationid > 1000 && isAttackAnimation(c->animationType_id) == 2
-    ){
+    //cant be much higher b/c need spell attack timings
+    //also check that this is an attack that involves subanimation
+    else if (animationid > 1000 && isAttackAnimation(c->animationType_id) == 2){
         //if kick or parry, immediate dodge away (aid ends in 100)
         if (animationid % 1000 == 100){
             c->subanimation = AttackSubanimationWindupClosing;
@@ -77,11 +72,20 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterGUIId){
             float animationTimer;
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
             float dodgeTimer = dodgeTimings(animationid);
+            if (dodgeTimer - animationTimer < 0.14){
+                c->subanimation = AttackSubanimationWindupGhostHit;
+            }
             //only bother to set this for a specific range
-            if ((animationTimer <= dodgeTimer - 0.2) && (animationTimer + 0.4 >= dodgeTimer)){
+            //TODO just do dodgeTimer - animationTimer < ~0.3
+            else if ((animationTimer <= dodgeTimer - 0.2) && (animationTimer + 0.4 >= dodgeTimer)){
                 c->subanimation = AttackSubanimationWindupClosing;
             }
         }
+    }
+
+    else{
+    //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation
+        c->subanimation = SubanimationNeutral;
     }
 
     //read if in ready state(can transition to another animation)
