@@ -29,12 +29,7 @@ Attack Network Inputs:
 
 
 ## TODO: 
-
-  know when they're attack is out of range but i can attack and hit them (reserch 0:29), no that shoukld be happening anyway
-  bs during attack : 46
-  go after/follow them during their rolls, roll catch : 57  
-  can do 1:12 with better timing, not enough recover time after attack to dodge 2nd hit
-  ideal bs at 1:30
+  should check enemy weapon speed, take into acound when deterrmining if roll or reverse roll bs.
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

@@ -144,8 +144,6 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 }
 
-static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport);
-
 void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:L1");
     long curTime = clock();
@@ -245,23 +243,25 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 		startTimeDefense = clock();
 	}
 
-    switch (subroutine_states[DodgeTypeIndex]){
-        case StandardRollId:
-            StandardRoll(Player, Phantom, iReport);
-            break;
-        case BackstepId:
-            Backstep(Player, Phantom, iReport);
-            break;
-        case CounterStrafeId:
-            CounterStrafe(Player, Phantom, iReport);
-            break;
-        case ReverseRollBSId:
-            ReverseRollBS(Player, Phantom, iReport, attackInfo);
-            break;
-        //should never be reached, since we default if instinct dodging
-        default:
-            guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
-            break;
+    if (inActiveDodgeSubroutine()){
+        switch (subroutine_states[DodgeTypeIndex]){
+            case StandardRollId:
+                StandardRoll(Player, Phantom, iReport);
+                break;
+            case BackstepId:
+                Backstep(Player, Phantom, iReport);
+                break;
+            case CounterStrafeId:
+                CounterStrafe(Player, Phantom, iReport);
+                break;
+            case ReverseRollBSId:
+                ReverseRollBS(Player, Phantom, iReport, attackInfo);
+                break;
+            //should never be reached, since defense choice must always be >0
+            default:
+                guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
+                break;
+        }
     }
 }
 
@@ -304,9 +304,9 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 	//end subanimation on recover animation
     if (
-        (curTime > startTimeAttack + inputDelayForRotateBack + 100) &&
+        (curTime > startTimeAttack + inputDelayForRotateBack + 100)// &&
         //if we've compleated the attack move and we're in animation end state we can end
-        (Player->subanimation == SubanimationRecover)// ||
+        //(Player->subanimation == SubanimationRecover)// ||
         //or we end if not in attack type animation id, because we could get hit out of attack subroutine
         //!isAttackAnimation(Player->animation_id))
     ){
@@ -354,8 +354,6 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     if (curTime > startTimeAttack + inputDelayForStopMove){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
-        subroutine_states[DodgeTypeIndex] = 0;
         guiPrint(LocationState",0:end sub");
     }
 }
@@ -382,9 +380,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
         }
         if (subroutine_states[AttackTypeIndex]){
             subroutine_states[AttackStateIndex] = 1;
+            //set time for this subroutine
+            startTimeAttack = clock();
         }
-        //set time for this subroutine
-        startTimeAttack = clock();
     }
 
     //may not actually enter subroutine
