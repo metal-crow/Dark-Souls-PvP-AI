@@ -49,7 +49,7 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
 
 //handles rollover from 360 to 0
 //player is +-60 degrees relative to the enemy rotation (yes, thats all to it)
-#define BackstabDegreeRange 59
+#define BackstabDegreeRange 60
 static bool InBackstabRange(float enemy, float player){
     float enemypos = enemy + BackstabDegreeRange;
     enemypos = enemypos <= 360 ? enemypos : enemypos - 360;
@@ -67,6 +67,8 @@ static bool InBackstabRange(float enemy, float player){
 
 //check if player behind enemy, and if they're in +-60 degree bs window
 #define BackstabRange 1.5
+//the determiner for if behind someone also must include both characters body widths. or it could be a cone, instead of a line. not sure.
+#define RealBehindRange 0.5 
 unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;
@@ -76,7 +78,7 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
     //each segment is 90 degrees
     if ((angle <= 360 && angle >= 315) || (angle <= 45 && angle >= 0)){
         //player is behind them
-        if (y_dist > 0){
+        if (y_dist > RealBehindRange){
             //player is in backstab rotation and distance in allowable range
             if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
@@ -85,7 +87,7 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
         }
         return 0;
     } else if (angle <= 315 && angle >= 225){
-        if (x_dist < 0){
+        if (x_dist < -RealBehindRange){
             if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
@@ -93,7 +95,7 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
         }
         return 0;
     } else if (angle <= 225 && angle >= 135){
-        if (y_dist < 0){
+        if (y_dist < -RealBehindRange){
             if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }
@@ -101,7 +103,7 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
         }
         return 0;
     } else{
-        if (x_dist > 0){
+        if (x_dist > RealBehindRange){
             if (InBackstabRange(angle, Player->rotation) && distance <= BackstabRange){
                 return 2;
             }

@@ -33,7 +33,7 @@ void readPointers(HANDLE processHandle){
     Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
     Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
     Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
-    Enemy.animation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animation_offsets_length, Enemy_animation_offsets);
+    Enemy.animationType_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationType_offsets_length, Enemy_animationType_offsets);
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
 
@@ -41,7 +41,7 @@ void readPointers(HANDLE processHandle){
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
     Player.r_weapon_address = 0;
     Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
-    Player.animation_address = FindPointerAddr(processHandle, player_base_add, Player_animation_offsets_length, Player_animation_offsets);
+    Player.animationType_address = FindPointerAddr(processHandle, player_base_add, Player_animationType_offsets_length, Player_animationType_offsets);
     Player.velocity_address = 0;
     Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
 }
@@ -83,8 +83,8 @@ CharState* ReadPlayerFANN(Character * c, HANDLE processHandle){
     c->rotation = (c->rotation + PI) * (180.0 / PI);
 
     //read current animation id
-    if (c->animation_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->animation_address), &(state->animation_id), 2, 0);
+    if (c->animationType_address){
+        ReadProcessMemory(processHandle, (LPCVOID)(c->animationType_address), &(state->animation_id), 2, 0);
     }
 
     if (c->velocity_address){

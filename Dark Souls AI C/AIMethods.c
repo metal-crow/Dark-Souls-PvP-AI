@@ -5,8 +5,10 @@
 char EnemyStateProcessing(Character * Player, Character * Phantom){
 	//if they are outside of their attack range
     float distanceByLine = distance(Player, Phantom);
+    guiPrint(LocationJoystick",1:Distance:%f", distanceByLine);
+
     if (distanceByLine <= Phantom->weaponRange){
-		unsigned char AtkID = isAttackAnimation(Phantom->animation_id);
+		unsigned char AtkID = isAttackAnimation(Phantom->animationType_id);
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
 		if (
@@ -18,7 +20,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
             OverrideLowPrioritySubroutines();
-            guiPrint(LocationDetection",0:about to be hit (anim id:%d) (suban id:%d)", Phantom->animation_id, Phantom->subanimation);
+            guiPrint(LocationDetection",0:about to be hit (anim type id:%d) (suban id:%d)", Phantom->animationType_id, Phantom->subanimation);
             return ImminentHit;
 		}
 		//windup, attack coming
@@ -42,7 +44,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
         }
     }
 
-    guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animation_id, Phantom->subanimation);
+    guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation type id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animationType_id, Phantom->subanimation);
     return EnemyNeutral;
 }
 
@@ -69,9 +71,9 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     if (
         (curTime > startTimeDefense + inputDelayForStopDodge + 50) &&
         //if we've compleated the dodge move and we're in animation end state we can end
-        ((Player->subanimation == AttackSubanimationRecover) ||
+        ((Player->subanimation == SubanimationRecover) ||
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
-        !isDodgeAnimation(Player->animation_id))
+        !isDodgeAnimation(Player->animationType_id))
        ){
         guiPrint(LocationState",1:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
@@ -93,7 +95,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
     if (
         (curTime > startTimeDefense + inputDelayForStopCircle)// &&
         //if we've compleated the dodge move and we're in animation end state we can end
-        //(Player->subanimation == AttackSubanimationRecover)// ||
+        //(Player->subanimation == SubanimationRecover)// ||
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
         //!isDodgeAnimation(Player->animation_id))
         ){
@@ -168,6 +170,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define TimeDeltaForGameRegisterAction 120
 
 //reverse roll through enemy attack and roll behind their back
+//TODO this doesnt work super well when enemy in opposite direction of camera. not enough time for lockon to fully spin camera and to dodge a hit.
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
     guiPrint(LocationState",0:Reverse Roll BS");
     long curTime = clock();
@@ -222,9 +225,15 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 		//indicate we are in dodge subroutine
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
-            //reverse roll on any attack
             case ImminentHit:
-                subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+                //if the reverse roll is close enough to put us behind the enemy
+                if (distance(Player, Phantom) <= 3){
+                    subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+                }
+                //otherwise, normal roll
+                else{
+                    subroutine_states[DodgeTypeIndex] = StandardRollId;
+                }
                 break;
             //only defines backstab detection handling
             default:
@@ -297,7 +306,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     if (
         (curTime > startTimeAttack + inputDelayForRotateBack + 100) &&
         //if we've compleated the attack move and we're in animation end state we can end
-        (Player->subanimation == AttackSubanimationRecover)// ||
+        (Player->subanimation == SubanimationRecover)// ||
         //or we end if not in attack type animation id, because we could get hit out of attack subroutine
         //!isAttackAnimation(Player->animation_id))
     ){
@@ -320,9 +329,9 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     if (
         (curTime > startTimeAttack + inputDelayForRotateBack) &&
         //if we've compleated the attack move and we're in animation end state we can end
-        ((Player->subanimation == AttackSubanimationRecover) ||
+        ((Player->subanimation == SubanimationRecover) ||
         //or we end if not in attack type animation id, because we could get hit out of attack subroutine
-        !isAttackAnimation(Player->animation_id))
+        !isAttackAnimation(Player->animationType_id))
         ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
@@ -356,8 +365,11 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 	//TODO need timing analysis. Opponent can move outside range during windup
 
     //procede with subroutine if we are not in one already
-    //also special case for asyncronous backstabs
-    if (!inActiveSubroutine() || attackInfo == InBSPosition){
+    if (
+        !inActiveSubroutine() ||
+        //special case for asyncronous backstabs. allow, but only when they can be executed, to avoid animation queue.
+        (attackInfo == InBSPosition && Player->subanimation >= SubanimationRecover)
+      ){
         //special mappings to decide between neural net desicion and logic, determine if we want to enter attack subroutine
         switch (attackInfo){
             //we are in a position to bs

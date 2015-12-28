@@ -58,7 +58,9 @@ Attack Network Inputs:
   [medium priority] get dynamic angle change while rolling to roll bs.  
   [medium priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
   [medium priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI or 0 depending on map.
+  [medium priority] Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
+  [low priority, currently nothing important can be used with]	Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around.  
   [low priority, currently sub-millisecond]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
   [low priority]	Find range of weapons(hitbox size,bows,etc)  
   [low priority]	Stamia management(for dodge, attack handled)  

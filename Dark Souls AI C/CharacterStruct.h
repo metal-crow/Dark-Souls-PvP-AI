@@ -18,9 +18,9 @@ typedef struct {
 	//data for rotation
 	ullong rotation_address;
 	float rotation;
-	//data for current animation id
-	ullong animation_address;
-	unsigned int animation_id;
+	//current animation type id
+	ullong animationType_address;
+	unsigned int animationType_id;
 	//hp
 	ullong hp_address;
 	unsigned int hp;
@@ -37,16 +37,16 @@ typedef struct {
 	float weaponRange;
     //encompases the various states of an animation
     unsigned int subanimation;
-    //the current attack animation id
-    ullong attackAnimationId_address;
+    //the current animation id
+    ullong animationId_address;
 	//animation timer.
     ullong animationTimer_address;
 	//hurtbox state 
     ullong hurtboxActive_address;
     //windup state
     ullong windup_address;
-    //recovery state
-    ullong recoveryState_address;
+    //ready/animation switchable state
+    ullong readyState_address;
     //velocity. used for backstab detection
     ullong velocity_address;
     float velocity;
@@ -60,7 +60,7 @@ Character Enemy;
 Character Player;
 
 //read memory for the character's variables
-void ReadPlayer(Character * c, HANDLE * processHandle, int Character);
+void ReadPlayer(Character * c, HANDLE * processHandle, int characterGUIId);
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...);
 
@@ -86,11 +86,11 @@ static const int Enemy_rotation_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x34 };
 static const int Player_rotation_offsets[] = { 0x288, 0xC0, 0x4, 0x18, 0x4 };
 static const int Enemy_rotation_offsets_length = 5;
 static const int Player_rotation_offsets_length = 5;
-//offsets and length for animation id
-static const int Enemy_animation_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x1EC };
-static const int Player_animation_offsets[] = { 0x288, 0xC, 0xC, 0x10, 0x41C };
-static const int Enemy_animation_offsets_length = 5;
-static const int Player_animation_offsets_length = 5;
+//offsets and length for animation type id
+static const int Enemy_animationType_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x1EC };
+static const int Player_animationType_offsets[] = { 0x288, 0xC, 0xC, 0x10, 0x41C };
+static const int Enemy_animationType_offsets_length = 5;
+static const int Player_animationType_offsets_length = 5;
 //hp
 static const int Enemy_hp_offsets[] = { 0x4, 0x4, 0x2D4 };
 static const int Player_hp_offsets[] = { 0x288, 0xC, 0x330, 0x4, 0x2D4 };
@@ -114,7 +114,8 @@ static const int Player_l_weapon_offsets_length = 5;
 #define AttackSubanimationWindupClosing 02
 #define AttackSubanimationActiveDuringHurtbox 11
 #define AttackSubanimationActiveHurtboxOver 12
-#define AttackSubanimationRecover 20
+#define DodgeSubanimation 13
+#define SubanimationRecover 20
 #define SubanimationNeutral 30
 //windup state
 static const int Enemy_windup_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x107 };
@@ -122,24 +123,17 @@ static const int Enemy_windup_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;
-
-//if windup is about to close
-//TODO this one isnt the best either...
-//byte doesnt work. try 4 byte or float
-//static const int Enemy_windupClose_offsets[] = { 0x4, 0x4, 0x24, 0x5C, 0x16 };//{ 0x4, 0x4, 0x658, 0x5C, 0xEB };
-//static const int Player_windupClose_offsets[] = { 0x28, 0x0, 0x34C, 0x24, 0x1BB };//TODO
-//static const int Enemy_windupClose_offsets_length = 5;
-//static const int Player_windupClose_offsets_length = 5;
-
 //time animation has been active
 static const int Enemy_animationTimer_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x4DC };
 static const int Enemy_animationTimer_offsets_length = 5;
-//current enemy attack animation id
-static const int Enemy_attackAnimationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
-static const int Enemy_attackAnimationID_offsets_length = 5;
-//if in recover state
-static const int Player_recoverState_offsets[] = { 0x3C, 0x60, 0x168, 0x2C, 0x415 };
-static const int Player_recoverState_offsets_length = 5;
+//current animation id
+static const int Enemy_animationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
+static const int Enemy_animationID_offsets_length = 5;
+static const int Player_animationID_offsets[] = { 0x288, 0xC, 0x618, 0x28, 0x7B0 };
+static const int Player_animationID_offsets_length = 5;
+//if in a ready/animation switchable state (is set to 0 during any animation, including walking even though walking can transition at anytime. OR w/ animation type id)
+static const int Player_readyState_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
+static const int Player_readyState_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
 //-0.13 walk

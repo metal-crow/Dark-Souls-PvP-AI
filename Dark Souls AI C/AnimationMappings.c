@@ -7,8 +7,8 @@ i cant seem to find a pattern in the ids, so this is just a big switch statement
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
 0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created*/
-unsigned char isAttackAnimation(unsigned char animation_id){
-    switch (animation_id){
+unsigned char isAttackAnimation(unsigned char animationType_id){
+    switch (animationType_id){
         //nothing
         //case 0:
         //    return 0;
@@ -192,22 +192,28 @@ unsigned char isAttackAnimation(unsigned char animation_id){
         //case 225:
         //    return 0;
         default:
-            guiPrint(LocationDetection",3:unknown animation id %d", animation_id);
+            guiPrint(LocationDetection",3:unknown animation id %d", animationType_id);
             return 0;
     }
 }
 
 
-unsigned char isDodgeAnimation(unsigned char animation_id){
-    switch (animation_id){
+unsigned char isDodgeAnimation(unsigned char animationType_id){
+    switch (animationType_id){
         //1 hand roll
         case 32:
+            return 1;
+        //1 hand backwards roll
+        case 33:
             return 1;
         //backstep 1h
         case 38:
             return 1;
         //2 hand roll
         case 94:
+            return 1;
+        //2 hand backwards roll
+        case 95:
             return 1;
         //backstep 2h
         case 100:
@@ -249,8 +255,8 @@ unsigned char isVulnerableAnimation(int animation_id){
 }
 
 
-float dodgeTimings(int attack_id){
-    switch (attack_id){
+float dodgeTimings(int animation_id){
+    switch (animation_id){
     case 6422: return 0.3;
     case 6517: return 1.1;
     case 6522: return 0.3;
@@ -873,7 +879,7 @@ float dodgeTimings(int attack_id){
     case 1344310: return 0.79;
     case 1354300: return 1.791999;
     default:      
-        guiPrint(LocationDetection",4:ALERT: %d attack id not found", attack_id);
+        guiPrint(LocationDetection",4:ALERT: %d attack id not found", animation_id);
         return 0.3;
     }
 }
