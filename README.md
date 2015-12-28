@@ -33,7 +33,6 @@ Attack Network Inputs:
   should check enemy weapon speed, take into acound when deterrmining if roll or reverse roll bs.
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  
-  [TOP priority] fix ghost hit  
   [TOP priority] should attack even when enemy attacking, just determine their direciton and attack to their side or behind.  
   see aimethods:25. see enemy windup, determine what side/direction it is coming from. immediatly start executing subroutine strafe arround to back in opposing direction. 
   This is attack desicion. WHen we reach back, the auto-bs detection should kick in.
@@ -48,18 +47,15 @@ Attack Network Inputs:
   [high priority] try to bs with neural network on and using strafing, train with that   
   [high priority] teach poise  
 
-  [medium priority] get dynamic angle change while rolling to roll bs.  
+  [medium priority] Get different base addresses for all possible enemies, allow switching of main target.
   [medium priority, can just not invade for now]	Pointers have to be reread for characters because end address changes when invading  
-  [medium priority, use CE for now]	Must lock camera(x and y pos and rotation), rotation x set to PI or 0 depending on map.
+  [medium priority, use CE for now]	Must lock camera(x and y pos), rotation x set to PI or 0 depending on map.
   [medium priority] Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   [low priority, currently nothing important can be used with]	Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around.  
   [low priority, currently sub-millisecond]	ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
-  [low priority]	Find range of weapons(hitbox size,bows,etc)  
-  [low priority]	Stamia management(for dodge, attack handled)  
   [low priority]	Better Vjoy loading/unloading    
   [low priority, use FANN only for now]		Have a build flag which determines if the program uses my handwritten neural netowrk or someone elses library neural network  
-  [low] fix camera to keep it locked for entire fight. Do NOT alter when locked on
 
   [cannot fix] lag will sometimes made perfect dodges impossible b/c hurtbox will appear before the windup animation finishes  
   [cannot fix] If broken out of dodge animation, instead of exiting roll i double roll due to queued animation system.   

@@ -66,6 +66,11 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     if (curTime < startTimeDefense + inputDelayForStopDodge){
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
+        //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
+        //this will cause this roll to occur in lockon state, but subroutine will exit without lockon. Nothing major
+        if (Player->locked_on){
+            iReport->lButtons += r3;
+        }
     }
 
     if (
@@ -164,7 +169,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 }
 
 #define TimeForR3ToTrigger 50
-#define TimeForCameraToRotateAfterLockon 190
+#define TimeForCameraToRotateAfterLockon 175//how much time we give to allow the camera to rotate. Short enough to not be hit by any attack
 #define TimeDeltaForGameRegisterAction 120
 
 //reverse roll through enemy attack and roll behind their back
@@ -173,8 +178,8 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     guiPrint(LocationState",0:Reverse Roll BS");
     long curTime = clock();
 
-    //have to lock on to reverse roll
-    if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger){
+    //have to lock on to reverse roll (also handle for being locked on already)
+    if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger && !Player->locked_on){
         iReport->lButtons = r3;
         guiPrint(LocationState",1:lockon");
     }
@@ -202,8 +207,6 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         iReport->wAxisY = joystickAngles.second;
         guiPrint(LocationState",1:moving to bs");
     }
-
-    //TODO point towards enemy
 
     if (
         (curTime > startTimeDefense + 3000) ||
@@ -284,7 +287,6 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 
     //start rotate back to enemy
-    //TODO dont have Player subanimation
     if (Player->subanimation == AttackSubanimationWindupGhostHit){
         guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%f, %f), Enemy: (%f,%f)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
         longTuple move = angleToJoystick(angle);
