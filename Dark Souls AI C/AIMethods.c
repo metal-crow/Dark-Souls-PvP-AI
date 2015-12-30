@@ -214,7 +214,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     if (
         (curTime > startTimeDefense + 3000) ||
         //early emergency abort in case enemy attack while we try to go for bs after roll or we dont get behind them after roll
-        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && ((attackInfo == ImminentHit) || (attackInfo != BehindEnemy))
+        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && ((attackInfo == ImminentHit) || (attackInfo != BehindEnemy)))
         )
     {
         guiPrint(LocationState",0:end ReverseRollBS");
