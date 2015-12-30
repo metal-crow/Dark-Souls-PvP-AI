@@ -169,8 +169,9 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 }
 
 #define TimeForR3ToTrigger 50
-#define TimeForCameraToRotateAfterLockon 175//how much time we give to allow the camera to rotate. Short enough to not be hit by any attack
+#define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate. Short enough to not be hit by any attack
 #define TimeDeltaForGameRegisterAction 120
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
 //TODO this doesnt work super well when enemy in opposite direction of camera. not enough time for lockon to fully spin camera and to dodge a hit.
@@ -227,8 +228,8 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
             case ImminentHit:
-                //if the reverse roll is close enough to put us behind the enemy
-                if (distance(Player, Phantom) <= 3){
+                //if the reverse roll is close enough to put us behind the enemy and we have enought windup time to reverse roll
+                if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTime){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
                 //otherwise, normal roll
@@ -275,6 +276,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 #define inputDelayForRotateBack 90
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:ghost hit");
     long curTime = clock();
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
@@ -318,6 +320,34 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 	}
 }
 
+static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:sub dead angle");
+    long curTime = clock();
+
+    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+
+    //hold attack button for a bit
+    if ((curTime < startTimeAttack + inputDelayForKick) && (curTime > startTimeAttack + inputDelayForStart)){
+        guiPrint(LocationState",1:r1");
+        iReport->lButtons = r1;
+    }
+
+    //point 90 degreees off angle from directly towards enemy
+    if (curTime > startTimeAttack + inputDelayForKick){
+        guiPrint(LocationState",1:angle");
+        angle = fmod((90.0 + angle), 360.0);
+        longTuple move = angleToJoystick(angle);
+        iReport->wAxisX = move.first;
+        iReport->wAxisY = move.second;
+    }
+
+    if (curTime > startTimeAttack + inputDelayForRotateBack + 100){
+        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackTypeIndex] = 0;
+        guiPrint(LocationState",0:end sub dead angle");
+    }
+}
+
 static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:backstab");
     long curTime = clock();
@@ -327,14 +357,8 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         iReport->lButtons = r1;
     }
 
-    //end subanimation on recover animation
-    if (
-        (curTime > startTimeAttack + inputDelayForRotateBack) &&
-        //if we've compleated the attack move and we're in animation end state we can end
-        ((Player->subanimation == SubanimationRecover) ||
-        //or we end if not in attack type animation id, because we could get hit out of attack subroutine
-        !isAttackAnimation(Player->animationType_id))
-        ){
+    //end subanimation immediatly
+    if (curTime > startTimeAttack + 40){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end backstab");
@@ -397,7 +421,8 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             //ghost hits for normal attacks
             case GhostHitId:
-                ghostHit(Player, Phantom, iReport);
+                //ghostHit(Player, Phantom, iReport);
+                deadAngle(Player, Phantom, iReport);
                 break;
             //backstab
             case BackstabId:

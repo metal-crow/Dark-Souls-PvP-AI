@@ -21,10 +21,10 @@ class GuiPane extends JPanel{
     private int height;
 
     private JPanel MemoryEnemy=new JPanel();
-    private JTextArea[] MemoryEnemy_Params=new JTextArea[11];
+    private JTextArea[] MemoryEnemy_Params=new JTextArea[12];
     
     private JPanel MemoryPlayer=new JPanel();
-    private JTextArea[] MemoryPlayer_Params=new JTextArea[11];
+    private JTextArea[] MemoryPlayer_Params=new JTextArea[12];
 
     private JPanel Detection=new JPanel();
     private JTextArea[] Detection_Params=new JTextArea[5];
@@ -150,7 +150,7 @@ public class GUI{
     
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
         //get screen dimensions
-        createAndShowGUI(500,500);
+        createAndShowGUI(450,700);
         
         DatagramSocket serverSocket = new DatagramSocket(4149);
         byte[] receiveData = new byte[500];
@@ -169,10 +169,10 @@ public class GUI{
         //serverSocket.close();
     }
     
-    private static void createAndShowGUI(int height, int width) {
+    private static void createAndShowGUI(int width, int height) {
         JFrame f = new JFrame("Dark Souls AI GUI");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(height,width);
+        f.setSize(width, height);
         innerGui=new GuiPane(height,width);
         f.add(innerGui);
         f.pack();

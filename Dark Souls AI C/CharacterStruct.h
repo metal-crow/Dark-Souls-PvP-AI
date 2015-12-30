@@ -53,6 +53,8 @@ typedef struct {
     //if locked on. used for verification for counter strafe
     ullong locked_on_address;
     unsigned char locked_on;
+    //time at which enemy hurtbox activates. Used for reverse roll vs dodge roll check
+    float dodgeTime;
 } Character;
 
 //initalize the phantom and player
@@ -60,7 +62,7 @@ Character Enemy;
 Character Player;
 
 //read memory for the character's variables
-void ReadPlayer(Character * c, HANDLE * processHandle, int characterGUIId);
+void ReadPlayer(Character * c, HANDLE * processHandle, int characterId);
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...);
 
