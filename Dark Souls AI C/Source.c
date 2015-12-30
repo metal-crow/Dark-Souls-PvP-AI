@@ -20,6 +20,7 @@ volatile char DefenseChoice = 0;
 MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
+#define DebuggingPacify 0
 int main(void){
 	//memset to ensure we dont have unusual char attributes at starting
 	memset(&Enemy, 0, sizeof(Character));
@@ -162,8 +163,9 @@ int main(void){
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
+#if DebuggingPacify
         DefenseChoice = 0;
-
+#endif
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
@@ -174,8 +176,9 @@ int main(void){
         WaitForThread(attack_mind_input);
         guiPrint(LocationDetection",2:Attack Neural Network decided %d subroutine_states={%d,%d,%d,%d}", AttackChoice,
             subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
+#if DebuggingPacify
         AttackChoice = 0;
-
+#endif
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action
         if (inActiveAttackSubroutine() || attackImminent != ImminentHit || AttackChoice){
