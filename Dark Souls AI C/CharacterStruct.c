@@ -2,6 +2,7 @@
 #define PI 3.14159265
 
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
+#pragma warning( disable: 4305 )
 
 void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 	HANDLE processHandle_nonPoint = *processHandle;
@@ -35,10 +36,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
     guiPrint("%d,6:L Weapon:%d", characterId, c->l_weapon_id);
 
-	//read if animation in windup
-    if (c->windup_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->windup_address), &(c->subanimation), 1, 0);
-    }
 	//read if hurtbox is active on enemy weapon
     if (c->hurtboxActive_address){
         unsigned char hurtboxActiveState;
@@ -74,14 +71,19 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 
             float dodgeTimer = dodgeTimings(animationid);
             c->dodgeTime = dodgeTimer;
+            float timeDelta = dodgeTimer - animationTimer;
+
             guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
 
-            if (dodgeTimer - animationTimer < 0.14){//time before the windup ends where we can still alter rotation
+            if (timeDelta > 0.45){
+                c->subanimation = AttackSubanimationWindup;
+            }
+            // time before the windup ends where we can still alter rotation
+            else if (timeDelta < 0.14){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
-            //only bother to set this for a specific range
-            //TODO just do dodgeTimer - animationTimer < ~0.3
-            else if ((animationTimer <= dodgeTimer - 0.2) && (animationTimer + 0.4 >= dodgeTimer)){
+            //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
+            else if (timeDelta <= 0.45 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
             }
         }

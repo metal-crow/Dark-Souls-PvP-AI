@@ -267,12 +267,13 @@ float dodgeTimings(int animation_id){
     case 203310: return 0.426;
     case 203500: return 0.529;
     case 203900: return 1.585999;
-    case 204000: return 0.324;
+    case 204000: return 0.3;
     case 204001: return 0.222;
     case 204002: return 0.324;
     case 204300: return 0.392;
     case 204310: return 0.409;
     case 204500: return 0.528;
+    case 204900: return 0.133;
     case 233000: return 0.51;
     case 233001: return 0.442;
     case 233002: return 0.442;
@@ -287,7 +288,7 @@ float dodgeTimings(int animation_id){
     case 234300: return 0.578;
     case 234310: return 0.51;
     case 234500: return 0.544;
-    case 234900: return 2.312;
+    case 234900: return 0.23;
     case 253000: return 0.648;
     case 253001: return 0.588;
     case 253002: return 0.652;
@@ -880,6 +881,6 @@ float dodgeTimings(int animation_id){
     case 1354300: return 1.791999;
     default:      
         guiPrint(LocationDetection",4:ALERT: %d attack id not found", animation_id);
-        return 0.3;
+        return 0.21;
     }
 }

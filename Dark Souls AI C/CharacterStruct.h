@@ -43,8 +43,6 @@ typedef struct {
     ullong animationTimer_address;
 	//hurtbox state 
     ullong hurtboxActive_address;
-    //windup state
-    ullong windup_address;
     //ready/animation switchable state
     ullong readyState_address;
     //velocity. used for backstab detection
@@ -120,9 +118,6 @@ static const int Player_l_weapon_offsets_length = 5;
 #define DodgeSubanimation 13
 #define SubanimationRecover 20
 #define SubanimationNeutral 30
-//windup state
-static const int Enemy_windup_offsets[] = { 0x4, 0x4, 0x28, 0x2C, 0x107 };
-static const int Enemy_windup_offsets_length = 5;
 //if enemy's weapon's hurtbox is active
 static const int Enemy_hurtboxActive_offsets[] = { 0x4, 0x0, 0xC, 0x3C, 0xF };
 static const int Enemy_hurtboxActive_offsets_length = 5;

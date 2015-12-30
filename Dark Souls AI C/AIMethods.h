@@ -19,7 +19,8 @@
 #define ImminentHit 2
 #define EnemyInWindup 1
 #define EnemyNeutral 0
-#define InBSPosition -1
+#define BehindEnemy -1
+#define InBSPosition -2
 char EnemyStateProcessing(Character * Player, Character * Phantom);
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.

@@ -29,9 +29,6 @@ Attack Network Inputs:
 
 
 ## TODO: 
-  if enemy in windup for a fast attack, trigger roll early from windup alert, instead of prehurtbox alert
-    should check enemy weapon speed, take into acound when deterrmining if roll or reverse roll bs.
-
   conserve more stamina when attacking desicion.
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

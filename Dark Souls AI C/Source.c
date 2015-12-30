@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
+#pragma warning( disable: 4305 )
 
 #include "gui.h"
 #include "MemoryEdits.h"
@@ -47,7 +49,6 @@ int main(void){
     Enemy.stamina_address = 0;
 	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
 	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
-    Enemy.windup_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_windup_offsets_length, Enemy_windup_offsets);
     Enemy.animationTimer_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer_offsets_length, Enemy_animationTimer_offsets);
     Enemy.animationId_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID_offsets_length, Enemy_animationID_offsets);
     Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
@@ -161,7 +162,7 @@ int main(void){
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
-        //DefenseChoice = 0;
+        DefenseChoice = 0;
 
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
@@ -173,11 +174,11 @@ int main(void){
         WaitForThread(attack_mind_input);
         guiPrint(LocationDetection",2:Attack Neural Network decided %d subroutine_states={%d,%d,%d,%d}", AttackChoice,
             subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
-        //AttackChoice = 0;
+        AttackChoice = 0;
 
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action
-        if (inActiveAttackSubroutine() || (attackImminent != ImminentHit || AttackChoice)){
+        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || AttackChoice){
             attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }

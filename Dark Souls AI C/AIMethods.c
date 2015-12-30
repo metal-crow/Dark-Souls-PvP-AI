@@ -40,7 +40,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
         if (BackStabStateDetected == 2){
             return InBSPosition;
         } else{
-            return EnemyNeutral;
+            return BehindEnemy;
         }
     }
 
@@ -169,12 +169,11 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 }
 
 #define TimeForR3ToTrigger 50
-#define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate. Short enough to not be hit by any attack
+#define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
 #define TimeDeltaForGameRegisterAction 120
 #define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
-//TODO this doesnt work super well when enemy in opposite direction of camera. not enough time for lockon to fully spin camera and to dodge a hit.
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
     guiPrint(LocationState",0:Reverse Roll BS");
     long curTime = clock();
@@ -196,7 +195,10 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     //move towards enemy back. Since the reverse roll ends at a about a 45 degree angle ajacent to their back, move in this way
     //Have to move to the side to get behind the enemys back
     //instead of going directly towards enemy, go at that direction +-10 degrees to make the end angle perpendicular to enemy's rotation
-    if (curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction){
+    if ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction)
+        //ensure we got behind the enemy, as we could have roll into them
+        && attackInfo == BehindEnemy)
+    {
         float angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
         if (Phantom->rotation < angle){
             angle += fmod((Phantom->rotation - angle),90);
@@ -211,8 +213,8 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 
     if (
         (curTime > startTimeDefense + 3000) ||
-        //early enemrgency abort in case enemy attack while we try to go for bs after roll
-        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && (attackInfo == ImminentHit))
+        //early emergency abort in case enemy attack while we try to go for bs after roll or we dont get behind them after roll
+        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && ((attackInfo == ImminentHit) || (attackInfo != BehindEnemy))
         )
     {
         guiPrint(LocationState",0:end ReverseRollBS");
