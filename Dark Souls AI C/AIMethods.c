@@ -77,13 +77,8 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         }
     }
 
-    if (
-        (curTime > startTimeDefense + inputDelayForStopDodge + 50) &&
-        //if we've compleated the dodge move and we're in animation end state we can end
-        ((Player->subanimation == SubanimationRecover) ||
-        //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
-        !isDodgeAnimation(Player->animationType_id))
-       ){
+    //need time to actually enter dodge roll in game so another subanimation cant override it
+    if (curTime > startTimeDefense + inputDelayForStopDodge + 200){
         guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
@@ -173,8 +168,8 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
 #define TimeForR3ToTrigger 50
 #define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
-#define TimeDeltaForGameRegisterAction 170//120
-#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
+#define TimeDeltaForGameRegisterAction 120
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){

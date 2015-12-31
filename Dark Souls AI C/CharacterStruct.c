@@ -80,13 +80,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             if (timeDelta > 0.45){
                 c->subanimation = AttackSubanimationWindup;
             }
-            // time before the windup ends where we can still alter rotation
-            else if (timeDelta < 0.14){
-                c->subanimation = AttackSubanimationWindupGhostHit;
-            }
             //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
             else if (timeDelta <= 0.45 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
+            }
+            // time before the windup ends where we can still alter rotation
+            else if (timeDelta < 0.14 && timeDelta > 0){
+                c->subanimation = AttackSubanimationWindupGhostHit;
             }
         }
     }

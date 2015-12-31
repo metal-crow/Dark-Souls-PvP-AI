@@ -132,7 +132,7 @@ static const int Enemy_animationID_offsets_length = 5;
 static const int Player_animationID_offsets[] = { 0x288, 0xC, 0x618, 0x28, 0x7B0 };
 static const int Player_animationID_offsets_length = 5;
 //if in a ready/animation switchable state (is set to 0 during any animation, including walking even though walking can transition at anytime. OR w/ animation type id)
-static const int Player_readyState_offsets[] = { 0x3C, 0x28, 0x320, 0x54, 0x796 };
+static const int Player_readyState_offsets[] = { 0x3C, 0x30, 0xC, 0x20C, 0x7D2 };
 static const int Player_readyState_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important
 //-0.04 slow walk
