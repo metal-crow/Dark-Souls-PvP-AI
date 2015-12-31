@@ -42,6 +42,9 @@ float distance(Character * Player, Character * Phantom);
 
 float angleDeltaFromFront(Character * Player, Character * Phantom);
 
+//determine if two angles are withing x degreees of eacho ther
+bool AnglesWithinRange(float ang1, float ang2, float range);
+
 unsigned char BackstabDetection(Character* Perspective, Character* Target, float distance);
 
 double angleFromCoordinates(float player_x, float phantom_x, float player_y, float phantom_y);

@@ -67,7 +67,9 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
     long curTime = clock();
-    if (curTime < startTimeDefense + inputDelayForStopDodge){
+    if (curTime < startTimeDefense + inputDelayForStopDodge
+        //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning
+        && AnglesWithinRange(angle, Player->rotation, 20)){
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
         //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
@@ -169,7 +171,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define TimeForR3ToTrigger 50
 #define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
 #define TimeDeltaForGameRegisterAction 120
-#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 100) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){

@@ -47,6 +47,21 @@ float angleDeltaFromFront(Character * Player, Character * Phantom){
     }
 }
 
+bool AnglesWithinRange(float ang1, float ang2, float range){
+    float ang1Max = ang1 + range;
+    ang1Max = ang1Max <= 360 ? ang1Max : ang1Max - 360;
+    float ang1Min = ang1 - range;
+    ang1Min = ang1Min >= 0 ? ang1Min : ang1Min + 360;
+
+    //dont have to worry about 0 problem
+    if (ang1Min < ang1Max){
+        return ang1Min <= ang2 && ang2 <= ang1Max;
+    } else{
+        //split into two sides across the 0 mark, check if player in either
+        return (ang1Min <= ang2 && ang2 <= 360) || (0 <= ang2 && ang2 <= ang1Max);
+    }
+}
+
 //handles rollover from 360 to 0
 //player is +-60 degrees relative to the enemy rotation (yes, thats all to it)
 #define BackstabDegreeRange 60
