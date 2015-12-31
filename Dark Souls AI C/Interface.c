@@ -304,7 +304,6 @@ longTuple angleToJoystick_CounterClockwise(double angle){
 		}
 	}
 
-    guiPrint(LocationJoystick",1:X:%d\nY:%d", tuple.first, tuple.second);
 	return tuple;
 }
 

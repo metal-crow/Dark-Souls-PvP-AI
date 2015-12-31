@@ -173,7 +173,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
 #define TimeForR3ToTrigger 50
 #define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
-#define TimeDeltaForGameRegisterAction 120
+#define TimeDeltaForGameRegisterAction 170//120
 #define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
@@ -228,7 +228,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
-	if (!inActiveSubroutine()){
+    if (!inActiveSubroutine() && Player->subanimation >= SubanimationRecover){
 		//indicate we are in dodge subroutine
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
@@ -394,11 +394,8 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
 	//TODO need timing analysis. Opponent can move outside range during windup
 
     //procede with subroutine if we are not in one already
-    if (
-        !inActiveSubroutine() ||
-        //special case for asyncronous backstabs. allow, but only when they can be executed, to avoid animation queue.
-        (attackInfo == InBSPosition && Player->subanimation >= SubanimationRecover)
-      ){
+    //special case for asyncronous backstabs.
+    if ((!inActiveSubroutine() || attackInfo == InBSPosition) && Player->subanimation >= SubanimationRecover){
         //special mappings to decide between neural net desicion and logic, determine if we want to enter attack subroutine
         switch (attackInfo){
             //we are in a position to bs
