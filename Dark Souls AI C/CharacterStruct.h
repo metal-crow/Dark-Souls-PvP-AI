@@ -124,7 +124,7 @@ static const int Enemy_hurtboxActive_offsets_length = 5;
 //time animation has been active
 static const int Enemy_animationTimer_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x4DC };
 static const int Enemy_animationTimer_offsets_length = 5;
-static const int Player_animationTimer_offsets[] = { 0x3C, 0x60, 0x4, 0x20, 0x54C };
+static const int Player_animationTimer_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x4DC };
 static const int Player_animationTimer_offsets_length = 5;
 //current animation id
 static const int Enemy_animationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
