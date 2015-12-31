@@ -1,4 +1,5 @@
 #include "MindRoutines.h"
+#pragma warning( disable: 4244 )
 
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
@@ -10,11 +11,35 @@ DWORD WINAPI DefenseMindProcess(void* data){
             SleepConditionVariableCS(&(defense_mind_input->cond), &(defense_mind_input->crit), INFINITE);
         }
 
-        fann_type* out = fann_run(defense_mind_input->mind, (fann_type*)&(defense_mind_input->input));
+        //generate inputs and scale from -1 to 1 
+        fann_type input[4];
+
+        float distanceInput = distance(&Player, &Enemy);
+        //min:0.3 max:5
+        input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
+
+        float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
+        //min:0 max:1.6
+        input[1] = 2 * (angleDeltaInput) / (1.6) - 1;
+
+        //min:-0.18 max:-0.04
+        input[2] = 2 * (Enemy.velocity - -0.18) / (-0.04 - -0.18) - 1;
+
+        float rotationDeltaInput = rotationDifferenceFromSelf(&Player, &Enemy);
+        //min:0 max:3.8
+        input[3] = 2 * (rotationDeltaInput) / (3.8) - 1;
+
+
+        fann_type* out = fann_run(defense_mind_input->mind, input);
         if (*out < 1.5 && *out > 0.5
-            && (float)defense_mind_input->nonNeuralNetworkInputs[0] < 5){//hardcode bs distance
+            && distanceInput < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
-        } else{
+        } 
+        //hardcoded check if the enemy is close behind us, may still have a change to avoid bs
+        else if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
+            DefenseChoice = StandardRollId;
+        }
+        else{
             DefenseChoice = 0;
         }
 
@@ -40,12 +65,12 @@ DWORD WINAPI AttackMindProcess(void* data){
         //fann_type* out = fann_run(attack_mind_input->mind, (fann_type*)&(attack_mind_input->input));
         //AttackChoice = (unsigned char)(*out);
 
-        if (attack_mind_input->input[0] > Player.weaponRange){//not in range
+        if (distance(&Player, &Enemy) > Player.weaponRange){//not in range
             AttackChoice = MoveUpId;
         }
         else if (
-            ((int)(attack_mind_input->nonNeuralNetworkInputs[0]) > 50) &&  //have enough stamina
-            ((int)(attack_mind_input->nonNeuralNetworkInputs[1]) >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
+            (Player.stamina > 50) &&  //have enough stamina
+            (Enemy.subanimation >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){
             AttackChoice = GhostHitId;

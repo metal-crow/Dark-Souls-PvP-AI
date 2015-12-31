@@ -12,11 +12,10 @@
 #include "fann.h"
 #include "CharacterStruct.h"
 #include "SubRoutines.h"
+#include "Interface.h"
 
 typedef struct{
     struct fann* mind;
-    volatile fann_type input[4];
-    volatile long long nonNeuralNetworkInputs[4];//store whatever is needed(evil casting, sorry)
     volatile bool exit;
     CRITICAL_SECTION crit;
     CONDITION_VARIABLE cond;

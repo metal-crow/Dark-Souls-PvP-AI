@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
-#pragma warning( disable: 4305 )
+#pragma warning( disable: 4305 )//ignore dataloss conversion from double to float
 
 #include "gui.h"
 #include "MemoryEdits.h"
@@ -108,35 +107,8 @@ int main(void){
         ReadPlayer(&Enemy, &processHandle, LocationMemoryEnemy);
         ReadPlayer(&Player, &processHandle, LocationMemoryPlayer);
 
-        //update neural network thread data
-
-        //Defense input: player distance, angle delta, velocity, rotation delta,
-        //get input and scale from -1 to 1 
-        float distanceInput = distance(&Player, &Enemy);
-        //min:0.3 max:5
-        defense_mind_input->nonNeuralNetworkInputs[0] = distanceInput;
-        defense_mind_input->input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
-
-        float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
-        //min:0 max:1.6
-        defense_mind_input->input[1] = 2 * (angleDeltaInput) / (1.6) - 1;
-
-        //min:-0.18 max:-0.04
-        defense_mind_input->input[2] = 2 * (Enemy.velocity - -0.18) / (-0.04 - -0.18) - 1;
-
-        float rotationDeltaInput = rotationDifferenceFromSelf(&Player, &Enemy);
-        //min:0 max:3.8
-        defense_mind_input->input[3] = 2 * (rotationDeltaInput) / (3.8) - 1;
-
+        //start the neural network threads
         WakeThread(defense_mind_input);
-
-        //Attack input for neural network: distance
-        //Attack input for logical check: stamina, enemy animation id
-        attack_mind_input->input[0] = distanceInput;
-
-        attack_mind_input->nonNeuralNetworkInputs[0] = Player.stamina;//send over for post check, neural network doesnt need to worry about, we can handle after
-        attack_mind_input->nonNeuralNetworkInputs[1] = Enemy.subanimation;
-
         WakeThread(attack_mind_input);
 
 		// reset struct info
@@ -147,18 +119,7 @@ int main(void){
 		iReport.wAxisXRot = MIDDLE;
         iReport.lButtons = 0x0;
 
-		//basic logic initilization choice
-
-		//logic has subroutine catches to ensure we dont interupt subroutines.
-		//need a continue catch to ensure that each frame has the routine run, since internal logic does not have garunteed forced continue's
-		/*
-		ex: we started an attack subroutine frame 1.
-		Frame 2 has the enemy attack us and trigger aboutToBeHit().
-		We go to dodge(), but the ai's internal catch says we're already in attack subroutine, so dont start the dodge subroutine.
-		Now the ai's normal logic would be finished, but we havent continued out attack subroutine.
-		These subroutine checks ensures that it is continued.
-		*/
-
+		//begin reading enemy state, and handle w logic and subroutines
         char attackImminent = EnemyStateProcessing(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
