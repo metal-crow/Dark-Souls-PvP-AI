@@ -192,7 +192,7 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //case 225:
         //    return 0;
         default:
-            guiPrint(LocationDetection",3:unknown animation id %d", animationType_id);
+            guiPrint(LocationDetection",3:unknown animation type %d", animationType_id);
             return 0;
     }
 }
@@ -880,7 +880,7 @@ float dodgeTimings(int animation_id){
     case 1344310: return 0.79;
     case 1354300: return 1.791999;
     default:      
-        guiPrint(LocationDetection",4:ALERT: %d attack id not found", animation_id);
+        guiPrint(LocationDetection",4:ALERT: %d animation id not found", animation_id);
         return 0.21;
     }
 }

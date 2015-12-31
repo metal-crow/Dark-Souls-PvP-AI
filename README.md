@@ -36,6 +36,7 @@ Attack Network Inputs:
   see aimethods:25. see enemy windup, determine what side/direction it is coming from. immediatly start executing subroutine strafe arround to back in opposing direction. 
   This is attack desicion. WHen we reach back, the auto-bs detection should kick in.
   [TOP] too prone to trading  
+  [TOP] impove bs neural netowrk accuracy. try to bs with neural network on and using strafing, train with that   
 
   [high] more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
   [high] use more than 1 attack types, dynamic range for weapon attacks  
@@ -43,7 +44,6 @@ Attack Network Inputs:
   [high] toggle escaping(cant dodge everything always, lag)
   [high] get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
   [high priority] make this strafe in the same direction as the enemy strafe  
-  [high priority] try to bs with neural network on and using strafing, train with that   
   [high priority] teach poise  
 
   [medium priority] Get different base addresses for all possible enemies, allow switching of main target.

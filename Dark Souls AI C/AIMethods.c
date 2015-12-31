@@ -3,6 +3,8 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
 char EnemyStateProcessing(Character * Player, Character * Phantom){
+    char returnVar = EnemyNeutral;
+
 	//if they are outside of their attack range
     float distanceByLine = distance(Player, Phantom);
     guiPrint(LocationJoystick",1:Distance:%f", distanceByLine);
@@ -21,13 +23,13 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 		){
             OverrideLowPrioritySubroutines();
             guiPrint(LocationDetection",0:about to be hit (anim type id:%d) (suban id:%d)", Phantom->animationType_id, Phantom->subanimation);
-            return ImminentHit;
+            returnVar = ImminentHit;
 		}
 		//windup, attack coming
         //TODO should start to plan an attack now and attack while they;re attacking while avoiding the attack
         else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
 			guiPrint(LocationDetection",0:dont attack, enemy windup");
-            return EnemyInWindup;
+            returnVar = EnemyInWindup;
 		}
 	}
 
@@ -38,14 +40,16 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
         //will overwrite strafe subroutine
         OverrideLowPrioritySubroutines();
         if (BackStabStateDetected == 2){
-            return InBSPosition;
+            returnVar = InBSPosition;
         } else{
-            return BehindEnemy;
+            returnVar = BehindEnemy;
         }
     }
 
-    guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation type id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animationType_id, Phantom->subanimation);
-    return EnemyNeutral;
+    if (returnVar == EnemyNeutral){
+        guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation type id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animationType_id, Phantom->subanimation);
+    }
+    return returnVar;
 }
 
 /* ------------- DODGE Actions ------------- */
@@ -334,10 +338,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         iReport->lButtons = r1;
     }
 
-    //point 90 degreees off angle from directly towards enemy
+    //point 75 degreees off angle from directly towards enemy
     if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle");
-        angle = fmod((90.0 + angle), 360.0);
+        angle = fmod((75.0 + angle), 360.0);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;

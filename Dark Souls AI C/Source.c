@@ -25,7 +25,7 @@ int main(void){
 	memset(&Enemy, 0, sizeof(Character));
 	Enemy.weaponRange = 6;//TODO temp hardcoding
 	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 1.7;
+	Player.weaponRange = 1.5;
 
 	//get access to dark souls memory
 	char * processName = "DARKSOULS.exe";
