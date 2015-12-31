@@ -35,7 +35,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
             && distanceInput < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
-        //hardcoded check if the enemy is close behind us, may still have a change to avoid bs
+        //hardcoded check if the enemy is close behind us, may still have a change to avoid bs. TODO make this extend to the sides as well.
         else if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
             DefenseChoice = StandardRollId;
         }

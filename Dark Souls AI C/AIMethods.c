@@ -57,7 +57,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 #define inputDelayForStopDodge 40
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",1:rolling");
+    guiPrint(LocationState",0:dodge roll");
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
     angle = fabs(angle - 180.0);
     //angle joystick
@@ -84,11 +84,10 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         //or we end if not in dodge type animation id, because we could get hit out of dodge subroutine
         !isDodgeAnimation(Player->animationType_id))
        ){
-        guiPrint(LocationState",1:end dodge roll");
+        guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
     }
-    guiPrint(LocationState",0:dodge roll\n");
 }
 
 #define inputDelayForStopCircle 40
@@ -234,7 +233,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
             case ImminentHit:
-                //if the reverse roll is close enough to put us behind the enemy and we have enought windup time to reverse roll
+                //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
                 if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTime){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }

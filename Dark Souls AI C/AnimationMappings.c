@@ -91,8 +91,8 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         case 107:
             return 2;
         //2h r1 bounce back
-        //case 108:
-        //    return 0;
+        case 108:
+            return 2;//uh, i saw this be a normal attack once
         //2h r1 combo
         case 109:
             return 2;
@@ -305,7 +305,7 @@ float dodgeTimings(int animation_id){
     case 254310: return 0.896;
     case 254500: return 0.592;
     case 254600: return 1;
-    case 254900: return 2.647998;
+    case 254900: return 0.5;
     case 263000: return 0.956;
     case 263001: return 0.864;
     case 263002: return 0.96;
