@@ -114,8 +114,9 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
 }
     
 //this tests if safe FROM backstabs and able TO backstab
-unsigned char BackstabDetection(Character* Player, Character* Enemy, float distance){
-    return BackstabDetection_CounterClockwise(Player, Enemy, distance);
+//determines the state of a backstab from the perspecitve's view with respect to the target
+unsigned char BackstabDetection(Character* Perspective, Character* Target, float distance){
+    return BackstabDetection_CounterClockwise(Perspective, Target, distance);
 }
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom){
