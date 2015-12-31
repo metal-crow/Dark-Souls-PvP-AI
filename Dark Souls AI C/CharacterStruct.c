@@ -48,6 +48,8 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId_address), &animationid, 4, 0);
     guiPrint("%d,7:Animation Id:%d", characterId, animationid);
 
+    unsigned char attackAnimationInfo = isAttackAnimation(c->animationType_id);
+
     if (isVulnerableAnimation(animationid))
     {
         c->subanimation = AttackSubanimationActiveHurtboxOver;
@@ -60,7 +62,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //what i want is a countdown till hurtbox is active
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
-    else if (animationid > 1000 && isAttackAnimation(c->animationType_id) == 2){
+    else if (animationid > 1000 && attackAnimationInfo == 2){
         //if kick or parry, immediate dodge away (aid ends in 100)
         if (animationid % 1000 == 100){
             c->subanimation = AttackSubanimationWindupClosing;
@@ -88,7 +90,12 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             }
         }
     }
-
+    else if (attackAnimationInfo == 1){
+        c->subanimation = AttackSubanimationWindup;
+    }
+    else if (attackAnimationInfo == 3){
+        c->subanimation = AttackSubanimationActiveDuringHurtbox;
+    }
     else{
     //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation
         c->subanimation = SubanimationNeutral;
