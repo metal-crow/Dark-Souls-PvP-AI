@@ -64,11 +64,11 @@
     <ClCompile Include="AnimationMappings.c">
       <Filter>AICore\Instinct</Filter>
     </ClCompile>
-    <ClCompile Include="GenerateHurtboxTimings.cpp">
-      <Filter>HelperUtils</Filter>
-    </ClCompile>
     <ClCompile Include="gui.c">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSpace.c">
+      <Filter>HelperUtils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

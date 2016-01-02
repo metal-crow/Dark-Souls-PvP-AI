@@ -54,22 +54,35 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 
 /* ------------- DODGE Actions ------------- */
 
+#define inputDelayForStopRotate 50
 #define inputDelayForStopDodge 40
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    long curTime = clock();
+
     guiPrint(LocationState",0:dodge roll");
-    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-    angle = fabs(angle - 180.0);
+
+    //this shouldnt have ever worked (100% anyway)
+    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 40.0;//To avoid taking too long in turning, only turn 40 degrees max
+    angle = angle < 0 ? angle + 360 : angle;
     //angle joystick
     longTuple move = angleToJoystick(angle);
     iReport->wAxisX = move.first;
     iReport->wAxisY = move.second;
 
+    //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
+    //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
+    /*if (curTime < startTimeDefense + inputDelayForStopRotate){
+        double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 0.0;//To avoid taking too long in turning, only turn 90 degrees max
+        angle = angle < 0 ? angle + 360 : angle;
+        //angle joystick
+        longTuple move = angleToJoystick(angle);
+        iReport->wAxisX = move.first;
+        iReport->wAxisY = move.second;
+    }*/
+
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
-    long curTime = clock();
-    if (curTime < startTimeDefense + inputDelayForStopDodge
-        //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning
-        && AnglesWithinRange(angle, Player->rotation, 20)){
+    if (curTime < startTimeDefense + inputDelayForStopDodge){
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
         //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
@@ -275,7 +288,6 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 
 #define inputDelayForStart 10//if we exit move forward and go into attack, need this to prevent kick
 #define inputDelayForKick 40
-#define inputDelayForRotateBack 90
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:ghost hit");
@@ -283,16 +295,21 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
+    //handle entering with lockon
+    if (Player->locked_on && curTime < startTimeAttack + inputDelayForKick){
+        iReport->lButtons += r3;
+    }
+
     //hold attack button for a bit
     if ((curTime < startTimeAttack + inputDelayForKick) && (curTime > startTimeAttack + inputDelayForStart)){
         guiPrint(LocationState",1:r1");
-        iReport->lButtons = r1;
+        iReport->lButtons += r1;
     }
 
 
     //start rotate back to enemy
     if (Player->subanimation == AttackSubanimationWindupGhostHit){
-        guiPrint(LocationState",1:TOWARDS ATTACK. angle %f Player: (%f, %f), Enemy: (%f,%f)", angle, Player->loc_x, Player->loc_y, Phantom->loc_x, Phantom->loc_y);
+        guiPrint(LocationState",1:towards");
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
@@ -310,11 +327,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 	//end subanimation on recover animation
     if (
-        (curTime > startTimeAttack + inputDelayForRotateBack + 100)// &&
-        //if we've compleated the attack move and we're in animation end state we can end
-        //(Player->subanimation == SubanimationRecover)// ||
-        //or we end if not in attack type animation id, because we could get hit out of attack subroutine
-        //!isAttackAnimation(Player->animation_id))
+        (curTime > startTimeAttack + 800) &&
+        (Player->subanimation >= AttackSubanimationWindupGhostHit)
     ){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
@@ -343,7 +357,7 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         iReport->wAxisY = move.second;
     }
 
-    if (curTime > startTimeAttack + inputDelayForRotateBack + 100){
+    if (curTime > startTimeAttack + 200){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub dead angle");
@@ -420,8 +434,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             //ghost hits for normal attacks
             case GhostHitId:
-                //ghostHit(Player, Phantom, iReport);
-                deadAngle(Player, Phantom, iReport);
+                ghostHit(Player, Phantom, iReport);
                 break;
             //backstab
             case BackstabId:

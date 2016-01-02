@@ -19,9 +19,12 @@ bool inActiveAttackSubroutine(){
 
 void OverrideLowPrioritySubroutines(){
     if (
-        subroutine_states[DodgeTypeIndex] == CounterStrafeId
+        subroutine_states[DodgeTypeIndex] == CounterStrafeId ||
+        subroutine_states[AttackTypeIndex] == MoveUpId
         ){
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[AttackTypeIndex] = 0;
+        subroutine_states[AttackStateIndex] = 0;
     }
 }

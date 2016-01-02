@@ -69,7 +69,7 @@ DWORD WINAPI AttackMindProcess(void* data){
             AttackChoice = MoveUpId;
         }
         else if (
-            (Player.stamina > 50) &&  //have enough stamina
+            (Player.stamina > 90) &&  //have enough stamina
             (Enemy.subanimation >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){

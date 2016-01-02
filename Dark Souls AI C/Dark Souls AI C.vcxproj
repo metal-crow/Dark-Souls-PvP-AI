@@ -87,7 +87,7 @@
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
-    <ClCompile Include="GenerateHurtboxTimings.cpp" />
+    <ClCompile Include="TestSpace.c" />
     <ClCompile Include="gui.c" />
     <ClCompile Include="InitalizeFANN.c" />
     <ClCompile Include="MindRoutines.c" />

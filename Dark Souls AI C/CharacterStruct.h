@@ -39,8 +39,12 @@ typedef struct {
     unsigned int subanimation;
     //the current animation id
     ullong animationId_address;
+    //secondary animation id. Used rarely
+    ullong animationId2_address;
 	//animation timer.
     ullong animationTimer_address;
+    //secondary animation timer. Used rarely
+    ullong animationTimer2_address;
 	//hurtbox state 
     ullong hurtboxActive_address;
     //ready/animation switchable state
@@ -111,11 +115,11 @@ static const int Enemy_l_weapon_offsets_length = 5;
 static const int Player_l_weapon_offsets_length = 5;
 //the current subanimation being executed
 #define AttackSubanimationWindup 00
-#define AttackSubanimationWindupGhostHit 01
-#define AttackSubanimationWindupClosing 02
+#define AttackSubanimationWindupClosing 01
+#define AttackSubanimationWindupGhostHit 02
 #define AttackSubanimationActiveDuringHurtbox 11
 #define AttackSubanimationActiveHurtboxOver 12
-#define DodgeSubanimation 13
+#define LockInSubanimation 13
 #define SubanimationRecover 20
 #define SubanimationNeutral 30
 //if enemy's weapon's hurtbox is active
@@ -126,12 +130,22 @@ static const int Enemy_animationTimer_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x4DC 
 static const int Enemy_animationTimer_offsets_length = 5;
 static const int Player_animationTimer_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x4DC };
 static const int Player_animationTimer_offsets_length = 5;
+//second timer for animation. Note sometimes due to lag this will cut itself off early to that timer 1 can start at correct time
+static const int Enemy_animationTimer2_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x440 };
+static const int Enemy_animationTimer2_offsets_length = 5;
+static const int Player_animationTimer2_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x440 };
+static const int Player_animationTimer2_offsets_length = 5;
 //current animation id
 static const int Enemy_animationID_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x444 };
 static const int Enemy_animationID_offsets_length = 5;
 static const int Player_animationID_offsets[] = { 0x288, 0xC, 0x618, 0x28, 0x7B0 };
 static const int Player_animationID_offsets_length = 5;
-//if in a ready/animation switchable state (is set to 0 during any animation, including walking even though walking can transition at anytime. OR w/ animation type id)
+//second animation id
+static const int Enemy_animationID2_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x3A8 };
+static const int Enemy_animationID2_offsets_length = 5;
+static const int Player_animationID2_offsets[] = { 0x3C, 0x28, 0x18, 0x8C, 0x1D4 };
+static const int Player_animationID2_offsets_length = 5;
+//if in a ready/animation switchable state
 static const int Player_readyState_offsets[] = { 0x3C, 0x30, 0xC, 0x20C, 0x7D2 };
 static const int Player_readyState_offsets_length = 5;
 //speed the opponent is approaching at. Player doesnt need to know their own. Idealy would like just if sprinting or not, actual velocity isnt important

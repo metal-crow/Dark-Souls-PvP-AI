@@ -32,7 +32,7 @@ class GuiPane extends JPanel{
     private JTextArea[] AIState_Params=new JTextArea[2];
 
     private JPanel JoystickInfo=new JPanel();
-    private JTextArea[] JoystickInfo_Params=new JTextArea[2];
+    private JTextArea[] JoystickInfo_Params=new JTextArea[3];
     
     public GuiPane(int height, int width){
         this.width=width;
@@ -162,6 +162,7 @@ public class GUI{
           
           try{
               innerGui.HandleGUIUpdate(updateData);
+              Thread.sleep(10);//add a bit of delay time
           }catch(Exception e){
               e.printStackTrace();
           }

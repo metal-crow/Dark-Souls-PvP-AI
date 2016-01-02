@@ -152,12 +152,12 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //firstorm
         case 164:
             return 3;
-        //flame windup
+        //flame windup (treat this as real attack, because actual is too fast)
         case 167:
-            return 1;
+            return 2;
         //flame attack
         case 168:
-            return 3;
+            return 0;
         //pyro ball windup
         case 173:
             return 1;
@@ -206,6 +206,12 @@ unsigned char isDodgeAnimation(unsigned char animationType_id){
         //1 hand backwards roll
         case 33:
             return 1;
+        //1h lockon right roll
+        case 34:
+            return 1;
+        //1h lockon left roll
+        case 35:
+            return 1;
         //backstep 1h
         case 38:
             return 1;
@@ -214,6 +220,12 @@ unsigned char isDodgeAnimation(unsigned char animationType_id){
             return 1;
         //2 hand backwards roll
         case 95:
+            return 1;
+        //2h lockon right roll
+        case 96:
+            return 1;
+        //2h lockon left roll
+        case 97:
             return 1;
         //backstep 2h
         case 100:
@@ -257,10 +269,11 @@ unsigned char isVulnerableAnimation(int animation_id){
 
 float dodgeTimings(int animation_id){
     switch (animation_id){
+    case 6207: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
     case 6422: return 0.3;
     case 6517: return 1.1;
     case 6522: return 0.3;
-    case 203000: return 0.324;
+    case 203000: return 0.25;
     case 203001: return 0.229667;
     case 203002: return 0.324;
     case 203300: return 0.427;

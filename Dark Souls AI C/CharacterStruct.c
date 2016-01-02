@@ -4,6 +4,8 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
 #pragma warning( disable: 4305 )
 
+#define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold traced until i find a dynamic way
+
 void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 	HANDLE processHandle_nonPoint = *processHandle;
     //TODO read large block that contains all data, then parse in process
@@ -46,7 +48,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     }
     int animationid;
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId_address), &animationid, 4, 0);
-    guiPrint("%d,7:Animation Id:%d", characterId, animationid);
+    //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
+    int animationid2;
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
+
+    guiPrint("%d,7:Animation Id 1/2:%d/%d", characterId, animationid, animationid2);
 
     unsigned char attackAnimationInfo = isAttackAnimation(c->animationType_id);
 
@@ -55,40 +61,68 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
         c->subanimation = AttackSubanimationActiveHurtboxOver;
     }
     else if (isDodgeAnimation(c->animationType_id)){
-        c->subanimation = DodgeSubanimation;
+        c->subanimation = LockInSubanimation;
     }
 
     //read how long the animation has been active, check with current animation, see if hurtbox is about to activate
     //what i want is a countdown till hurtbox is active
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
-    else if (animationid > 1000 && attackAnimationInfo == 2){
-        //if kick or parry, immediate dodge away (aid ends in 100)
-        if (animationid % 1000 == 100){
-            c->subanimation = AttackSubanimationWindupClosing;
+    else if (attackAnimationInfo == 2){
+        if (animationid > 1000){
+            //if kick or parry, immediate dodge away (aid ends in 100)
+            if (animationid % 1000 == 100){
+                c->subanimation = AttackSubanimationWindupClosing;
+            } else{
+                float animationTimer;
+                ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
+
+                float dodgeTimer = dodgeTimings(animationid);
+                c->dodgeTime = dodgeTimer;
+                float timeDelta = dodgeTimer - animationTimer;
+
+                guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
+
+
+                // time before the windup ends where we can still alter rotation (only for player)
+                if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.15 && characterId == LocationMemoryPlayer){
+                    c->subanimation = AttackSubanimationWindupGhostHit;
+                }
+
+                if (timeDelta > 0.4){
+                    c->subanimation = AttackSubanimationWindup;
+                }
+                //between 0.4 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
+                else if (timeDelta <= 0.4 && timeDelta >= 0.15){
+                    c->subanimation = AttackSubanimationWindupClosing;
+                } else if (timeDelta < 0){
+                    c->subanimation = AttackSubanimationActiveHurtboxOver;
+                }
+            }
         }
-        else{
-            float animationTimer;
-            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
+        else if (animationid2 > 1000){
+            //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
+            float animationTimer2;
+            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
 
-            float dodgeTimer = dodgeTimings(animationid);
+            float dodgeTimer = dodgeTimings(animationid2);
             c->dodgeTime = dodgeTimer;
-            float timeDelta = dodgeTimer - animationTimer;
+            float timeDelta = dodgeTimer - animationTimer2;
 
-            guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
+            guiPrint("%d,8:Animation Timer 2:%f\nDodge Time:%f", characterId, animationTimer2, dodgeTimer);
 
-            if (timeDelta > 0.45){
+            if (timeDelta > 0.4){
                 c->subanimation = AttackSubanimationWindup;
             }
-            //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
-            else if (timeDelta <= 0.45 && timeDelta >= 0.15){
+            //between 0.4 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
+            else if (timeDelta <= 0.4 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
             }
-            // time before the windup ends where we can still alter rotation
-            else if (timeDelta < 0.14 && timeDelta > 0){
-                c->subanimation = AttackSubanimationWindupGhostHit;
+            else if (timeDelta < 0){
+                c->subanimation = AttackSubanimationActiveHurtboxOver;
             }
         }
+
     }
     else if (attackAnimationInfo == 1){
         c->subanimation = AttackSubanimationWindup;
@@ -102,13 +136,14 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     }
 
     //read if in ready state(can transition to another animation)
-    //Can sometimes be 0 even when animation in is changable. use in conjunction with animation type id
     if (c->readyState_address){
         unsigned char readyState;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->readyState_address), &readyState, 1, 0);
         if(readyState){
             c->subanimation = SubanimationRecover;
-        }
+        } /*else{ Not adding this now because it would lock out subanimations every time i move
+            c->subanimation = LockInSubanimation;
+        }*/
     }
     guiPrint("%d,9:Subanimation:%d", characterId, c->subanimation);
 
