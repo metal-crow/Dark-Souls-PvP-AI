@@ -47,7 +47,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
     }
 
     if (returnVar == EnemyNeutral){
-        guiPrint(LocationDetection",0:not about to be hit (in dodge subr st:%d) (enemy animation type id:%d) (enemy subanimation id:%d)", subroutine_states[DodgeStateIndex], Phantom->animationType_id, Phantom->subanimation);
+        guiPrint(LocationDetection",0:not about to be hit (enemy animation type id:%d) (enemy subanimation id:%d)", Phantom->animationType_id, Phantom->subanimation);
     }
     return returnVar;
 }
@@ -132,7 +132,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //have to lock on to strafe
     if (curTime < startTimeDefense + 30){
         iReport->lButtons = r3;
-        guiPrint(LocationState",1:lockon");
+        guiPrint(LocationState",1:lockon cs");
     }
     //need a delay for dark souls to respond
     else if (curTime < startTimeDefense + 60){
@@ -194,7 +194,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     //have to lock on to reverse roll (also handle for being locked on already)
     if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger && !Player->locked_on){
         iReport->lButtons = r3;
-        guiPrint(LocationState",1:lockon");
+        guiPrint(LocationState",1:lockon rrbs");
     }
 
     //backwards then circle to roll and omnistep via delockon
@@ -244,7 +244,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         switch (attackInfo){
             case ImminentHit:
                 //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTime){
+                if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
                 //otherwise, normal roll
@@ -348,10 +348,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         iReport->lButtons = r1;
     }
 
-    //point 75 degreees off angle from directly towards enemy
+    //point 50 degreees off angle from directly towards enemy
     if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle");
-        angle = fmod((75.0 + angle), 360.0);
+        angle = fmod((50.0 + angle), 360.0);
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
@@ -434,7 +434,8 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             //ghost hits for normal attacks
             case GhostHitId:
-                ghostHit(Player, Phantom, iReport);
+                //ghostHit(Player, Phantom, iReport);
+                deadAngle(Player, Phantom, iReport);
                 break;
             //backstab
             case BackstabId:

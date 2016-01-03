@@ -18,6 +18,9 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //1h rolling attack
         case 41:
             return 2;
+        //sheild poke
+        case 45:
+            return 2;
         //1h r1
         case 46:
             return 2;
@@ -63,6 +66,8 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //crossbow recover 1h
         //case 71:
         //    return 0;
+        //shield raise while walking
+        //case 75:
         //shield raise
         //case 76:
         //    return 0;
@@ -72,6 +77,12 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //shied lower
         //case 78:
         //    return 0;
+        //lower shield while walking
+        //case 79:
+        //start walking w shield
+        //case 80:
+        //walking w shield
+        //case 81:
         //parry
         //case 86:
         //    return 0;
@@ -270,6 +281,7 @@ unsigned char isVulnerableAnimation(int animation_id){
 float dodgeTimings(int animation_id){
     switch (animation_id){
     case 6207: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
+    case 6307: return 0.65;//rhand version of above
     case 6422: return 0.3;
     case 6517: return 1.1;
     case 6522: return 0.3;

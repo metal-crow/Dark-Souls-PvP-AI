@@ -55,8 +55,8 @@ typedef struct {
     //if locked on. used for verification for counter strafe
     ullong locked_on_address;
     unsigned char locked_on;
-    //time at which enemy hurtbox activates. Used for reverse roll vs dodge roll check
-    float dodgeTime;
+    //time left before enemy hurtbox activates. Used for reverse roll vs dodge roll check
+    float dodgeTimeRemaining;
 } Character;
 
 //initalize the phantom and player

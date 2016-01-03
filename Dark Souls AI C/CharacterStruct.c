@@ -78,11 +78,10 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
                 ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
 
                 float dodgeTimer = dodgeTimings(animationid);
-                c->dodgeTime = dodgeTimer;
                 float timeDelta = dodgeTimer - animationTimer;
+                c->dodgeTimeRemaining = timeDelta;
 
                 guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
-
 
                 // time before the windup ends where we can still alter rotation (only for player)
                 if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.15 && characterId == LocationMemoryPlayer){
@@ -98,6 +97,9 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
                 } else if (timeDelta < 0){
                     c->subanimation = AttackSubanimationActiveHurtboxOver;
                 }
+                else{
+                    c->subanimation = 12;//TESTING
+                }
             }
         }
         else if (animationid2 > 1000){
@@ -106,8 +108,8 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
 
             float dodgeTimer = dodgeTimings(animationid2);
-            c->dodgeTime = dodgeTimer;
             float timeDelta = dodgeTimer - animationTimer2;
+            c->dodgeTimeRemaining = timeDelta;
 
             guiPrint("%d,8:Animation Timer 2:%f\nDodge Time:%f", characterId, animationTimer2, dodgeTimer);
 
@@ -121,8 +123,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             else if (timeDelta < 0){
                 c->subanimation = AttackSubanimationActiveHurtboxOver;
             }
+            else{
+                c->subanimation = 12;//TESTING
+            }
         }
-
+        else{
+            guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");
+        }
     }
     else if (attackAnimationInfo == 1){
         c->subanimation = AttackSubanimationWindup;

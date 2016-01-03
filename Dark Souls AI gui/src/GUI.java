@@ -162,7 +162,6 @@ public class GUI{
           
           try{
               innerGui.HandleGUIUpdate(updateData);
-              Thread.sleep(10);//add a bit of delay time
           }catch(Exception e){
               e.printStackTrace();
           }

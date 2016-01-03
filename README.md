@@ -29,6 +29,12 @@ Attack Network Inputs:
 
 
 ## TODO: 
+analyze videos
+rolled into mlgs r2 hurtbox
+mlgs r2 triggers double roll, or is the 1st getting triggered early? see good 5 0:45
+should i use animation id everywhere instead of animation type id?
+bug with starting move up in lcoked on even though shouldnt be possible. added more debugging
+
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  
   [TOP priority] should attack even when enemy attacking, just determine their direciton and attack to their side or behind.  
