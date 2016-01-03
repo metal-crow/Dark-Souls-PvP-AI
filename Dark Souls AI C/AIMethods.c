@@ -143,6 +143,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
         iReport->wAxisY = MIDDLE / 2;//3/4 pushed up
+        guiPrint(LocationState",1:strafe");
     }
 
     //disable lockon
