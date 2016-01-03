@@ -342,10 +342,15 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
+    //handle entering with lockon
+    if (Player->locked_on && curTime < startTimeAttack + inputDelayForKick){
+        iReport->lButtons += r3;
+    }
+
     //hold attack button for a bit
     if ((curTime < startTimeAttack + inputDelayForKick) && (curTime > startTimeAttack + inputDelayForStart)){
         guiPrint(LocationState",1:r1");
-        iReport->lButtons = r1;
+        iReport->lButtons += r1;
     }
 
     //point 50 degreees off angle from directly towards enemy
