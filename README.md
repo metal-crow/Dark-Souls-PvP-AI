@@ -35,8 +35,8 @@ mlgs r2 triggers double roll, or is the 1st getting triggered early? see good 5 
 should i use animation id everywhere instead of animation type id?
 bug with starting move up in locked on even though shouldnt be possible. see 1:36 of good 7
 roll direction should be set to directly towards enemy if backstab detection == 1, and they attack (dead angle wog)
-game didnt read roll button 0:30
-i do need to queue b/c game need times to read button press otherwise, queueing prevbents that.
+game didnt read roll button 0:30, 0:34:10
+game didnt read r1 button at 0:33:28
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

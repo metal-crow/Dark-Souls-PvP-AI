@@ -291,7 +291,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 /* ------------- ATTACK Actions ------------- */
 
 #define inputDelayForStart 10//if we exit move forward and go into attack, need this to prevent kick
-#define inputDelayForKick 40
+#define inputDelayForKick 50
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:ghost hit");
