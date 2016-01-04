@@ -58,7 +58,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 /* ------------- DODGE Actions ------------- */
 
 #define inputDelayForStopRotate 50
-#define inputDelayForStopDodge 40
+#define inputDelayForStopDodge 50
 
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
@@ -242,7 +242,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
-    if (!inActiveSubroutine() && Player->subanimation >= SubanimationRecover){
+    if (!inActiveSubroutine() && Player->subanimation >= AttackSubanimationActiveHurtboxOver){
 		//indicate we are in dodge subroutine
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
