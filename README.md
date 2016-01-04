@@ -33,7 +33,8 @@ analyze videos
 rolled into mlgs r2 hurtbox
 mlgs r2 triggers double roll, or is the 1st getting triggered early? see good 5 0:45
 should i use animation id everywhere instead of animation type id?
-bug with starting move up in lcoked on even though shouldnt be possible. added more debugging
+bug with starting move up in locked on even though shouldnt be possible. see 1:36 of good 7
+cant always be safe behind enemy back. wog.
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

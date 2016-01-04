@@ -419,6 +419,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
             case InBSPosition:
                 subroutine_states[AttackTypeIndex] = BackstabId;
                 break;
+            //dont attack if enemy in windup
+            case EnemyInWindup:
+                break;
             default:
                 subroutine_states[AttackTypeIndex] = AttackNeuralNetChoice;
                 break;
