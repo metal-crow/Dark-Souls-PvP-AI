@@ -6,7 +6,7 @@
 i cant seem to find a pattern in the ids, so this is just a big switch statement
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
-0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created*/
+0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created, 4 is same as 2 but override behind enemy safety*/
 unsigned char isAttackAnimation(unsigned char animationType_id){
     switch (animationType_id){
         //nothing
@@ -136,7 +136,7 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
             return 0;
         //miricle AOE cast
         case 146:
-            return 2;
+            return 4;
         //miricle ground attack windup
         case 155:
             return 0;

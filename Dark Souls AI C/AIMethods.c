@@ -8,16 +8,17 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 	//if they are outside of their attack range
     float distanceByLine = distance(Player, Phantom);
     guiPrint(LocationJoystick",1:Distance:%f", distanceByLine);
+    
+    unsigned char AtkID = isAttackAnimation(Phantom->animationType_id);
 
     if (distanceByLine <= Phantom->weaponRange){
-		unsigned char AtkID = isAttackAnimation(Phantom->animationType_id);
 		//attack id will tell up if an attack is coming up soon. if so, we need to prevent going into a subroutine(attack), and wait for attack to fully start b4 entering dodge subroutine
 
 		if (
             //if in an animation where subanimation is not used for hurtbox
             (AtkID == 3 && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox) ||
             //or animation where it is
-            (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindupClosing)
+            ((AtkID == 2 || AtkID == 4) && Phantom->subanimation == AttackSubanimationWindupClosing)
 			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
@@ -41,7 +42,9 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
         OverrideLowPrioritySubroutines();
         if (BackStabStateDetected == 2){
             returnVar = InBSPosition;
-        } else{
+        }
+        //override saftey notice here if = 4
+        else if (AtkID != 4){
             returnVar = BehindEnemy;
         }
     }
