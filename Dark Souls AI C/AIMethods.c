@@ -400,6 +400,9 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
+        if (Player->locked_on){
+            iReport->lButtons = r3;
+        }
     }
 
     if (curTime > startTimeAttack + inputDelayForStopMove){

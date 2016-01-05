@@ -29,14 +29,14 @@ Attack Network Inputs:
 
 
 ## TODO: 
-analyze videos
+resolution at 1440x810
 rolled into mlgs r2 hurtbox
 mlgs r2 triggers double roll, or is the 1st getting triggered early? see good 5 0:45
 should i use animation id everywhere instead of animation type id?
 bug with starting move up in locked on even though shouldnt be possible. see 1:36 of good 7
 roll direction should be set to directly towards enemy if backstab detection == 1, and they attack (dead angle wog)
-game didnt read roll button 0:30, 0:34:10
-game didnt read r1 button at 0:33:28
+need to detect if player in parry'd bs'd state. not in animation type? 
+
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  
