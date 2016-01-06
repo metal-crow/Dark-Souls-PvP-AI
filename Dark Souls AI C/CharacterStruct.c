@@ -69,66 +69,54 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
     else if (attackAnimationInfo == 2 || attackAnimationInfo == 4){
+        int curAnimationTimer_address = 0;
+        int curAnimationid = 0;
+
         if (animationid > 1000){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (animationid % 1000 == 100){
                 c->subanimation = AttackSubanimationWindupClosing;
             } else{
-                float animationTimer;
-                ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer_address), &animationTimer, 4, 0);
-
-                float dodgeTimer = dodgeTimings(animationid);
-                float timeDelta = dodgeTimer - animationTimer;
-                c->dodgeTimeRemaining = timeDelta;
-
-                guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
-
-                // time before the windup ends where we can still alter rotation (only for player)
-                if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.15 && characterId == LocationMemoryPlayer){
-                    c->subanimation = AttackSubanimationWindupGhostHit;
-                }
-
-                if (timeDelta > 0.4){
-                    c->subanimation = AttackSubanimationWindup;
-                }
-                //between 0.4 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
-                else if (timeDelta <= 0.4 && timeDelta >= 0.15){
-                    c->subanimation = AttackSubanimationWindupClosing;
-                } else if (timeDelta < 0){
-                    c->subanimation = AttackSubanimationActiveHurtboxOver;
-                }
-                else{
-                    c->subanimation = 12;//TESTING
-                }
+                curAnimationTimer_address = c->animationTimer_address;
+                curAnimationid = animationid;
             }
         }
+        //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
         else if (animationid2 > 1000){
-            //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
-            float animationTimer2;
-            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
+            curAnimationTimer_address = c->animationTimer2_address;
+            curAnimationid = animationid2;
+        } else{
+            guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");
+        }
 
-            float dodgeTimer = dodgeTimings(animationid2);
-            float timeDelta = dodgeTimer - animationTimer2;
+        if (curAnimationid){
+            float animationTimer;
+            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
+
+            float dodgeTimer = dodgeTimings(curAnimationid);
+            float timeDelta = dodgeTimer - animationTimer;
             c->dodgeTimeRemaining = timeDelta;
 
-            guiPrint("%d,8:Animation Timer 2:%f\nDodge Time:%f", characterId, animationTimer2, dodgeTimer);
+            guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
 
-            if (timeDelta > 0.4){
+            // time before the windup ends where we can still alter rotation (only for player)
+            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.15 && characterId == LocationMemoryPlayer){
+                c->subanimation = AttackSubanimationWindupGhostHit;
+            }
+
+            if (timeDelta > 1.0){
+                c->subanimation = SubanimationNeutral;
+            } else if (timeDelta < 1.0 && timeDelta > 0.4){
                 c->subanimation = AttackSubanimationWindup;
             }
             //between 0.4 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
             else if (timeDelta <= 0.4 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
-            }
-            else if (timeDelta < 0){
+            } else if (timeDelta < 0){
                 c->subanimation = AttackSubanimationActiveHurtboxOver;
+            } else{
+                c->subanimation = -1;//TESTING
             }
-            else{
-                c->subanimation = 12;//TESTING
-            }
-        }
-        else{
-            guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");
         }
     }
     else if (attackAnimationInfo == 1){

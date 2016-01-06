@@ -188,7 +188,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define TimeForR3ToTrigger 50
 #define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
 #define TimeDeltaForGameRegisterAction 120
-#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 100) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
