@@ -104,13 +104,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
 
-            if (timeDelta > 1.0){
+            if (timeDelta >= 1.0){
                 c->subanimation = SubanimationNeutral;
-            } else if (timeDelta < 1.0 && timeDelta > 0.4){
+            } else if (timeDelta < 1.0 && timeDelta > 0.45){
                 c->subanimation = AttackSubanimationWindup;
             }
-            //between 0.4 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
-            else if (timeDelta <= 0.4 && timeDelta >= 0.15){
+            //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
+            else if (timeDelta <= 0.45 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
             } else if (timeDelta < 0){
                 c->subanimation = AttackSubanimationActiveHurtboxOver;
