@@ -68,7 +68,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //what i want is a countdown till hurtbox is active
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
-    else if (attackAnimationInfo == 2){
+    else if (attackAnimationInfo == 2 || attackAnimationInfo == 4){
         if (animationid > 1000){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (animationid % 1000 == 100){

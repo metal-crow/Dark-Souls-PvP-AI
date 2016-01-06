@@ -35,6 +35,7 @@ mlgs r2 triggers double roll, or is the 1st getting triggered early? see good 5 
 should i use animation id everywhere instead of animation type id?
 bug with starting move up in locked on even though shouldnt be possible. see 1:36 of good 7
 roll direction should be set to directly towards enemy if backstab detection == 1, and they attack (dead angle wog)
+maybe if we're behind enemy, we should wait and try tyo see if a bs is possible. attack neural net issue.
 need to detect if player in parry'd bs'd state. not in animation type? 
 
 
