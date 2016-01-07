@@ -127,7 +127,7 @@ int main(void){
         char attackImminent = EnemyStateProcessing(&Player, &Enemy);
 
         WaitForThread(defense_mind_input);
-        guiPrint(LocationDetection",1:Defense Neural Network detected %d", DefenseChoice);
+        guiPrint(LocationDetection",1:Defense Neural Network detected %d, and Attack %d", DefenseChoice, AttackChoice);
 #if DebuggingPacify
         DefenseChoice = 0;
 #endif

@@ -44,9 +44,9 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             returnVar = InBSPosition;
         }
         //override saftey notice here if = 4
-        else if (AtkID != 4){
+        /*else if (AtkID != 4){TEMP DISABLE
             returnVar = BehindEnemy;
-        }
+        }*/
     }
 
     if (returnVar == EnemyNeutral){
