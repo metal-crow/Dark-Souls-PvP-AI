@@ -95,7 +95,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 
             float dodgeTimer = dodgeTimings(curAnimationid);
             float timeDelta = dodgeTimer - animationTimer;
-            c->dodgeTimeRemaining = timeDelta;
+            c->dodgeTimeRemaining = timeDelta;//TODO this is only ever used with the enemy
 
             guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
 

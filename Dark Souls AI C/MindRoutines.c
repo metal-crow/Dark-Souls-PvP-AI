@@ -65,7 +65,14 @@ DWORD WINAPI AttackMindProcess(void* data){
         //fann_type* out = fann_run(attack_mind_input->mind, (fann_type*)&(attack_mind_input->input));
         //AttackChoice = (unsigned char)(*out);
 
-        if (distance(&Player, &Enemy) > Player.weaponRange){//not in range
+        float distanceInput = distance(&Player, &Enemy);
+
+        if (
+            //not in range
+            distance(&Player, &Enemy) > Player.weaponRange ||
+            //we're behind the enemy and might be able to get a backstab
+            BackstabDetection(&Player, &Enemy, distanceInput) == 1)
+        {
             AttackChoice = MoveUpId;
         }
         else if (

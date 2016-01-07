@@ -65,24 +65,22 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     guiPrint(LocationState",0:dodge roll");
 
-    //this shouldnt have ever worked (100% anyway)
-    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 40.0;//To avoid taking too long in turning, only turn 40 degrees max
-    angle = angle < 0 ? angle + 360 : angle;
+    //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
+    //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
+
+    double rollOffset = 40.0;//To avoid taking too long in turning, only turn 40 degrees max
+    //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
+    if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
+        rollOffset = 0;
+    }
+
+    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - rollOffset;
+    angle = angle < 0 ? angle + 360 : angle;//wrap around
+
     //angle joystick
     longTuple move = angleToJoystick(angle);
     iReport->wAxisX = move.first;
     iReport->wAxisY = move.second;
-
-    //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
-    //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
-    /*if (curTime < startTimeDefense + inputDelayForStopRotate){
-        double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 0.0;//To avoid taking too long in turning, only turn 90 degrees max
-        angle = angle < 0 ? angle + 360 : angle;
-        //angle joystick
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
-    }*/
 
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
     if (curTime < startTimeDefense + inputDelayForStopDodge){
