@@ -516,6 +516,7 @@ float dodgeTimings(int animation_id){
     case 504300: return 0.755;
     case 504301: return 0.755083;
     case 504310: return 0.587833;
+    case 504600: return 1.0;
     case 504900: return 0.319083;
     case 513000: return 0.717354;
     case 513001: return 0.718188;

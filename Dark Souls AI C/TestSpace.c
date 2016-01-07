@@ -12,8 +12,11 @@
 
 typedef struct{
     int aid;
+    ullong aidAddr;
     float timer;
+    ullong timerAddr;
     unsigned char hurtbox;
+    ullong hurtboxAddr;
 }toRead;
 
 toRead EnemyHurtboxTimings;
@@ -50,14 +53,23 @@ int mainHURTBOXTIMINGS(void)
     //open the handle
     HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
 
+    //get the base address of the process and append all other addresses onto it
+    ullong memorybase = GetModuleBase(processId, processName);
+    Enemy_base_add += memorybase;
+    player_base_add += memorybase;
+
+    EnemyHurtboxTimings.timerAddr = FindPointerAddr(processHandle, player_base_add, Player_animationTimer_offsets_length, Player_animationTimer_offsets);
+    EnemyHurtboxTimings.aidAddr = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
+    EnemyHurtboxTimings.hurtboxAddr = 0x062540A7;
+
     HANDLE thread = CreateThread(NULL, 0, ListentoContinue1, NULL, 0, NULL);
 
     int lastaid = -1;
 
     while (listening1){
-        ReadProcessMemory(processHandle, (LPCVOID)(aidADD), &(EnemyHurtboxTimings.aid), 4, 0);
-        ReadProcessMemory(processHandle, (LPCVOID)(timerADD), &(EnemyHurtboxTimings.timer), 4, 0);
-        ReadProcessMemory(processHandle, (LPCVOID)(hurtboxADD), &(EnemyHurtboxTimings.hurtbox), 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(EnemyHurtboxTimings.aidAddr), &(EnemyHurtboxTimings.aid), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(EnemyHurtboxTimings.timerAddr), &(EnemyHurtboxTimings.timer), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(EnemyHurtboxTimings.hurtboxAddr), &(EnemyHurtboxTimings.hurtbox), 1, 0);
         
         if (EnemyHurtboxTimings.hurtbox && lastaid != EnemyHurtboxTimings.aid){
             fprintf(fpdef, "%d %f\n", EnemyHurtboxTimings.aid, EnemyHurtboxTimings.timer);
