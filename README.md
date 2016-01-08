@@ -31,10 +31,10 @@ Attack Network Inputs:
 ## TODO: 
 resolution at 1440x810
 rolling into mlgs r2 hurtbox
-maybe if we're behind enemy, we should wait and try tyo see if a bs is possible. attack neural net issue.
 need to detect if player in parry'd bs'd state. not in animation type? 
 refine behind enemy safe state to be more behind enemy
 the stupid fucking walls
+stucpid combustion bug at 0:51
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

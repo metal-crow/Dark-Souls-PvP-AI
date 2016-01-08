@@ -112,10 +112,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
             else if (timeDelta <= 0.45 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
-            } else if (timeDelta < 0){
+            }
+            //just treat this as the hurtbox is activated
+            else if (timeDelta < 0.15 && timeDelta >= 0){
+                c->subanimation = AttackSubanimationActiveDuringHurtbox;
+            }
+            else if (timeDelta < 0){
                 c->subanimation = AttackSubanimationActiveHurtboxOver;
-            } else{
-                c->subanimation = -1;//TESTING
             }
         }
     }
