@@ -127,14 +127,14 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
             return 2;
         //fire surge windup
         case 135:
-            0;
+            return 0;
         //fire surge cast
         //since this has no windup after the first cast, treat as instant
         case 136:
-            3;
+            return 3;
         //fire surge recover
         case 137:
-            0;
+            return 0;
         //miricle projectile windup
         case 143:
             return 0;

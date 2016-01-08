@@ -35,6 +35,7 @@ need to detect if player in parry'd bs'd state. not in animation type?
 refine behind enemy safe state to be more behind enemy
 the stupid fucking walls
 stucpid combustion bug at 0:51
+bug with timer not being reset to 0 ingame b4 animation gets set
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  
