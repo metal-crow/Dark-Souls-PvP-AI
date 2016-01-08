@@ -125,6 +125,16 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //2h r2 combo
         case 116:
             return 2;
+        //fire surge windup
+        case 135:
+            0;
+        //fire surge cast
+        //since this has no windup after the first cast, treat as instant
+        case 136:
+            3;
+        //fire surge recover
+        case 137:
+            0;
         //miricle projectile windup
         case 143:
             return 0;
@@ -157,16 +167,22 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //TODO this is not fire!
         case 160:
             return 3;
+        //fire whip windup
+        case 161:
+            return 0;
+        //fire whip cast
+        case 162:
+            return 2;
         //firestorm windup
         case 163:
             return 0;//is a windup, but want to attack during it
         //firstorm
         case 164:
             return 3;
-        //flame windup (treat this as real attack, because actual is too fast)
+        //combustion windup (treat this as real attack, because actual is too fast)
         case 167:
             return 2;
-        //flame attack
+        //combustion attack
         case 168:
             return 0;
         //pyro ball windup

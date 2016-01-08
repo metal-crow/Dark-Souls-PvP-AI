@@ -72,7 +72,12 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
         int curAnimationTimer_address = 0;
         int curAnimationid = 0;
 
-        if (animationid > 1000){
+        //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
+        if (animationid2 > 1000){
+            curAnimationTimer_address = c->animationTimer2_address;
+            curAnimationid = animationid2;
+        }
+        else if (animationid > 1000){
             //if kick or parry, immediate dodge away (aid ends in 100)
             if (animationid % 1000 == 100){
                 c->subanimation = AttackSubanimationWindupClosing;
@@ -81,11 +86,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
                 curAnimationid = animationid;
             }
         }
-        //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
-        else if (animationid2 > 1000){
-            curAnimationTimer_address = c->animationTimer2_address;
-            curAnimationid = animationid2;
-        } else{
+        else{
             guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");
         }
 
