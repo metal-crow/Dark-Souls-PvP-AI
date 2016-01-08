@@ -122,6 +122,7 @@ int main(void){
 		iReport.wAxisYRot = MIDDLE;
 		iReport.wAxisXRot = MIDDLE;
         iReport.lButtons = 0x0;
+        iReport.bHats = 0x0;//d-pad
 
 		//begin reading enemy state, and handle w logic and subroutines
         char attackImminent = EnemyStateProcessing(&Player, &Enemy);

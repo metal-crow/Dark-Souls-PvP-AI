@@ -120,6 +120,7 @@ static const int Player_l_weapon_offsets_length = 5;
 #define AttackSubanimationActiveDuringHurtbox 11
 #define AttackSubanimationActiveHurtboxOver 12
 #define LockInSubanimation 13
+#define PoiseBrokenSubanimation 14
 #define SubanimationRecover 20
 #define SubanimationNeutral 30
 //if enemy's weapon's hurtbox is active

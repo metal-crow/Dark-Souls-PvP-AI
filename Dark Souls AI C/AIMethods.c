@@ -238,6 +238,22 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     }
 }
 
+//this is more of a bandaid to the fact that the ai is ever getting hit
+static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Toggle Escape");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + 30){
+        iReport->bHats = 0x3;//left d pad
+    }
+
+    if (curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end Toggle Escape");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+    }
+}
+
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
     if (!inActiveSubroutine() && Player->subanimation >= AttackSubanimationActiveHurtboxOver){
@@ -245,8 +261,12 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
             case ImminentHit:
+                //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
+                if (Player->subanimation == PoiseBrokenSubanimation){
+                    subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
+                }
                 //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
+                else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
                 //otherwise, normal roll
@@ -278,9 +298,13 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
             case ReverseRollBSId:
                 ReverseRollBS(Player, Phantom, iReport, attackInfo);
                 break;
-            //should never be reached, since defense choice must always be >0
+            case ToggleEscapeId:
+                ToggleEscape(Player, Phantom, iReport);
+                break;
+            //should never be reached
             default:
                 guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
+                subroutine_states[DodgeStateIndex] = 0;
                 break;
         }
     }

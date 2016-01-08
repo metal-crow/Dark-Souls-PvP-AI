@@ -28,7 +28,9 @@ int loadvJoy(UINT iInterface);
 #define triangle 0x2
 #define r1 0x20
 #define l1 0x10
+#define l2 0x40 //untested
 #define r2 0x80
+#define l3 0x100 //untested
 #define r3 0x200
 #define select 0x400
 #define start 0x800

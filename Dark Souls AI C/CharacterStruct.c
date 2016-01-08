@@ -56,10 +56,15 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 
     unsigned char attackAnimationInfo = isAttackAnimation(c->animationType_id);
 
+    //---any subanimation that is based purely off animation id should be prioritized in subanimation state setting---
     if (isVulnerableAnimation(animationid))
     {
         c->subanimation = AttackSubanimationActiveHurtboxOver;
     }
+    else if (animationid >= 2000 && animationid <= 2045){//animation states for poise breaks, knockdowns, launches, staggers
+        c->subanimation = PoiseBrokenSubanimation;
+    }
+    //---subanimations based on animation type---
     else if (isDodgeAnimation(c->animationType_id)){
         c->subanimation = LockInSubanimation;
     }
