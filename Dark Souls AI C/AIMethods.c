@@ -37,10 +37,10 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
     //backstab checks. If AI CANNOT be attacked/BS'd, cancel Defense Neural net desicion. Also override attack neural net if can bs.
     unsigned char BackStabStateDetected = BackstabDetection(Player, Phantom, distanceByLine);
     if (BackStabStateDetected){
-        guiPrint(LocationDetection",0:backstab detection result %d", BackStabStateDetected);
         //will overwrite strafe subroutine
         OverrideLowPrioritySubroutines();
         if (BackStabStateDetected == 2){
+            guiPrint(LocationDetection",0:backstab detected");
             returnVar = InBSPosition;
         }
         //override saftey notice here if = 4
@@ -81,6 +81,8 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     longTuple move = angleToJoystick(angle);
     iReport->wAxisX = move.first;
     iReport->wAxisY = move.second;
+
+    guiPrint(LocationState",1:angle roll %f", rollOffset);
 
     //after the joystick input, press circle to roll but dont hold circle, otherwise we run
     if (curTime < startTimeDefense + inputDelayForStopDodge){
@@ -381,14 +383,15 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
 
     //point 50 degreees off angle from directly towards enemy
     if (curTime > startTimeAttack + inputDelayForKick){
-        guiPrint(LocationState",1:angle");
-        angle = fmod((50.0 + angle), 360.0);
+        guiPrint(LocationState",1:angle towards enemy: %f", angle);
+        angle = 50.0 + angle;
+        angle = angle > 360 ? angle - 360 : angle;
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
         iReport->wAxisY = move.second;
     }
 
-    if (curTime > startTimeAttack + 200){
+    if (curTime > startTimeAttack + 500){
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub dead angle");

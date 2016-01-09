@@ -36,6 +36,7 @@ refine behind enemy safe state to be more behind enemy
 the stupid fucking walls
 bug with timer not being reset to 0 ingame b4 animation gets set
 somethign weird with backstabs. wont trigger unless its a normal attack, not combo?
+ce camera lock script causes crashes 
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

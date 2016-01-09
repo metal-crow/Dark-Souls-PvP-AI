@@ -35,7 +35,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
             && distanceInput < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
-        //hardcoded check if the enemy is close behind us, try to damage cancel their bs.
+        //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
         else if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
             AttackChoice = GhostHitId;
         }
