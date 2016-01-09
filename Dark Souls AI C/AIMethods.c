@@ -63,7 +63,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
-    guiPrint(LocationState",0:dodge roll");
+    guiPrint(LocationState",0:dodge roll time:%f", (curTime - startTimeDefense));
 
     //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
     //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
@@ -95,8 +95,9 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         }
     }
 
-    //need time to actually enter dodge roll in game so another subanimation cant override it
-    if (curTime > startTimeDefense + inputDelayForStopDodge + 200){
+    //ensure we actually enter dodge roll in game so another subanimation cant override it
+    //or we get poise broken out
+    if (isDodgeAnimation(Player->animationType_id) || Player->subanimation == PoiseBrokenSubanimation){
         guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
@@ -192,8 +193,8 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
 //reverse roll through enemy attack and roll behind their back
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
-    guiPrint(LocationState",0:Reverse Roll BS");
     long curTime = clock();
+    guiPrint(LocationState",0:Reverse Roll BS time:%f", (curTime - startTimeDefense));
 
     //have to lock on to reverse roll (also handle for being locked on already)
     if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger && !Player->locked_on){
@@ -229,7 +230,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
     }
 
     if (
-        (curTime > startTimeDefense + 3000) ||
+        (curTime > startTimeDefense + 600) ||
         //early emergency abort in case enemy attack while we try to go for bs after roll or we dont get behind them after roll
         ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction) && ((attackInfo == ImminentHit) || (attackInfo != BehindEnemy)))
         )
@@ -365,8 +366,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 }
 
 static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:sub dead angle");
     long curTime = clock();
+    guiPrint(LocationState",0:sub dead angle time:%f", (curTime - startTimeAttack));
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
@@ -419,8 +420,9 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     //if we are not close enough, move towards 
-    guiPrint(LocationState",0:move up");
     long curTime = clock();
+    guiPrint(LocationState",0:move up time:%f", (curTime - startTimeAttack));
+
     if (curTime < startTimeAttack + inputDelayForStopMove){
         longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
         iReport->wAxisX = move.first;
@@ -452,6 +454,10 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             //dont attack if enemy in windup
             case EnemyInWindup:
+                //do allow move up though
+                if (AttackNeuralNetChoice == MoveUpId){
+                    subroutine_states[AttackTypeIndex] = MoveUpId;
+                }
                 break;
             default:
                 subroutine_states[AttackTypeIndex] = AttackNeuralNetChoice;
