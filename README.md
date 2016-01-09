@@ -37,7 +37,6 @@ the stupid fucking walls
 bug with timer not being reset to 0 ingame b4 animation gets set
 somethign weird with backstabs. wont trigger unless its a normal attack, not combo?
 ce camera lock script causes crashes 
-dodge roll while in attack subanimation done before in recoery. as soon as revory immediatly started attack, which overrode dodge in game queue
 
   read enemy animaiton type id when in backstab
   [bug] kicking instead of attacking sometimess  

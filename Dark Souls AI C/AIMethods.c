@@ -63,7 +63,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
-    guiPrint(LocationState",0:dodge roll time:%f", (curTime - startTimeDefense));
+    guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
 
     //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
     //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
@@ -194,7 +194,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 //reverse roll through enemy attack and roll behind their back
 static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo){
     long curTime = clock();
-    guiPrint(LocationState",0:Reverse Roll BS time:%f", (curTime - startTimeDefense));
+    guiPrint(LocationState",0:Reverse Roll BS time:%d", (curTime - startTimeDefense));
 
     //have to lock on to reverse roll (also handle for being locked on already)
     if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger && !Player->locked_on){
@@ -319,8 +319,8 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
 #define inputDelayForKick 50
 
 static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:ghost hit");
     long curTime = clock();
+    guiPrint(LocationState",0:ghost hit time:%d", (curTime - startTimeAttack));
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
@@ -367,7 +367,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
-    guiPrint(LocationState",0:sub dead angle time:%f", (curTime - startTimeAttack));
+    guiPrint(LocationState",0:sub dead angle time:%d", (curTime - startTimeAttack));
 
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
 
@@ -421,7 +421,7 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     //if we are not close enough, move towards 
     long curTime = clock();
-    guiPrint(LocationState",0:move up time:%f", (curTime - startTimeAttack));
+    guiPrint(LocationState",0:move up time:%d", (curTime - startTimeAttack));
 
     if (curTime < startTimeAttack + inputDelayForStopMove){
         longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
