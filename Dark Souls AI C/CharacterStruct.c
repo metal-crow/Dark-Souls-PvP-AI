@@ -83,13 +83,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             curAnimationid = animationid2;
         }
         else if (animationid > 1000){
-            //if kick or parry, immediate dodge away (aid ends in 100)
+            //if kick or parry (aid ends in 100), use catch all aid
             if (animationid % 1000 == 100){
-                c->subanimation = AttackSubanimationWindupClosing;
+                curAnimationid = 100;
             } else{
-                curAnimationTimer_address = c->animationTimer_address;
                 curAnimationid = animationid;
             }
+            curAnimationTimer_address = c->animationTimer_address;
         }
         else{
             guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");

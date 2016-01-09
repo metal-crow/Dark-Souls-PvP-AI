@@ -296,6 +296,7 @@ unsigned char isVulnerableAnimation(int animation_id){
 
 float dodgeTimings(int animation_id){
     switch (animation_id){
+    case 100: return 0.5;//catch all for all kicks
     case 6207: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
     case 6307: return 0.65;//rhand version of above
     case 6422: return 0.3;

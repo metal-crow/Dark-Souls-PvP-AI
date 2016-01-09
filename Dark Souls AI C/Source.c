@@ -140,8 +140,7 @@ int main(void){
 		}
 
         WaitForThread(attack_mind_input);
-        guiPrint(LocationDetection",2:Attack Neural Network decided %d subroutine_states={%d,%d,%d,%d}", AttackChoice,
-            subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
+        guiPrint(LocationDetection",2:Attack Neural Network decided %d", AttackChoice);
 #if DebuggingPacify
         AttackChoice = 0;
 #endif
@@ -151,6 +150,8 @@ int main(void){
             attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }
+
+        guiPrint(LocationDetection",5:Current Subroutine States ={%d,%d,%d,%d}", subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
         guiPrint(LocationJoystick",0:AxisX:%d\nAxisY:%d\nButtons:%d", iReport.wAxisX, iReport.wAxisY, iReport.lButtons);
