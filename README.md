@@ -12,7 +12,9 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
 * Install [Cheat Engine](http://www.cheatengine.org/)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
  * Cheat Engine and the table are only used to lock the camera's x rotation. If you dont want to use them, figure out how to do that yourself.
-* Download the source code and compile with [FANN](http://leenissen.dk/) or use the binary in releases.
+* Download the source code and compile with [FANN](http://leenissen.dk/)
+* Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
+ * Or skip the above two and use the folder in release.
 * (optional) Import the folder for the GUI into eclipse and run that.
 * Run the PvP AI whenever the opponent is ready.
 
