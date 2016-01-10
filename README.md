@@ -34,6 +34,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
+    * rotation during dodge breaking it
     * glitch with conbustion timer not resetting between combustions
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  

@@ -141,12 +141,12 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
         //miricle projectile cast
         case 144:
             return 2;
-        //miricle AOE windup
+        //miricle AOE windup (treat this as real attack, because actual is too fast)
         case 145:
-            return 0;
+            return 4;
         //miricle AOE cast
         case 146:
-            return 4;
+            return 0;
         //miricle ground attack windup
         case 155:
             return 0;
@@ -299,7 +299,7 @@ float dodgeTimings(int animation_id){
     case 100: return 0.5;//catch all for all kicks
     case 6207: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
     case 6307: return 0.65;//rhand version of above
-    case 6422: return 0.3;
+    case 6222: return 0.63;//this animation actually never goes past 0.33, but lie to account for .3 of next animation
     case 6517: return 1.1;
     case 6522: return 0.3;
     case 203000: return 0.25;

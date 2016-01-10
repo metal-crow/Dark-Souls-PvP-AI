@@ -77,7 +77,7 @@ DWORD WINAPI AttackMindProcess(void* data){
         }
         else if (
             (Player.stamina > 90) &&  //have enough stamina
-            (Enemy.subanimation >= AttackSubanimationActiveHurtboxOver) &&  //enemy in vulnerable state
+            (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){
             AttackChoice = GhostHitId;
