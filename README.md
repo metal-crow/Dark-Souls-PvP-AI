@@ -25,10 +25,8 @@ Defense Network Inputs:
   -The enemy velocity  
   -The rotation difference between the enemy and the player  
 
-//TODO what inputs should i give to teach attack neural net?  
 Attack Network Inputs:  
-  -Player distance from Enemy(also send as non-ranged)  
-  -Player stamina (not used as input, just post check)(enemy stamina not sent over wire)  
+  -TODO. Undecided currently.
 
 ## TODO
 resolution at 1440x810
