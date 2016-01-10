@@ -58,16 +58,14 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 
 /* ------------- DODGE Actions ------------- */
 
-#define inputDelayForStopRotate 50
 #define inputDelayForStopDodge 50
 
+//IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
+//also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
     guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
-
-    //IMPORTANT: CANNOT ROLL WHILE IN THE MIDDLE OF TURNING ROTATION. Have to wait until done turning before rolling
-    //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
 
     double rollOffset = 40.0;//To avoid taking too long in turning, only turn 40 degrees max
     //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
@@ -375,14 +373,20 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         iReport->lButtons += r3;
     }
 
+    //if we enter from a roll, move to enter neutral animation so we don't kick
+    if (isDodgeAnimation(Player->animationType_id)){
+        longTuple move = angleToJoystick(angle);
+        iReport->wAxisX = move.first;
+        iReport->wAxisY = move.second;
+        startTimeAttack = curTime;//reset start time when we exit dodge, so we know how long to hold buttons for
+    }
     //hold attack button for a bit
-    if ((curTime < startTimeAttack + inputDelayForKick) && (curTime > startTimeAttack + inputDelayForStart)){
+    else if (curTime < startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:r1");
         iReport->lButtons += r1;
     }
-
     //point 50 degreees off angle from directly towards enemy
-    if (curTime > startTimeAttack + inputDelayForKick){
+    else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
         angle = 50.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;

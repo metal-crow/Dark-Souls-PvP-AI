@@ -11,7 +11,7 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
 * Create Vjoy controller with the config: x,y,z,rx,ry,20 buttons,1 discrete pov
 * Install [Cheat Engine](http://www.cheatengine.org/)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
- * Cheat Engine and the table are only used to lock the camera's x rotation. If you dont want to use them, figure out how to do that yourself.
+ * Cheat Engine and the table are only used to lock the camera's x rotation to PI. If you dont want to use them, figure out how to do that yourself.
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
  * Or skip the above two and use the folder in release.
@@ -34,7 +34,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * kicking instead of attacking sometimes because attack subroutine executed while ready, but dodge animation still recovering
+    * glitch with conbustion timer not resetting between combustions
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
