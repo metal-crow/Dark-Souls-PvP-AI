@@ -211,19 +211,17 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         guiPrint(LocationState",1:reverse roll");
     }
 
-    //move towards enemy back. Since the reverse roll ends at a about a 45 degree angle ajacent to their back, move in this way
-    //Have to move to the side to get behind the enemys back
-    //instead of going directly towards enemy, go at that direction +-10 degrees to make the end angle perpendicular to enemy's rotation
+    //move towards enemy's back.
     if ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction)
-        //ensure we got behind the enemy, as we could have roll into them
+        //ensure we got behind the enemy, as we could have rolled into them
         && attackInfo == BehindEnemy)
     {
         float angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-        if (Phantom->rotation < angle){
+        /*if (Phantom->rotation < angle){
             angle += fmod((Phantom->rotation - angle),90);
         } else{
             angle += fmod((angle - Phantom->rotation), 90);
-        }
+        }*/
         longTuple joystickAngles = angleToJoystick(angle);
         iReport->wAxisX = joystickAngles.first;
         iReport->wAxisY = joystickAngles.second;
@@ -400,17 +398,31 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
     }
 }
 
+static startTimeHasntBeenReset = true;
 static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:backstab");
     long curTime = clock();
 
-    //hold attack button for a bit
-    if (curTime < startTimeAttack + 40){
+    //backstabs cannot be triggerd from queued action
+    //move character towards enemy back to switch to neutral animation as soon as in ready state
+    double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+    longTuple move = angleToJoystick(angle);
+    iReport->wAxisX = move.first;
+    iReport->wAxisY = move.second;
+
+    //once backstab is possible (neutral), press r1
+    if (Player->subanimation == SubanimationNeutral){
         iReport->lButtons = r1;
+        if (startTimeHasntBeenReset){
+            startTimeAttack = curTime; //reset start time to allow exit timeout
+            startTimeHasntBeenReset = false;
+        }
     }
 
-    //end subanimation immediatly
-    if (curTime > startTimeAttack + 40){
+    //end subanimation after too long moving, or too long holding r1
+    //exit if we either got the bs, or we incorrectly detected it
+    if (curTime > startTimeAttack + 100){
+        startTimeHasntBeenReset = true;
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end backstab");

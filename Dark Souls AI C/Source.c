@@ -154,7 +154,7 @@ int main(void){
         guiPrint(LocationDetection",5:Current Subroutine States ={%d,%d,%d,%d}", subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
 
 		//send this struct to the driver (only 1 call for setting all controls, much faster)
-        guiPrint(LocationJoystick",0:AxisX:%d\nAxisY:%d\nButtons:%x", iReport.wAxisX, iReport.wAxisY, iReport.lButtons);
+        guiPrint(LocationJoystick",0:AxisX:%d\nAxisY:%d\nButtons:0x%x", iReport.wAxisX, iReport.wAxisY, iReport.lButtons);
 		UpdateVJD(iInterface, (PVOID)&iReport);
 
 		//SetForegroundWindow(h);
