@@ -34,7 +34,6 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * backstabs wont trigger from queue animations. have to be in neural state
     * kicking instead of attacking sometimes because attack subroutine executed while ready, but dodge animation still recovering
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  
