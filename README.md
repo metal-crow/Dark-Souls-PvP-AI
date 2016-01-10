@@ -15,7 +15,7 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
  * Or skip the above two and use the folder in release.
-* (optional) Import the folder for the GUI into eclipse and run that.
+* (If you want the gui) Import the folder for the GUI into eclipse and run that. Or run the included .jar file.
 * Run the PvP AI whenever the opponent is ready.
 
 ## Neural Networks
