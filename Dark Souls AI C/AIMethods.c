@@ -38,9 +38,10 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
     unsigned char BackStabStateDetected = BackstabDetection(Player, Phantom, distanceByLine);
     if (BackStabStateDetected){
         //will overwrite strafe subroutine
-        OverrideLowPrioritySubroutines();
+        OverrideLowPriorityDefenseSubroutines();
+
+        guiPrint(LocationDetection",0:backstab state %d", BackStabStateDetected);
         if (BackStabStateDetected == 2){
-            guiPrint(LocationDetection",0:backstab detected");
             returnVar = InBSPosition;
         }
         //override saftey notice here if = 4

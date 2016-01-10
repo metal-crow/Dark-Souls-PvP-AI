@@ -37,6 +37,10 @@ bool inActiveDodgeSubroutine();
 
 bool inActiveAttackSubroutine();
 
+void OverrideLowPriorityDefenseSubroutines();
+
+void OverrideLowPriorityAttackSubroutines();
+
 //handles aborting low priority subroutines in case of immediate nesiccary change
 //NOTE ensure this isnt called and then the same overridden subroutine isnt retriggered
 void OverrideLowPrioritySubroutines();
