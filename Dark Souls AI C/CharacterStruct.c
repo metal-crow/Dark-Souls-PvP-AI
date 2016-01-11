@@ -61,7 +61,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     {
         c->subanimation = AttackSubanimationActiveHurtboxOver;
     }
-    else if (animationid >= 2000 && animationid <= 2045){//animation states for poise breaks, knockdowns, launches, staggers
+    else if (animationid >= 2000 && animationid <= 2056){//animation states for poise breaks, knockdowns, launches, staggers
         c->subanimation = PoiseBrokenSubanimation;
     }
     //---subanimations based on animation type---
