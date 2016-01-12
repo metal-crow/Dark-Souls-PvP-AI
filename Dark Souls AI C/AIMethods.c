@@ -58,9 +58,6 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 
 /* ------------- DODGE Actions ------------- */
 
-#define timeBeforeStartOfTurnAnimation 100
-#define inputDelayForStopDodge 50
-
 //also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
@@ -68,7 +65,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
 
     //start to turn, and wait until the turing animation starts in game
-    if (curTime < startTimeDefense + timeBeforeStartOfTurnAnimation){
+    if (curTime < startTimeDefense + 350){
         double rollOffset = 40.0;//To avoid taking too long in turning, only turn 40 degrees max
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
@@ -92,7 +89,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
     }
     //once we've starting turing in game, queue the roll. It will start as soon as the turning ends in game
-    else if (curTime < startTimeDefense + timeBeforeStartOfTurnAnimation + inputDelayForStopDodge){
+    if (curTime < startTimeDefense + 200 && curTime > startTimeDefense + 125){
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
         //handle this subroutines intitation after a counterstrafe abort (handles being locked on)

@@ -11,7 +11,7 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
 * Create Vjoy controller with the config: x,y,z,rx,ry,20 buttons,1 discrete pov
 * Install [Cheat Engine](http://www.cheatengine.org/)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
- * Cheat Engine and the table are only used to lock the camera's x rotation to PI. If you dont want to use them, figure out how to do that yourself.
+ * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. If you dont want to use them, figure out how to do that yourself.
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
  * Or skip the above two and use the folder in release.
@@ -33,8 +33,8 @@ resolution at 1440x810
 
   * **TOP Priority**
     * spear game too strong
-    * backflips still happening. Bad 21, 1:56
     * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early. Try and find another timer 1.
+    * memory for if enemy likes to combo, and dodge away if so. combos wreck its shit.
     * i was wrong. dead angles dont protect against parrying.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  
@@ -52,7 +52,7 @@ resolution at 1440x810
     * teach poise  
 
   * **MEDIUM Priority**
-    * the stupid fucking walls
+    * true pathfinding. Rip maths, use a*
     * Get different base addresses for all possible enemies, allow switching of main target.
     * rolling into mlgs r2 hurtbox. should always roll away from that attack?
     * Pointers have to be reread for characters because end address changes when invading  
