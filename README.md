@@ -33,8 +33,8 @@ resolution at 1440x810
 
   * **TOP Priority**
     * spear game too strong
-    * rotation during dodge breaking it. fix created backflipping, which has less iframes
-    * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early.
+    * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early. Try and find another timer 1.
+    * memory. If last action was toggle escape, dont attack, dodge. In neural net logics.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that

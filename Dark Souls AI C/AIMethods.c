@@ -264,7 +264,7 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
-    if (!inActiveSubroutine() && Player->subanimation >= AttackSubanimationActiveHurtboxOver){
+    if (!inActiveSubroutine() && Player->subanimation >= LockInSubanimation){
 		//indicate we are in dodge subroutine
         //special mappings to decide between neural net desicion and logic
         switch (attackInfo){
