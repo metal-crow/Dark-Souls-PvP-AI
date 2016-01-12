@@ -80,10 +80,16 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
         //angle joystick
         longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+        //Stupid bug with dark souls. Can only roll when one of these is very close to middle. Select whatever one is furthest
+        int diffX = abs(move.first - MIDDLE);
+        int diffY = abs(move.second - MIDDLE);
+        if (diffX > diffY){
+            iReport->wAxisX = move.first;
+        } else{
+            iReport->wAxisY = move.second;
+        }
 
-        guiPrint(LocationState",1:angle roll %f", rollOffset);
+        guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
     }
     //once we've starting turing in game, queue the roll. It will start as soon as the turning ends in game
     else if (curTime < startTimeDefense + timeBeforeStartOfTurnAnimation + inputDelayForStopDodge){
@@ -98,7 +104,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //ensure we actually enter dodge roll in game so another subanimation cant override it
     //or we get poise broken out
-    if (isDodgeAnimation(Player->animationType_id) || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 2000){
+    if (isDodgeAnimation(Player->animationType_id) || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
         guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;

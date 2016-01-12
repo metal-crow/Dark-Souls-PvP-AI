@@ -32,6 +32,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
+    * spear game too strong
     * rotation during dodge breaking it. fix created backflipping, which has less iframes
     * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
