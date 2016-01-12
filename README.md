@@ -35,12 +35,11 @@ resolution at 1440x810
     * spear game too strong
     * backflips still happening. Bad 21, 1:56
     * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early. Try and find another timer 1.
-    * memory. If last action was toggle escape, dont attack, dodge. In neural net logics.
     * i was wrong. dead angles dont protect against parrying.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * too prone to trading, imrpove attack neural network  
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes 
+    * CE camera lock script causes crashes. Fix: disable all scripts before invasions and disconnect.
 
   * **HIGH Priority**
     * have fully automated version. When in world, put down sign. When enemy detected, enable ai. Put on server, steam to switch.

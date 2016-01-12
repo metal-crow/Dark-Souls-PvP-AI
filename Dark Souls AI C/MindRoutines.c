@@ -36,11 +36,12 @@ DWORD WINAPI DefenseMindProcess(void* data){
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        else if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
+        if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
             AttackChoice = GhostHitId;
         }
-        else{
-            DefenseChoice = 0;
+        //if we had to toggle escape, they're probably comboing. Get out.
+        if (last_subroutine_states_self[0] == ToggleEscapeId){
+            DefenseChoice = StandardRollId;
         }
 
         //prevent rerun

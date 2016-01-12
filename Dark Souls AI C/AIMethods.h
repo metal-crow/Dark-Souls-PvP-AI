@@ -11,6 +11,7 @@
 #include "SubRoutines.h"
 #include <time.h>
 #include "AnimationMappings.h"
+#include "Memory.h"
 
 //return 2 if i am about to be hit by an attack by the enemy
 //1 if an attack if coming soon and i should wait to dodge it

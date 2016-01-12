@@ -32,6 +32,9 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{88ec01be-7698-47b6-820f-1090f3602f68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AICore\Memory">
+      <UniqueIdentifier>{1bb40e32-0de2-42f9-9c5d-fdf8863aea58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.c">
@@ -70,6 +73,9 @@
     <ClCompile Include="TestSpace.c">
       <Filter>HelperUtils</Filter>
     </ClCompile>
+    <ClCompile Include="Memory.c">
+      <Filter>AICore\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interface.h">
@@ -104,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="gui.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>AICore\Memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

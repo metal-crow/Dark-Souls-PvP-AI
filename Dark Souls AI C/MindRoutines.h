@@ -13,6 +13,7 @@
 #include "CharacterStruct.h"
 #include "SubRoutines.h"
 #include "Interface.h"
+#include "Memory.h"
 
 typedef struct{
     struct fann* mind;

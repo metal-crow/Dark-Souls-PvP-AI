@@ -88,6 +88,7 @@
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
+    <ClCompile Include="Memory.c" />
     <ClCompile Include="TestSpace.c" />
     <ClCompile Include="gui.c" />
     <ClCompile Include="InitalizeFANN.c" />
@@ -103,6 +104,7 @@
     <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="Interface.h" />

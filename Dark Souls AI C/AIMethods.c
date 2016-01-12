@@ -108,6 +108,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(StandardRollId);
     }
 }
 
@@ -131,6 +132,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
         guiPrint(LocationState",0:end backstep");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(BackstepId);
     }
 }
 
@@ -171,6 +173,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         guiPrint(LocationState",0:end CounterStrafe");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(CounterStrafeId);
     }
 }
 
@@ -190,6 +193,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
         guiPrint(LocationState",0:end L1");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(L1AttackId);
     }
 }
 
@@ -243,6 +247,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         guiPrint(LocationState",0:end ReverseRollBS");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(ReverseRollBSId);
     }
 }
 
@@ -259,6 +264,7 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
         guiPrint(LocationState",0:end Toggle Escape");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(ToggleEscapeId);
     }
 }
 
@@ -367,6 +373,7 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub ghost hit");
+        AppendLastSubroutineSelf(GhostHitId);
 	}
 }
 
@@ -407,6 +414,7 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub dead angle");
+        AppendLastSubroutineSelf(GhostHitId);
     }
 }
 
@@ -438,6 +446,7 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end backstab");
+        AppendLastSubroutineSelf(BackstabId);
     }
 }
 
@@ -461,6 +470,7 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         subroutine_states[AttackStateIndex] = 0;
         subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub");
+        AppendLastSubroutineSelf(MoveUpId);
     }
 }
 
