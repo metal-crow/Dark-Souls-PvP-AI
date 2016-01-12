@@ -224,6 +224,7 @@ void getTrainingDataforBackstab(void)
     fclose(fpdef);
 }
 
+//have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
 void getTrainingDataforAttack(void)
 {
     FILE* fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
@@ -231,70 +232,49 @@ void getTrainingDataforAttack(void)
     unsigned int trainingLinesCountAtk = 0;
 
     //memset to ensure we dont have unusual char attributes at starting
-    memset(&Enemy, 0, sizeof(Character));
     memset(&Player, 0, sizeof(Character));
 
     HANDLE processHandle = readingSetup();
 
-    CharState** stateBuffer = calloc(4, sizeof(CharState*));
-    //initalize so we dont read null
-    stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
-    stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
-
     HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
+
+    CharState* player;
+    CharState* enemy;
 
     while (listening){
         readPointers(processHandle);
 
-        //move buffer down
-        if (stateBuffer[3] && stateBuffer[4]){
-            free(stateBuffer[3]);
-            free(stateBuffer[2]);
-        }
+        player = ReadPlayerFANN(&Player, processHandle);
+        enemy = ReadPlayerFANN(&Enemy, processHandle);
 
-        stateBuffer[3] = stateBuffer[1];
-        stateBuffer[2] = stateBuffer[0];
+        if (isAttackAnimation(player->animation_id)){
+            int startingHp = player->hp;
 
-        stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
-        stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
+            float distance = distanceFANN(player, enemy);
 
-        if (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)){
-            do{
-                stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
-                stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
-            } while (!(((stateBuffer[3]->hp - stateBuffer[1]->hp) > 35 || (stateBuffer[2]->hp - stateBuffer[0]->hp) > 35)));
-        }
+            while (isAttackAnimation(player->animation_id)){
+                player = ReadPlayerFANN(&Player, processHandle);
+            }
 
-        //trigger on self attack or enemy attack and it resulted in a positive or negitive(hp change)
-        bool atkActivateState =
-            (isAttackAnimation(stateBuffer[3]->animation_id) || isAttackAnimation(stateBuffer[2]->animation_id)) &&
-            ((stateBuffer[3]->hp - stateBuffer[1]->hp)>35 || (stateBuffer[2]->hp - stateBuffer[0]->hp)>35);
-
-        if (
-            atkActivateState
-            && inTraining
-            )
-        {
-            float result;
-            //bad outcome if we take damage
-            if ((stateBuffer[2]->hp - stateBuffer[0]->hp) > 35){
+            float result = 0;
+            //bad outcome
+            if (startingHp != player->hp){
                 result = -1;
             }
-            //if enemy takes damage good outcome is the animation we chose
-            else if ((stateBuffer[3]->hp - stateBuffer[1]->hp) > 35){
-                result = stateBuffer[2]->animation_id;
+            //good outcome
+            else{
+                result = 1;
             }
+            trainingLinesCountAtk++;
 
-            fprintf(fpatk, "%f %f %f\n",
+            /*fprintf(fpatk, "%f %f %f\n",
                 (float)stateBuffer[3]->animation_id,
                 (float)stateBuffer[2]->animation_id,
                 result
-                );
-            trainingLinesCountAtk++;
+                );*/
 
             //save
-            printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, (float)stateBuffer[2]->animation_id, (float)stateBuffer[3]->animation_id);
-
+            //printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, (float)stateBuffer[2]->animation_id, (float)stateBuffer[3]->animation_id);
         }
     }
 

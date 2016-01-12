@@ -29,6 +29,7 @@ Attack Network Inputs:
 how do you decide someone is about to attack you?
 they move up on you head on
 they roll up
+spacing in general
 How do you decide when you should attack?
 
 ## TODO
@@ -37,7 +38,7 @@ resolution at 1440x810
   * **TOP Priority**
     * too prone to trading, imrpove attack neural network  
     * spear game too strong
-    * i was wrong. dead angles dont protect against parrying.
+    * i was wrong. dead angles dont protect against parrying. need ghost hit
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
     * CE camera lock script causes crashes. Fix: disable all scripts before invasions and disconnect.
@@ -53,7 +54,8 @@ resolution at 1440x810
     * teach poise  
 
   * **MEDIUM Priority**
-    * true pathfinding. Rip maths, use a*
+    * movement bug. jerky and sometimes off
+    * true pathfinding. Rip maps, use a*
     * Get different base addresses for all possible enemies, allow switching of main target.
     * rolling into mlgs r2 hurtbox. should always roll away from that attack?
     * Pointers have to be reread for characters because end address changes when invading  
