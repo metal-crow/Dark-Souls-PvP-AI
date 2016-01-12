@@ -99,6 +99,13 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             float animationTimer;
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
+            //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it.
+            if (CombineLastAnimation(curAnimationid)){
+                float animationTimer2;
+                ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
+                animationTimer += animationTimer2;
+            }
+
             float dodgeTimer = dodgeTimings(curAnimationid);
             float timeDelta = dodgeTimer - animationTimer;
             c->dodgeTimeRemaining = timeDelta;//TODO this is only ever used with the enemy

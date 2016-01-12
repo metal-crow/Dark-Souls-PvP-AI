@@ -14,7 +14,6 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
  * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. If you dont want to use them, figure out how to do that yourself.
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
- * Or skip the above two and use the folder in release.
 * (If you want the gui) Import the folder for the GUI into eclipse and run that. Or run the included .jar file.
 * Run the PvP AI whenever the opponent is ready.
 
@@ -27,17 +26,20 @@ Defense Network Inputs:
 
 Attack Network Inputs:  
   -TODO. Undecided currently.
+how do you decide someone is about to attack you?
+they move up on you head on
+they roll up
+How do you decide when you should attack?
 
 ## TODO
 resolution at 1440x810
 
   * **TOP Priority**
+    * too prone to trading, imrpove attack neural network  
     * spear game too strong
     * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early. Try and find another timer 1.
-    * memory for if enemy likes to combo, and dodge away if so. combos wreck its shit.
     * i was wrong. dead angles dont protect against parrying.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
-    * too prone to trading, imrpove attack neural network  
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
     * CE camera lock script causes crashes. Fix: disable all scripts before invasions and disconnect.
 

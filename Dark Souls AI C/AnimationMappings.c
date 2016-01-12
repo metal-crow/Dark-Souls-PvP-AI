@@ -293,12 +293,27 @@ unsigned char isVulnerableAnimation(int animation_id){
     }
 }
 
+//HAHA! TIME FOR JANK!
+//If the given animation is in this list, add up the two animation timers.
+unsigned char CombineLastAnimation(int animation_id){
+    switch (animation_id){
+        //l hand combustion cast
+        case 6407:
+            return 1;
+        //r hand conbustion cast
+        case 6507:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 
 float dodgeTimings(int animation_id){
     switch (animation_id){
     case 100: return 0.5;//catch all for all kicks
-    case 6207: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
-    case 6307: return 0.65;//rhand version of above
+    case 6407: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
+    case 6507: return 0.65;//rhand version of above
     case 6222: return 0.63;//this animation actually never goes past 0.33, but lie to account for .3 of next animation
     case 6517: return 1.1;
     case 6522: return 0.3;
