@@ -88,6 +88,7 @@
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
+    <ClCompile Include="Handler.c" />
     <ClCompile Include="Memory.c" />
     <ClCompile Include="TestSpace.c" />
     <ClCompile Include="gui.c" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Interface.h" />
     <ClInclude Include="MemoryEdits.h" />
     <ClInclude Include="public.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="SubRoutines.h" />
     <ClInclude Include="vjoyinterface.h" />
   </ItemGroup>

@@ -11,44 +11,49 @@
 
 #include "fann.h"
 
+//vjoy settings/variables
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
+#define iInterface 1// Default target vJoy device
+JOYSTICK_POSITION iReport;
 
-//intialize extern variables for neural net
+//neural net and desicion making settings/variables
 MindInput* defense_mind_input;
 volatile char DefenseChoice = 0;
 MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
-#define DebuggingPacify 0
-int main(void){
-	//memset to ensure we dont have unusual char attributes at starting
-	memset(&Enemy, 0, sizeof(Character));
-	Enemy.weaponRange = 6;//TODO temp hardcoding
-	memset(&Player, 0, sizeof(Character));
-	Player.weaponRange = 2.5;
+HANDLE processHandle;
 
-	//get access to dark souls memory
-	char * processName = "DARKSOULS.exe";
-	//get the process id from the name
-	int processId = GetProcessIdFromName(processName);
-	//open the handle
-	HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
-	//get the base address of the process and append all other addresses onto it
-	ullong memorybase = GetModuleBase(processId, processName);
-	Enemy_base_add += memorybase;
-	player_base_add += memorybase;
+#define DebuggingPacify 0
+int SetupandLoad(){
+    //memset to ensure we dont have unusual char attributes at starting
+    memset(&Enemy, 0, sizeof(Character));
+    Enemy.weaponRange = 6;//TODO temp hardcoding
+    memset(&Player, 0, sizeof(Character));
+    Player.weaponRange = 2.5;
+
+    //get access to dark souls memory
+    char * processName = "DARKSOULS.exe";
+    //get the process id from the name
+    int processId = GetProcessIdFromName(processName);
+    //open the handle
+    processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
+    //get the base address of the process and append all other addresses onto it
+    ullong memorybase = GetModuleBase(processId, processName);
+    Enemy_base_add += memorybase;
+    player_base_add += memorybase;
 
     //TODO THESE HAVE TO BE REREAD, AS THE END ADDRESS CAN CHANGE
     //MOVE TO SETUP METHOD in CharacterStruct
-	//add the pointer offsets to the address. This can be slow because its startup only
-	Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
-	Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
-	Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
+    //add the pointer offsets to the address. This can be slow because its startup only
+    Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
+    Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
+    Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
     Enemy.animationType_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationType_offsets_length, Enemy_animationType_offsets);
-	Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
+    Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
     Enemy.stamina_address = 0;
-	Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
-	Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
+    Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
+    Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
     Enemy.animationTimer_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer_offsets_length, Enemy_animationTimer_offsets);
     Enemy.animationTimer2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer2_offsets_length, Enemy_animationTimer2_offsets);
     Enemy.animationId_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID_offsets_length, Enemy_animationID_offsets);
@@ -58,14 +63,14 @@ int main(void){
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
 
-	Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
-	Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
-	Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
+    Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
+    Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
+    Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
     Player.animationType_address = FindPointerAddr(processHandle, player_base_add, Player_animationType_offsets_length, Player_animationType_offsets);
-	Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
+    Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
     Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
-	Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
-	Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
+    Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
+    Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
     Player.animationTimer_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer_offsets_length, Player_animationTimer_offsets);
     Player.animationTimer2_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer2_offsets_length, Player_animationTimer2_offsets);
     Player.animationId_address = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
@@ -75,14 +80,12 @@ int main(void){
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
 
-	//want to use controller input, instead of keyboard, as analog stick is more precise movement
-	UINT iInterface = 1;								// Default target vJoy device
-	int loadresult = loadvJoy(iInterface);
-	if (loadresult != 0){
-		return loadresult;
-	}
-	JOYSTICK_POSITION iReport;
-	iReport.bDevice = (BYTE)iInterface;
+    //want to use controller input, instead of keyboard, as analog stick is more precise movement
+    int loadresult = loadvJoy(iInterface);
+    if (loadresult != 0){
+        return loadresult;
+    }
+    iReport.bDevice = (BYTE)iInterface;
 
     //load neural network and threads
     int error = ReadyThreads();
@@ -93,17 +96,18 @@ int main(void){
     //start gui
     guiStart();
 
-	//get current camera details to lock
-	readCamera(&processHandle,memorybase);
+    //get current camera details to lock
+    readCamera(&processHandle, memorybase);
 
-	//set window focus
-	HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
-	SetForegroundWindow(h);
-	SetFocus(h);
+    //set window focus
+    HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
+    SetForegroundWindow(h);
+    SetFocus(h);
 
-	//TODO load vJoy driver(we ONLY want the driver loaded when program running)
+    //TODO load vJoy driver(we ONLY want the driver loaded when program running)
+}
 
-	while (1){
+void MainLogicLoop(){
 		//TODO lock the camera
 		//lockCamera(&processHandle);
 
@@ -159,12 +163,12 @@ int main(void){
 
 		//SetForegroundWindow(h);
 		//SetFocus(h);
-	}
+}
 
+void Exit(){
 	RelinquishVJD(iInterface);
     defense_mind_input->exit = true;
     attack_mind_input->exit = true;
 	CloseHandle(processHandle);
     guiClose();
-	return EXIT_SUCCESS;
 }

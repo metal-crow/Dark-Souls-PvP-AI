@@ -7,38 +7,38 @@
 #define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
 void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
-	HANDLE processHandle_nonPoint = *processHandle;
+    HANDLE processHandle_nonPoint = *processHandle;
     //TODO read large block that contains all data, then parse in process
-	//read x location
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
+    //read x location
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
     guiPrint("%d,0:X:%f", characterId, c->loc_x);
-	//read y location
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
+    //read y location
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
     guiPrint("%d,1:Y:%f", characterId, c->loc_y);
-	//read rotation of player
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
-	//Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
-	//convert to radians, then to degrees
-	c->rotation = (c->rotation + PI) * (180.0 / PI);
+    //read rotation of player
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
+    //Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
+    //convert to radians, then to degrees
+    c->rotation = (c->rotation + PI) * (180.0 / PI);
     guiPrint("%d,2:Rotation:%f", characterId, c->rotation);
-	//read current animation type
+    //read current animation type
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationType_address), &(c->animationType_id), 2, 0);
     guiPrint("%d,3:Animation Type:%d", characterId, c->animationType_id);
-	//read hp
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
+    //read hp
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     //read stamina
     if (c->stamina_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
         guiPrint("%d,4:Stamina:%d", characterId, c->stamina);
     }
-	//read what weapon they currently have in right hand
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
+    //read what weapon they currently have in right hand
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
     guiPrint("%d,5:R Weapon:%d", characterId, c->r_weapon_id);
-	//read what weapon they currently have in left hand
-	ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
+    //read what weapon they currently have in left hand
+    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
     guiPrint("%d,6:L Weapon:%d", characterId, c->l_weapon_id);
 
-	//read if hurtbox is active on enemy weapon
+    //read if hurtbox is active on enemy weapon
     if (c->hurtboxActive_address){
         unsigned char hurtboxActiveState;
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &hurtboxActiveState, 1, 0);
@@ -51,6 +51,16 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
     int animationid2;
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
+
+    //keep track of enemy animations in memory
+    bool newAid = false;
+    if (characterId == LocationMemoryEnemy){
+        if (animationid){
+            newAid = AppendLastAnimationIdEnemy(animationid);
+        } else {
+            newAid = AppendLastAnimationIdEnemy(animationid2);
+        }
+    }
 
     guiPrint("%d,7:Animation Id 1/2:%d/%d", characterId, animationid, animationid2);
 
@@ -99,7 +109,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             float animationTimer;
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
-            bool newAid = AppendLastAnimationIdEnemy(curAnimationid);
             //handle the timer not being reset to 0 as soon as a new animation starts
             if (newAid){
                 animationTimer = 0.0;
