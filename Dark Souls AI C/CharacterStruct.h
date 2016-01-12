@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <Windows.h>
 #include "AnimationMappings.h"
+#include "Memory.h"
 
 typedef unsigned long long ullong;
 

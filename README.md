@@ -37,7 +37,6 @@ resolution at 1440x810
   * **TOP Priority**
     * too prone to trading, imrpove attack neural network  
     * spear game too strong
-    * glitch with timers not resetting between animations. If the last one ended at say 0.3 and the next one has a dodge timer of 0.5, we will dodge immediatly, and early. Try and find another timer 1.
     * i was wrong. dead angles dont protect against parrying.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that

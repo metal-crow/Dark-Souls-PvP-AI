@@ -99,6 +99,12 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             float animationTimer;
             ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
+            bool newAid = AppendLastAnimationIdEnemy(curAnimationid);
+            //handle the timer not being reset to 0 as soon as a new animation starts
+            if (newAid){
+                animationTimer = 0.0;
+            }
+
             //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it.
             if (CombineLastAnimation(curAnimationid)){
                 float animationTimer2;
