@@ -4,7 +4,7 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
 #pragma warning( disable: 4305 )
 
-#define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold traced until i find a dynamic way
+#define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
 void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 	HANDLE processHandle_nonPoint = *processHandle;
@@ -105,11 +105,6 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 
             guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
 
-            // time before the windup ends where we can still alter rotation (only for player)
-            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.15 && characterId == LocationMemoryPlayer){
-                c->subanimation = AttackSubanimationWindupGhostHit;
-            }
-
             if (timeDelta >= 1.0){
                 c->subanimation = SubanimationNeutral;
             } else if (timeDelta < 1.0 && timeDelta > 0.45){
@@ -125,6 +120,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             }
             else if (timeDelta < 0){
                 c->subanimation = AttackSubanimationActiveHurtboxOver;
+            }
+
+            // time before the windup ends where we can still alter rotation (only for player)
+            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == LocationMemoryPlayer){
+                c->subanimation = AttackSubanimationWindupGhostHit;
             }
         }
     }
