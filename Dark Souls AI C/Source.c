@@ -105,6 +105,8 @@ int SetupandLoad(){
     SetFocus(h);
 
     //TODO load vJoy driver(we ONLY want the driver loaded when program running)
+
+    return EXIT_SUCCESS;
 }
 
 void MainLogicLoop(){

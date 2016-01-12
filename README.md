@@ -41,7 +41,7 @@ resolution at 1440x810
     * i was wrong. dead angles dont protect against parrying. need ghost hit
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes. Fix: disable all scripts before invasions and disconnect.
+    * CE camera lock script causes crashes.
 
   * **HIGH Priority**
     * have fully automated version. When in world, put down sign. When enemy detected, enable ai. Put on server, steam to switch.
