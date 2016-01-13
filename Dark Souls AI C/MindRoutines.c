@@ -68,7 +68,10 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         float distanceInput = distance(&Player, &Enemy);
 
-        if (
+        if (!Player.twoHanding){
+            AttackChoice = TwoHandId;
+        }
+        else if (
             //not in range
             distance(&Player, &Enemy) > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab
@@ -76,15 +79,12 @@ DWORD WINAPI AttackMindProcess(void* data){
         {
             AttackChoice = MoveUpId;
         }
-        else if (
+        if (
             (Player.stamina > 90) &&  //have enough stamina
             (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
             (rand()<RAND_MAX/5)                                 //random limitor
            ){
             AttackChoice = GhostHitId;
-        }
-        else{
-            AttackChoice = 0;
         }
 
         //prevent rerun

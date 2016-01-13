@@ -471,6 +471,23 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 }
 
+static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    long curTime = clock();
+    guiPrint(LocationState",0:two hand time:%d", (curTime - startTimeAttack));
+
+    if (curTime < startTimeAttack + 40){
+        iReport->lButtons = triangle;
+    }
+
+    if (curTime > startTimeAttack + 40){
+        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackTypeIndex] = 0;
+        guiPrint(LocationState",0:end two hand");
+        AppendLastSubroutineSelf(TwoHandId);
+    }
+}
+
+
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
 	//TODO need timing analysis. Opponent can move outside range during windup
@@ -518,6 +535,10 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
             //backstab
             case BackstabId:
                 backStab(Player, Phantom, iReport);
+                break;
+            //two hand
+            case TwoHandId:
+                twoHand(Player, Phantom, iReport);
                 break;
             default:
                 guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);

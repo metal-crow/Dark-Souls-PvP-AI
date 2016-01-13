@@ -24,7 +24,7 @@ class GuiPane extends JPanel{
     private JTextArea[] MemoryEnemy_Params=new JTextArea[12];
     
     private JPanel MemoryPlayer=new JPanel();
-    private JTextArea[] MemoryPlayer_Params=new JTextArea[12];
+    private JTextArea[] MemoryPlayer_Params=new JTextArea[13];
 
     private JPanel Detection=new JPanel();
     private JTextArea[] Detection_Params=new JTextArea[6];

@@ -184,6 +184,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
         guiPrint("%d,11:Locked On:%d", characterId, c->locked_on);
     }
+    //read two handed state of player
+    if (c->twoHanding_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
+        guiPrint("%d,12:Two Handing:%d", characterId, c->twoHanding);
+    }
 }
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){

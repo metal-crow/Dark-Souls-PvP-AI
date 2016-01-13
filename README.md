@@ -6,6 +6,8 @@ https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!
 https://github.com/OrdinaryMagician. Various projects in dark souls 2, and assembly master.   
 https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he found the Dark Souls 2 bullet params a week after it came out.  
   
+I tag commits when i have tested that current build, and it peforms to my liking. Anything between tags, or after the most recent tag, can be assumed to be broken or non-functional.
+  
 ##Setup
 * Install [Vjoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install).
 * Create Vjoy controller with the config: x,y,z,rx,ry,20 buttons,1 discrete pov
@@ -31,11 +33,15 @@ they move up on you head on
 they roll up
 spacing in general
 How do you decide when you should attack?
+ usually tell how they attack by how long it's been since they last attacked and how far away they are
+will they backstab punish me? will the attack poise break them? if not, do a quicker attack.
+try feeding an array of distance inputs for last x seconds
 
 ## TODO
 resolution at 1440x810
 
   * **TOP Priority**
+    * Two hand if not two handing
     * too prone to trading, imrpove attack neural network  
     * spear game too strong
     * i was wrong. dead angles dont protect against parrying. need ghost hit

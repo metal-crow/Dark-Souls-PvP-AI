@@ -29,6 +29,7 @@ extern long startTimeDefense;
 #define MoveUpId 1
 #define GhostHitId 2
 #define BackstabId 3
+#define TwoHandId 4
 
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();

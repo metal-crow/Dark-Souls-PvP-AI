@@ -24,7 +24,6 @@ volatile unsigned char AttackChoice = 0;
 
 HANDLE processHandle;
 
-#define DebuggingPacify 0
 int SetupandLoad(){
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
@@ -62,6 +61,7 @@ int SetupandLoad(){
     Enemy.readyState_address = 0;
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
+    Enemy.twoHanding_address = 0;
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -79,6 +79,7 @@ int SetupandLoad(){
     Player.readyState_address = FindPointerAddr(processHandle, player_base_add, Player_readyState_offsets_length, Player_readyState_offsets);
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
+    Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
 
     //want to use controller input, instead of keyboard, as analog stick is more precise movement
     int loadresult = loadvJoy(iInterface);
@@ -108,6 +109,8 @@ int SetupandLoad(){
 
     return EXIT_SUCCESS;
 }
+
+#define DebuggingPacify 0
 
 void MainLogicLoop(){
 		//TODO lock the camera

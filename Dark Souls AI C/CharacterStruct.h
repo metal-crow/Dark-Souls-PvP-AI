@@ -58,6 +58,9 @@ typedef struct {
     unsigned char locked_on;
     //time left before enemy hurtbox activates. Used for reverse roll vs dodge roll check
     float dodgeTimeRemaining;
+    //if player is two handing or not
+    ullong twoHanding_address;
+    unsigned char twoHanding;
 } Character;
 
 //initalize the phantom and player
@@ -159,4 +162,7 @@ static const int Enemy_velocity_offsets_length = 5;
 //if player is locked on. used for verification only
 static const int Player_Lock_on_offsets[] = { 0x3C, 0x170, 0x2C, 0x390, 0x128 };
 static const int Player_Lock_on_offsets_length = 5;
+//handed state of player
+static const int Player_twohanding_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x0 };
+static const int Player_twohanding_offsets_length = 5;
 #endif
