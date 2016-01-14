@@ -1,15 +1,7 @@
+#include "Source.h"
+
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning( disable: 4305 )//ignore dataloss conversion from double to float
-
-#include "gui.h"
-#include "MemoryEdits.h"
-#include "CharacterStruct.h"
-#include "Interface.h"
-#include "AIMethods.h"
-#include "SubRoutines.h"
-#include "MindRoutines.h"
-
-#include "fann.h"
 
 //vjoy settings/variables
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library

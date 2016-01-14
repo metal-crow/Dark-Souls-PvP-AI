@@ -73,7 +73,7 @@ DWORD WINAPI AttackMindProcess(void* data){
         }
         else if (
             //not in range
-            distance(&Player, &Enemy) > Player.weaponRange ||
+            distanceInput > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab
             BackstabDetection(&Player, &Enemy, distanceInput) == 1)
         {
@@ -82,7 +82,8 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (
             (Player.stamina > 90) &&  //have enough stamina
             (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
-            (rand()<RAND_MAX/5)                                 //random limitor
+            (rand()<RAND_MAX/5) &&                              //random limitor
+            (distanceInput > 1)  //dont attack when right in enemy face to try and avoid getting parried
            ){
             AttackChoice = GhostHitId;
         }

@@ -26,17 +26,18 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     guiPrint("%d,3:Animation Type:%d", characterId, c->animationType_id);
     //read hp
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
+    guiPrint("%d,4:HP:%d", characterId, c->hp);
     //read stamina
     if (c->stamina_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
-        guiPrint("%d,4:Stamina:%d", characterId, c->stamina);
+        guiPrint("%d,5:Stamina:%d", characterId, c->stamina);
     }
     //read what weapon they currently have in right hand
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
-    guiPrint("%d,5:R Weapon:%d", characterId, c->r_weapon_id);
+    guiPrint("%d,6:R Weapon:%d", characterId, c->r_weapon_id);
     //read what weapon they currently have in left hand
     ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
-    guiPrint("%d,6:L Weapon:%d", characterId, c->l_weapon_id);
+    guiPrint("%d,7:L Weapon:%d", characterId, c->l_weapon_id);
 
     //read if hurtbox is active on enemy weapon
     if (c->hurtboxActive_address){
@@ -62,7 +63,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
         }
     }
 
-    guiPrint("%d,7:Animation Id 1/2:%d/%d", characterId, animationid, animationid2);
+    guiPrint("%d,8:Animation Id 1/2:%d/%d", characterId, animationid, animationid2);
 
     unsigned char attackAnimationInfo = isAttackAnimation(c->animationType_id);
 
@@ -125,7 +126,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             float timeDelta = dodgeTimer - animationTimer;
             c->dodgeTimeRemaining = timeDelta;//TODO this is only ever used with the enemy
 
-            guiPrint("%d,8:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
+            guiPrint("%d,9:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
 
             if (timeDelta >= 1.0){
                 c->subanimation = SubanimationNeutral;
@@ -171,23 +172,23 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             c->subanimation = LockInSubanimation;
         }*/
     }
-    guiPrint("%d,9:Subanimation:%d", characterId, c->subanimation);
+    guiPrint("%d,10:Subanimation:%d", characterId, c->subanimation);
 
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will
     if (c->velocity_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
-        guiPrint("%d,10:Velocity:%f", characterId, c->velocity);
+        guiPrint("%d,11:Velocity:%f", characterId, c->velocity);
     }
     //read if the player is locked on
     if (c->locked_on_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
-        guiPrint("%d,11:Locked On:%d", characterId, c->locked_on);
+        guiPrint("%d,12:Locked On:%d", characterId, c->locked_on);
     }
     //read two handed state of player
     if (c->twoHanding_address){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
-        guiPrint("%d,12:Two Handing:%d", characterId, c->twoHanding);
+        guiPrint("%d,13:Two Handing:%d", characterId, c->twoHanding);
     }
 }
 

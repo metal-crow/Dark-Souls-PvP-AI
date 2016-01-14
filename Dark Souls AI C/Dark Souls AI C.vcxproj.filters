@@ -5,14 +5,8 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="InterfaceUtils">
-      <UniqueIdentifier>{f4ec4ca0-bc61-4460-89da-5b9df2edc5f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AICore">
       <UniqueIdentifier>{9d394c78-f626-4970-9439-04cc41f965ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HelperUtils">
-      <UniqueIdentifier>{1f52c710-79df-41f8-87b0-5b4a0bd9aded}</UniqueIdentifier>
     </Filter>
     <Filter Include="VJoy">
       <UniqueIdentifier>{b8d0b07e-4394-4bc2-8e1c-266b2c58fc88}</UniqueIdentifier>
@@ -35,19 +29,22 @@
     <Filter Include="AICore\Memory">
       <UniqueIdentifier>{1bb40e32-0de2-42f9-9c5d-fdf8863aea58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CharacterUtils">
+      <UniqueIdentifier>{1f52c710-79df-41f8-87b0-5b4a0bd9aded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelperUtils">
+      <UniqueIdentifier>{f4ec4ca0-bc61-4460-89da-5b9df2edc5f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Interface.c">
-      <Filter>InterfaceUtils</Filter>
-    </ClCompile>
     <ClCompile Include="MemoryEdits.c">
-      <Filter>InterfaceUtils</Filter>
+      <Filter>HelperUtils</Filter>
     </ClCompile>
     <ClCompile Include="CharacterStruct.c">
-      <Filter>HelperUtils</Filter>
+      <Filter>CharacterUtils</Filter>
     </ClCompile>
     <ClCompile Include="AIMethods.c">
       <Filter>AICore\Instinct</Filter>
@@ -71,7 +68,7 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="TestSpace.c">
-      <Filter>HelperUtils</Filter>
+      <Filter>CharacterUtils</Filter>
     </ClCompile>
     <ClCompile Include="Memory.c">
       <Filter>AICore\Memory</Filter>
@@ -79,16 +76,19 @@
     <ClCompile Include="Handler.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WeaponData.c">
+      <Filter>HelperUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="HelperUtil.c">
+      <Filter>HelperUtils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Interface.h">
-      <Filter>InterfaceUtils</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryEdits.h">
-      <Filter>InterfaceUtils</Filter>
+      <Filter>HelperUtils</Filter>
     </ClInclude>
     <ClInclude Include="CharacterStruct.h">
-      <Filter>HelperUtils</Filter>
+      <Filter>CharacterUtils</Filter>
     </ClInclude>
     <ClInclude Include="public.h">
       <Filter>VJoy</Filter>
@@ -119,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="Source.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelperUtil.h">
+      <Filter>HelperUtils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

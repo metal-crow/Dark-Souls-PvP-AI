@@ -6,7 +6,7 @@
 #include "CharacterStruct.h"
 #include <stdbool.h>
 #include "MemoryEdits.h"
-#include "Interface.h"
+#include "HelperUtil.h"
 
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
 

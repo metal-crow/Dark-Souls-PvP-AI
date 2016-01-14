@@ -7,7 +7,7 @@ i cant seem to find a pattern in the ids, so this is just a big switch statement
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
 0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created, 4 is same as 2 but override behind enemy safety*/
-unsigned char isAttackAnimation(unsigned char animationType_id){
+unsigned char isAttackAnimation(unsigned short animationType_id){
     switch (animationType_id){
         //nothing
         //case 0:
@@ -225,7 +225,7 @@ unsigned char isAttackAnimation(unsigned char animationType_id){
 }
 
 
-unsigned char isDodgeAnimation(unsigned char animationType_id){
+unsigned char isDodgeAnimation(unsigned short animationType_id){
     switch (animationType_id){
         //1 hand roll
         case 32:

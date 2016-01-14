@@ -1,5 +1,5 @@
-#ifndef Interface_H
-#define Interface_H
+#ifndef HelperUtil_H
+#define HelperUtil_H
 
 #include "gui.h"
 #include <stdio.h>
@@ -11,6 +11,7 @@
 #include "public.h"
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
+#include "WeaponData.h"
 
 #define PI 3.14159265
 #define XRIGHT 32768

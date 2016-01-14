@@ -12,7 +12,7 @@
 #include "fann.h"
 #include "CharacterStruct.h"
 #include "SubRoutines.h"
-#include "Interface.h"
+#include "HelperUtil.h"
 #include "Memory.h"
 
 typedef struct{

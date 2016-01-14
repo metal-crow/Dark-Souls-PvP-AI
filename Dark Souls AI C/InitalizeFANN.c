@@ -2,124 +2,21 @@
 #pragma warning(disable: 4244)
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
-#include <stdlib.h>
-#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
-#include <Windows.h>
-#include <math.h>
-#include <stdbool.h>
-
+#include "Source.h"
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
 #include "AnimationMappings.h"
-
+#include "gui.h"
 #include "fann.h"
 
-typedef struct {
-    float loc_x;
-    float loc_y;
-    unsigned int r_weapon_id;
-    float rotation;
-    unsigned char animation_id;
-    float velocity;
-    unsigned int hp;
-}CharState;
-
-Character Enemy;
-Character Player;
-
-void readPointers(HANDLE processHandle){
-    Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
-    Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
-    Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
-    Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
-    Enemy.animationType_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationType_offsets_length, Enemy_animationType_offsets);
-    Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
-    Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
-
-    Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
-    Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
-    Player.r_weapon_address = 0;
-    Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
-    Player.animationType_address = FindPointerAddr(processHandle, player_base_add, Player_animationType_offsets_length, Player_animationType_offsets);
-    Player.velocity_address = 0;
-    Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
-}
-
-HANDLE readingSetup(){
-    //get access to dark souls memory
-    char * processName = "DARKSOULS.exe";
-    //get the process id from the name
-    int processId = GetProcessIdFromName(processName);
-    //open the handle
-    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
-    //get the base address of the process and append all other addresses onto it
-    ullong memorybase = GetModuleBase(processId, processName);
-    Enemy_base_add += memorybase;
-    player_base_add += memorybase;
-
-    readPointers(processHandle);
-
-    return processHandle;
-}
+#include <stdio.h>
+#include <stdlib.h>
+#include <Windows.h>
+#include <math.h>
+#include <stdbool.h>
+#include <time.h>
 
 #define PI 3.14159265
-
-CharState* ReadPlayerFANN(Character * c, HANDLE processHandle){
-    CharState* state = malloc(sizeof(CharState));
-
-    //read x location
-    ReadProcessMemory(processHandle, (LPCVOID)(c->location_x_address), &(state->loc_x), 4, 0);
-    //read y location
-    ReadProcessMemory(processHandle, (LPCVOID)(c->location_y_address), &(state->loc_y), 4, 0);
-    //read r hand wep
-    if (c->r_weapon_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->r_weapon_address), &(state->r_weapon_id), 4, 0);
-    }
-
-    ReadProcessMemory(processHandle, (LPCVOID)(c->rotation_address), &(state->rotation), 4, 0);
-    //Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
-    //convert to radians, then to degrees
-    c->rotation = (c->rotation + PI) * (180.0 / PI);
-
-    //read current animation id
-    if (c->animationType_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->animationType_address), &(state->animation_id), 2, 0);
-    }
-
-    if (c->velocity_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->velocity_address), &(state->velocity), 4, 0);
-    }
-
-    ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(state->hp), 4, 0);
-
-    return state;
-}
-
-//get straight line distance between me and enemy
-float distanceFANN(CharState * Player, CharState * Phantom){
-    double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
-    double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
-    return hypot(delta_x, delta_y);
-}
-
-//the absolute value of the angle the opponent is off from straight ahead
-float angleDeltaFromFrontFANN(CharState * Player, CharState * Phantom){
-    double delta_x = fabsf(fabsf(Player->loc_x) - fabsf(Phantom->loc_x));
-    double delta_y = fabsf(fabsf(Player->loc_y) - fabsf(Phantom->loc_y));
-
-    //if its closer to either 90 or 270 by 45, its x direction facing
-    if (((Player->rotation > 45) && (Player->rotation < 135)) || ((Player->rotation > 225) && (Player->rotation < 315))){
-        return atan(delta_y / delta_x);
-    } else{
-        return atan(delta_x / delta_y);
-    }
-}
-
-float rotationDifferenceFromSelfFANN(CharState * Player, CharState * Phantom){
-    double delta = fabs((Player->rotation) - (Phantom->rotation));
-    return delta;
-}
 
 volatile bool listening = true;
 volatile bool inTraining = false;
@@ -141,12 +38,12 @@ DWORD WINAPI ListentoContinue(void* data) {
     return 0;
 }
 
-
 #define RRAND(min,max) (min + rand() % (max - min))
 #define backstab_animation 225
 int num_input = 4;
 int num_output = 1;
 
+/*
 void getTrainingDataforBackstab(void)
 {
     FILE* fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
@@ -223,6 +120,7 @@ void getTrainingDataforBackstab(void)
 
     fclose(fpdef);
 }
+*/
 
 //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
 void getTrainingDataforAttack(void)
@@ -231,34 +129,31 @@ void getTrainingDataforAttack(void)
 
     unsigned int trainingLinesCountAtk = 0;
 
-    //memset to ensure we dont have unusual char attributes at starting
-    memset(&Player, 0, sizeof(Character));
+    SetupandLoad();
 
-    HANDLE processHandle = readingSetup();
-
-    HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
-
-    CharState* player;
-    CharState* enemy;
+    //float distanceStorage[50];//every 100 ms, LENGTH*100 is memory length
+    float poiseEnemy;
+    float weaponPoiseDamage;
+    float enemyStaminaEstimate;//use the last_animation_ids_enemy to estimate enemy stamina
 
     while (listening){
-        readPointers(processHandle);
 
-        player = ReadPlayerFANN(&Player, processHandle);
-        enemy = ReadPlayerFANN(&Enemy, processHandle);
+        ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
+        ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
 
-        if (isAttackAnimation(player->animation_id)){
-            int startingHp = player->hp;
+        AppendDistance(distance(&Player, &Enemy));
+        AppendAnimationTypeEnemy(Enemy.animationType_id);
 
-            float distance = distanceFANN(player, enemy);
+        if (isAttackAnimation(Player.animationType_id)){
+            int startingHp = Player.hp;
 
-            while (isAttackAnimation(player->animation_id)){
-                player = ReadPlayerFANN(&Player, processHandle);
+            while (isAttackAnimation(Player.animationType_id)){
+                ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             }
 
             float result = 0;
             //bad outcome
-            if (startingHp != player->hp){
+            if (startingHp != Player.hp){
                 result = -1;
             }
             //good outcome
@@ -283,6 +178,7 @@ void getTrainingDataforAttack(void)
     fclose(fpatk);
 }
 
+/*
 //use the file to train the network
 int trainFromFile(void){
     //create new, empty network
@@ -318,10 +214,9 @@ int trainFromFile(void){
 
     return 0;
 }
+*/
 
-
-#include <time.h>
-
+/*
 void testData(void){
     struct fann* defense_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
 
@@ -359,11 +254,9 @@ void testData(void){
     }
 
 }
+*/
 
 int main1(void){
-    getTrainingDataforBackstab();
-    //getTrainingDataforAttack();
-    //trainFromFile();
-    //testData();
+    getTrainingDataforAttack();
     return 0;
 }

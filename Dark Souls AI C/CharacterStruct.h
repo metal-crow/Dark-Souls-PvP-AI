@@ -21,7 +21,7 @@ typedef struct {
 	float rotation;
 	//current animation type id
 	ullong animationType_address;
-	unsigned int animationType_id;
+    unsigned short animationType_id;
 	//hp
 	ullong hp_address;
 	unsigned int hp;

@@ -5,7 +5,7 @@
 
 #include "gui.h"
 #include "CharacterStruct.h"
-#include "Interface.h"
+#include "HelperUtil.h"
 #include <math.h>
 #include <stdbool.h>
 #include "SubRoutines.h"

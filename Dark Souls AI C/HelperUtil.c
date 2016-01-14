@@ -1,4 +1,4 @@
-#include "Interface.h"
+#include "HelperUtil.h"
 #include <stdio.h>//printf
 
 #define OolicelMap 1
@@ -59,6 +59,41 @@ bool AnglesWithinRange(float ang1, float ang2, float range){
     } else{
         //split into two sides across the 0 mark, check if player in either
         return (ang1Min <= ang2 && ang2 <= 360) || (0 <= ang2 && ang2 <= ang1Max);
+    }
+}
+
+//since stamina isnt sent over wire estimate the enemy's from last_animation_types_enemy
+float StaminaEstimationEnemy(){
+    float staminaEstimate = 192;//assume their max stamina is max
+
+    for (unsigned int i = last_animation_types_enemy_LENGTH - 1; i > 1; i--){
+        //backsteps. these have diff stamina drain from other rolls
+        if (last_animation_types_enemy[i] == 38 || last_animation_types_enemy[i] == 100){
+            staminaEstimate -= 19;
+        }
+        else if (isDodgeAnimation(last_animation_types_enemy[i])){
+            staminaEstimate -= 28;
+        }
+        else if (isAttackAnimation(last_animation_types_enemy[i])){
+            //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, but works and less work)
+            float baseWepStamDamg = AverageStaminaDamageForWeapon(Enemy.r_weapon_id);
+
+            //apply multiply modifier based on the type of attack
+        }
+        //bug: this includes running, which drains stamina
+        else if (last_animation_types_enemy[i] == 0){
+            //base regen of 45 stam per sec
+
+            //if child mask + 14.85
+            //if grass crest + 22.5
+            //if green blossoms + 40
+
+
+            //cap max stam
+            if (staminaEstimate > 192){
+                staminaEstimate = 192;
+            }
+        }
     }
 }
 
