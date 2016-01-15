@@ -6,7 +6,7 @@ https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!
 https://github.com/OrdinaryMagician. Various projects in dark souls 2, and assembly master.   
 https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he found the Dark Souls 2 bullet params a week after it came out.  
   
-I tag commits when i have tested that current build, and it peforms to my liking. Anything between tags, or after the most recent tag, can be assumed to be broken or non-functional.  
+The most recent commit to master should always have been tested and verified to perform well. Any work that may be breaking or may not function well should be done in a branch.  
   
 ##Setup
 * Install [Vjoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install).
