@@ -27,8 +27,12 @@ unsigned short last_animation_types_enemy[last_animation_types_enemy_LENGTH];//u
 
 static long lastAnimationTypeUpdateTime = 0;
 
+//stores enemy's last animation types. Does not duplicate if its the same as the last stored one, except if it is 0.
 void AppendAnimationTypeEnemy(unsigned short animationType_id){
-    if (clock() - lastAnimationTypeUpdateTime >= 100){
+    if (clock() - lastAnimationTypeUpdateTime >= 100 && 
+       (animationType_id != last_animation_types_enemy[0] || animationType_id == 0)
+       )
+    {
         for (unsigned int i = last_animation_types_enemy_LENGTH - 1; i > 1; i--){
             last_animation_types_enemy[i] = last_animation_types_enemy[i - 1];
         }

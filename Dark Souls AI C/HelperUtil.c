@@ -75,7 +75,7 @@ float StaminaEstimationEnemy(){
             staminaEstimate -= 28;
         }
         else if (isAttackAnimation(last_animation_types_enemy[i])){
-            //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, but works and less work)
+            //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, i know)
             float baseWepStamDamg = AverageStaminaDamageForWeapon(Enemy.r_weapon_id);
 
             //apply multiply modifier based on the type of attack
@@ -83,11 +83,12 @@ float StaminaEstimationEnemy(){
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){
             //base regen of 45 stam per sec
+            staminaEstimate += 4.5;
 
             //if child mask + 14.85
             //if grass crest + 22.5
             //if green blossoms + 40
-
+            //if chlorathy ring + 22.5
 
             //cap max stam
             if (staminaEstimate > 192){

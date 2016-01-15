@@ -131,10 +131,8 @@ void getTrainingDataforAttack(void)
 
     SetupandLoad();
 
-    //float distanceStorage[50];//every 100 ms, LENGTH*100 is memory length
     float poiseEnemy;
     float weaponPoiseDamage;
-    float enemyStaminaEstimate;//use the last_animation_ids_enemy to estimate enemy stamina
 
     while (listening){
 
@@ -161,6 +159,9 @@ void getTrainingDataforAttack(void)
                 result = 1;
             }
             trainingLinesCountAtk++;
+
+            //output the array of distance values
+            //output float estimatedStaminaEnemy = StaminaEstimationEnemy();
 
             /*fprintf(fpatk, "%f %f %f\n",
                 (float)stateBuffer[3]->animation_id,
