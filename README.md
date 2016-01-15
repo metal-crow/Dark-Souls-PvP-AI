@@ -1,4 +1,4 @@
-# Dark-Souls-PvP-AI
+# Project King, The Dark Souls PvP AI
 AI for playing (and winning) in dark souls pvp  
   
 People who if you like this you should also follow:  

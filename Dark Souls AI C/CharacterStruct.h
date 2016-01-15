@@ -6,8 +6,7 @@
 #include <Windows.h>
 #include "AnimationMappings.h"
 #include "Memory.h"
-
-typedef unsigned long long ullong;
+#include "MemoryEdits.h"
 
 typedef struct {
 	//data for x location
