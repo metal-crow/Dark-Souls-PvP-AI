@@ -7,8 +7,17 @@ void BlackCrystalOut(){
     iReport.bHats = 0x0;
     iReport.lButtons = square;
     Sleep(100);
+    iReport.bHats = 0x1;//down d pad again to go back to red sign
     iReport.lButtons = 0x0;
-    Sleep(1000);
+    Sleep(100);
+    iReport.bHats = 0x0;
+    Sleep(10000);//TODO time is however long it takes to black crystal
+}
+
+void PutDownRedSign(){
+    iReport.lButtons = square;
+    Sleep(100);
+    iReport.lButtons = 0x0;
 }
 
 int main(void){
@@ -22,11 +31,13 @@ int main(void){
             MainLogicLoop();
         }
         //if enemy player far away, black crystal out
-        else if (distance(&Player, &Enemy) < 100){
+        else if (Player.visualStatus == 2 && distance(&Player, &Enemy) > 100){
             BlackCrystalOut();
         }
-        //if AI in host world, and red sign not down, put down red sign
-
+        //if AI in host world, and TODO red sign not down, put down red sign
+        else if (Player.visualStatus == 0){
+            PutDownRedSign();
+        }
     }
 
     Exit();
