@@ -26,6 +26,8 @@ int main(void){
     }
 
     while (1){
+        ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
+
         //if AI is a red phantom and enemy player is fairly close
         if (Player.visualStatus == 2 && distance(&Player, &Enemy) < 100){
             MainLogicLoop();
