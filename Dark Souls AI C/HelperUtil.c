@@ -76,7 +76,7 @@ int StaminaEstimationEnemy(){
         }
         else if (isAttackAnimation(last_animation_types_enemy[i])){
             //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, i know)
-            float baseWepStamDamg = AverageStaminaDamageForWeapon(Enemy.r_weapon_id);
+            int baseWepStamUse = BaseStaminaUseForWeapon(Enemy.r_weapon_id);
 
             //apply multiply modifier based on the type of attack
         }
