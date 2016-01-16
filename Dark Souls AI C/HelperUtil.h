@@ -47,7 +47,7 @@ float angleDeltaFromFront(Character * Player, Character * Phantom);
 
 bool AnglesWithinRange(float ang1, float ang2, float range);
 
-float StaminaEstimationEnemy();
+int StaminaEstimationEnemy();
 
 unsigned char BackstabDetection(Character* Perspective, Character* Target, float distance);
 

@@ -73,12 +73,11 @@ int SetupandLoad(){
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
 
-    //want to use controller input, instead of keyboard, as analog stick is more precise movement
-    int loadresult = loadvJoy(iInterface);
-    if (loadresult != 0){
-        return loadresult;
-    }
-    iReport.bDevice = (BYTE)iInterface;
+    //start gui
+    guiStart();
+
+    //get current camera details to lock
+    readCamera(&processHandle, memorybase);
 
     //load neural network and threads
     int error = ReadyThreads();
@@ -86,18 +85,18 @@ int SetupandLoad(){
         return error;
     }
 
-    //start gui
-    guiStart();
-
-    //get current camera details to lock
-    readCamera(&processHandle, memorybase);
+    //TODO load vJoy driver(we ONLY want the driver loaded when program running)
+    //want to use controller input, instead of keyboard, as analog stick is more precise movement
+    int loadresult = loadvJoy(iInterface);
+    if (loadresult != 0){
+        return loadresult;
+    }
+    iReport.bDevice = (BYTE)iInterface;
 
     //set window focus
     HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
     SetForegroundWindow(h);
     SetFocus(h);
-
-    //TODO load vJoy driver(we ONLY want the driver loaded when program running)
 
     return EXIT_SUCCESS;
 }

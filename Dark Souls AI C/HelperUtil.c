@@ -63,8 +63,8 @@ bool AnglesWithinRange(float ang1, float ang2, float range){
 }
 
 //since stamina isnt sent over wire estimate the enemy's from last_animation_types_enemy
-float StaminaEstimationEnemy(){
-    float staminaEstimate = 192;//assume their max stamina is max
+int StaminaEstimationEnemy(){
+    int staminaEstimate = 192;//assume their max stamina is max
 
     for (unsigned int i = last_animation_types_enemy_LENGTH - 1; i > 1; i--){
         //backsteps. these have diff stamina drain from other rolls
@@ -82,13 +82,13 @@ float StaminaEstimationEnemy(){
         }
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){
-            //base regen of 45 stam per sec
-            staminaEstimate += 4.5;
+            //base regen of 40 stam per sec
+            staminaEstimate += 4;
 
-            //if child mask + 14.85
-            //if grass crest + 22.5
+            //if child mask + 10
+            //if grass crest + 10
             //if green blossoms + 40
-            //if chlorathy ring + 22.5
+            //if chlorathy ring + 20
 
             //cap max stam
             if (staminaEstimate > 192){

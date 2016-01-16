@@ -161,7 +161,7 @@ void getTrainingDataforAttack(void)
             trainingLinesCountAtk++;
 
             //output the array of distance values
-            //output float estimatedStaminaEnemy = StaminaEstimationEnemy();
+            //output int estimatedStaminaEnemy = StaminaEstimationEnemy();
 
             /*fprintf(fpatk, "%f %f %f\n",
                 (float)stateBuffer[3]->animation_id,
