@@ -3,21 +3,30 @@
 
 void BlackCrystalOut(){
     iReport.bHats = 0x1;//down d pad
+    UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.bHats = 0x0;
     iReport.lButtons = square;
+    UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.bHats = 0x1;//down d pad again to go back to red sign
     iReport.lButtons = 0x0;
+    UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.bHats = 0x0;
+    UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(10000);//TODO time is however long it takes to black crystal
 }
 
+static bool RedSignDown = false;
+
 void PutDownRedSign(){
     iReport.lButtons = square;
+    UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.lButtons = 0x0;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    RedSignDown = true;
 }
 
 int main(void){
@@ -28,16 +37,20 @@ int main(void){
     while (1){
         ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
 
-        //if AI is a red phantom and enemy player is fairly close
-        if (Player.visualStatus == 2 && distance(&Player, &Enemy) < 100){
-            MainLogicLoop();
+        //if AI is a red phantom
+        if (Player.visualStatus == 2){
+            RedSignDown = false;
+            //enemy player is fairly close
+            if(distance(&Player, &Enemy) < 50){
+                MainLogicLoop();
+            }
+            //if enemy player far away, black crystal out
+            else{
+                BlackCrystalOut();
+            }
         }
-        //if enemy player far away, black crystal out
-        else if (Player.visualStatus == 2 && distance(&Player, &Enemy) > 100){
-            BlackCrystalOut();
-        }
-        //if AI in host world, and TODO red sign not down, put down red sign
-        else if (Player.visualStatus == 0){
+        //if AI in host world, and red sign not down, put down red sign
+        else if (Player.visualStatus == 0 && !RedSignDown){
             PutDownRedSign();
         }
     }

@@ -5,7 +5,6 @@
 
 //vjoy settings/variables
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
-#define iInterface 1// Default target vJoy device
 JOYSTICK_POSITION iReport;
 
 //neural net and desicion making settings/variables
@@ -81,6 +80,15 @@ int SetupandLoad(){
         return loadresult;
     }
     iReport.bDevice = (BYTE)iInterface;
+
+    // reset struct info
+    iReport.wAxisX = MIDDLE;
+    iReport.wAxisY = MIDDLE;
+    iReport.wAxisZ = MIDDLE;//this is l2 and r2
+    iReport.wAxisYRot = MIDDLE;
+    iReport.wAxisXRot = MIDDLE;
+    iReport.lButtons = 0x0;
+    iReport.bHats = 0x0;//d-pad
 
     //load neural network and threads
     int error = ReadyThreads();
