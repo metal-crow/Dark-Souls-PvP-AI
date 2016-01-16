@@ -60,6 +60,9 @@ typedef struct {
     //if player is two handing or not
     ullong twoHanding_address;
     unsigned char twoHanding;
+    //player visual state. used for auto red signing
+    ullong visualStatus_address;
+    int visualStatus;
 } Character;
 
 //initalize the phantom and player
@@ -164,4 +167,7 @@ static const int Player_Lock_on_offsets_length = 5;
 //handed state of player
 static const int Player_twohanding_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x0 };
 static const int Player_twohanding_offsets_length = 5;
+//visual state of player (phantom, host, invader, etc)
+static const int Player_visual_offsets[] = { 0x28, 0x0, 0x30, 0xC, 0x70 };
+static const int Player_visual_offsets_length = 5;
 #endif

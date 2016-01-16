@@ -54,6 +54,7 @@ int SetupandLoad(){
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
     Enemy.twoHanding_address = 0;
+    Enemy.visualStatus_address = 0;
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -72,6 +73,7 @@ int SetupandLoad(){
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
+    Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
 
     //want to use controller input, instead of keyboard, as analog stick is more precise movement
     int loadresult = loadvJoy(iInterface);

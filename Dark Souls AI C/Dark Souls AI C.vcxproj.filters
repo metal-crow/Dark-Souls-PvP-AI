@@ -67,9 +67,6 @@
     <ClCompile Include="gui.c">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="TestSpace.c">
-      <Filter>CharacterUtils</Filter>
-    </ClCompile>
     <ClCompile Include="Memory.c">
       <Filter>AICore\Memory</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
     </ClCompile>
     <ClCompile Include="HelperUtil.c">
       <Filter>HelperUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSpace.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +121,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HelperUtil.h">
+      <Filter>HelperUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponData.h">
       <Filter>HelperUtils</Filter>
     </ClInclude>
   </ItemGroup>

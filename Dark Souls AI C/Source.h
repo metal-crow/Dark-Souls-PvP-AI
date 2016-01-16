@@ -12,6 +12,7 @@
 #include "fann.h"
 
 extern HANDLE processHandle;
+extern JOYSTICK_POSITION iReport;
 
 int SetupandLoad();
 
