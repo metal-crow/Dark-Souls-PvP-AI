@@ -4,6 +4,9 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
 #pragma warning( disable: 4305 )
 
+ullong Enemy_base_add = 0x00F7DC70;
+ullong player_base_add = 0x00F7D644;
+
 #define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
 void ReadPlayer(Character * c, HANDLE processHandle, int characterId){

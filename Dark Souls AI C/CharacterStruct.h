@@ -81,8 +81,8 @@ void ReadPointerEndAddresses(HANDLE processHandle);
 //basic values and offsets we use
 //the base address, which offsets are added to
 //this MUST be 64 bits to account for max possible address space
-static ullong Enemy_base_add = 0x00F7DC70;
-static ullong player_base_add = 0x00F7D644;
+extern ullong Enemy_base_add;
+extern ullong player_base_add;
 //offsets and length for x location
 static const int Enemy_loc_x_offsets[] = { 0x4, 0x4, 0x2C, 0x260 };
 static const int Player_loc_x_offsets[] = { 0x3C, 0x330, 0x4, 0x20C, 0x3C0 };

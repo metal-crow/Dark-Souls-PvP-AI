@@ -31,6 +31,8 @@ void PutDownRedSign(){
     RedSignDown = true;
 }
 
+static bool RereadPointerEndAddress = true;
+
 int main(void){
     if (SetupandLoad()){
         return EXIT_FAILURE;
@@ -39,25 +41,31 @@ int main(void){
     while (1){
         ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
 
+        if (RereadPointerEndAddress){
+            ReadPointerEndAddresses(processHandle);
+        }
+
         //if AI is a red phantom
         if (Player.visualStatus == 2){
             RedSignDown = false;
+            RereadPointerEndAddress = false;
             //enemy player is fairly close
             if(distance(&Player, &Enemy) < 50){
                 MainLogicLoop();
+                //once we die
+                if (Player.hp <= 0){
+                    RereadPointerEndAddress = true;
+                }
             }
             //if enemy player far away, black crystal out
             else{
+                RereadPointerEndAddress = true;
                 BlackCrystalOut();
             }
         }
         //if AI in host world, and red sign not down, put down red sign
         else if (Player.visualStatus == 0 && !RedSignDown){
             PutDownRedSign();
-        }
-        //i know this is dirty, but it feels so clean.
-        else if (Player.visualStatus != 0 && Player.visualStatus != 2){
-            ReadPointerEndAddresses(processHandle);
         }
     }
 
