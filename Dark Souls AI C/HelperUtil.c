@@ -82,13 +82,7 @@ int StaminaEstimationEnemy(){
         }
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){
-            //base regen of 40 stam per sec
-            staminaEstimate += 4;
-
-            //if child mask + 10
-            //if grass crest + 10
-            //if green blossoms + 40
-            //if chlorathy ring + 20
+            staminaEstimate += Enemy.staminaRecoveryRate / 10;
 
             //cap max stam
             if (staminaEstimate > 192){
@@ -96,6 +90,8 @@ int StaminaEstimationEnemy(){
             }
         }
     }
+
+    return staminaEstimate;
 }
 
 //handles rollover from 360 to 0

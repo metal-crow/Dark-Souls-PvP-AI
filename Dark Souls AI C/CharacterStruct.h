@@ -60,6 +60,9 @@ typedef struct {
     //if player is two handing or not
     ullong twoHanding_address;
     unsigned char twoHanding;
+    //stamina recovery rate
+    ullong staminaRecoveryRate_address;
+    int staminaRecoveryRate;
 } Character;
 
 //initalize the phantom and player
@@ -164,4 +167,8 @@ static const int Player_Lock_on_offsets_length = 5;
 //handed state of player
 static const int Player_twohanding_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x0 };
 static const int Player_twohanding_offsets_length = 5;
+//stamina recovery rate of enemy
+static const int Enemy_stamRecovery_offsets[] = { 0x4, 0x4, 0x188, 0x0, 0x280 };
+static const int Enemy_stamRecovery_offsets_length = 5;
+
 #endif

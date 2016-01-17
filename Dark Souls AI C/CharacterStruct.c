@@ -190,6 +190,11 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
         ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
         guiPrint("%d,13:Two Handing:%d", characterId, c->twoHanding);
     }
+    //read stamina recovery of enemy
+    if (c->staminaRecoveryRate_address){
+        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
+        guiPrint("%d,14:Stamina Recovery Rate:%d", characterId, c->staminaRecoveryRate);
+    }
 }
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
