@@ -1,6 +1,6 @@
 #include "WeaponData.h"
 
-//thsi can theoreticly be read in memory, but thats slow
+//this can theoretically be read in memory, but thats slow
 float AverageStaminaDamageForWeapon(unsigned int weaponId){
     switch(weaponId){
         case 100000: return 10;
