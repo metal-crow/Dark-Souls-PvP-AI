@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 void BlackCrystalOut(){
+    ResetAll();
     iReport.bHats = 0x1;//down d pad
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
@@ -21,6 +22,7 @@ void BlackCrystalOut(){
 static bool RedSignDown = false;
 
 void PutDownRedSign(){
+    ResetAll();
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
@@ -52,6 +54,10 @@ int main(void){
         //if AI in host world, and red sign not down, put down red sign
         else if (Player.visualStatus == 0 && !RedSignDown){
             PutDownRedSign();
+        }
+        //i know this is dirty, but it feels so clean.
+        else if (Player.visualStatus != 0 && Player.visualStatus != 2){
+            ReadPointerEndAddresses(processHandle);
         }
     }
 
