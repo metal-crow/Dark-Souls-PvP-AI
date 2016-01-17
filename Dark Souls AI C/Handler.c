@@ -3,20 +3,27 @@
 
 void BlackCrystalOut(){
     ResetVJoyController();
-    iReport.bHats = 0x1;//down d pad
+    iReport.bHats = ddown;
     UpdateVJD(iInterface, (PVOID)&iReport);
-    Sleep(100);
-    iReport.bHats = 0x0;
+    Sleep(1000);//gotta wait for menu to change
+
+    iReport.bHats = dcenter;
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
-    iReport.bHats = 0x1;//down d pad again to go back to red sign
-    iReport.lButtons = 0x0;
+
+    iReport.lButtons = cross;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
-    iReport.bHats = 0x0;
+
+    iReport.bHats = ddown;//down d pad again to go back to red sign
+    iReport.lButtons = 0x0;
     UpdateVJD(iInterface, (PVOID)&iReport);
-    Sleep(10000);//TODO time is however long it takes to black crystal
+
+    Sleep(100);
+    iReport.bHats = dcenter;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    Sleep(5000);//10 sec is how long it takes to black crystal
 }
 
 static bool RedSignDown = false;
@@ -47,8 +54,6 @@ int main(void){
 
         //if AI is a red phantom
         if (Player.visualStatus == 2){
-            RedSignDown = false;
-            RereadPointerEndAddress = false;
             //enemy player is fairly close
             if(distance(&Player, &Enemy) < 50){
                 MainLogicLoop();
@@ -61,6 +66,12 @@ int main(void){
             else{
                 RereadPointerEndAddress = true;
                 BlackCrystalOut();
+            }
+
+            RedSignDown = false;
+            //check that we got the enemy's struct address by ensuring their x loc is pos.
+            if (Enemy.loc_x > 0){
+                RereadPointerEndAddress = false;
             }
         }
         //if AI in host world, and red sign not down, put down red sign

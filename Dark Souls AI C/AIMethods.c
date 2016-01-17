@@ -254,7 +254,7 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
     long curTime = clock();
 
     if (curTime < startTimeDefense + 30){
-        iReport->bHats = 0x3;//left d pad
+        iReport->bHats = dleft;
     }
 
     if (curTime > startTimeDefense + 60){

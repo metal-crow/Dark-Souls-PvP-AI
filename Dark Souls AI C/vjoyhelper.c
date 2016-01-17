@@ -10,5 +10,5 @@ void ResetVJoyController(){
     iReport.wAxisYRot = MIDDLE;
     iReport.wAxisXRot = MIDDLE;
     iReport.lButtons = 0x0;
-    iReport.bHats = 0x0;//d-pad
+    iReport.bHats = dcenter;//d-pad center
 }
