@@ -3,27 +3,35 @@
 
 void BlackCrystalOut(){
     ResetVJoyController();
+    //switch to black crystal
     iReport.bHats = ddown;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(1000);//gotta wait for menu to change
-
+    //use
     iReport.bHats = dcenter;
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
-
+    //yes i want to leave
     iReport.lButtons = cross;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
-
-    iReport.bHats = ddown;//down d pad again to go back to red sign
+    //ok i left
     iReport.lButtons = 0x0;
     UpdateVJD(iInterface, (PVOID)&iReport);
-
     Sleep(100);
+    iReport.lButtons = cross;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    Sleep(100);
+    //down d pad again to go back to red sign
+    iReport.bHats = ddown;
+    iReport.lButtons = 0x0;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    Sleep(100);
+    //wait
     iReport.bHats = dcenter;
     UpdateVJD(iInterface, (PVOID)&iReport);
-    Sleep(5000);//10 sec is how long it takes to black crystal
+    Sleep(10000);//10 sec is how long it takes to black crystal
 }
 
 static bool RedSignDown = false;
@@ -46,21 +54,18 @@ int main(void){
     }
 
     while (1){
-        ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
-
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
+            ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
+            ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
         }
+        ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
 
         //if AI is a red phantom
         if (Player.visualStatus == 2){
             //enemy player is fairly close
             if(distance(&Player, &Enemy) < 50){
                 MainLogicLoop();
-                //once we die
-                if (Player.hp <= 0){
-                    RereadPointerEndAddress = true;
-                }
             }
             //if enemy player far away, black crystal out
             else{
@@ -73,9 +78,14 @@ int main(void){
             if (Enemy.loc_x > 0){
                 RereadPointerEndAddress = false;
             }
+            //once one character dies
+            if (Player.hp <= 0 || Enemy.hp <= 0){
+                RereadPointerEndAddress = true;
+            }
         }
         //if AI in host world, and red sign not down, put down red sign
         else if (Player.visualStatus == 0 && !RedSignDown){
+            Sleep(10000);//ensure we're out of loading screen
             PutDownRedSign();
         }
     }
