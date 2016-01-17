@@ -41,7 +41,7 @@ int SetupandLoad(){
         return loadresult;
     }
     iReport.bDevice = (BYTE)iInterface;
-    ResetAll();
+    ResetVJoyController();
 
     //load neural network and threads
     int error = ReadyThreads();
@@ -79,7 +79,7 @@ void MainLogicLoop(){
         WakeThread(defense_mind_input);
         WakeThread(attack_mind_input);
 
-        ResetAll();//reset vjoy struct
+        ResetVJoyController();
 
 		//begin reading enemy state, and handle w logic and subroutines
         char attackImminent = EnemyStateProcessing(&Player, &Enemy);

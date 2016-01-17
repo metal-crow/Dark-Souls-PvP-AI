@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 void BlackCrystalOut(){
-    ResetAll();
+    ResetVJoyController();
     iReport.bHats = 0x1;//down d pad
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
@@ -22,7 +22,7 @@ void BlackCrystalOut(){
 static bool RedSignDown = false;
 
 void PutDownRedSign(){
-    ResetAll();
+    ResetVJoyController();
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);

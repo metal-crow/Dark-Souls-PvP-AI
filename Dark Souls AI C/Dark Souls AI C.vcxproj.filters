@@ -82,6 +82,9 @@
     <ClCompile Include="TestSpace.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vjoyhelper.c">
+      <Filter>VJoy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MemoryEdits.h">
@@ -125,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="WeaponData.h">
       <Filter>HelperUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="vjoyhelper.h">
+      <Filter>VJoy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

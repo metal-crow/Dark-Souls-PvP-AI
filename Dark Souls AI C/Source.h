@@ -8,6 +8,7 @@
 #include "AIMethods.h"
 #include "SubRoutines.h"
 #include "MindRoutines.h"
+#include "vjoyhelper.h"
 
 #include "fann.h"
 
