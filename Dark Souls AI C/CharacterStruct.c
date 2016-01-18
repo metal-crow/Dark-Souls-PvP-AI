@@ -194,7 +194,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     }
     //read stamina recovery of enemy
     if (c->staminaRecoveryRate_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
         guiPrint("%d,14:Stamina Recovery Rate:%d", characterId, c->staminaRecoveryRate);
     }
 }
