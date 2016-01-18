@@ -13,16 +13,12 @@ void BlackCrystalOut(){
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     //yes i want to leave
-    iReport.lButtons = cross;
-    UpdateVJD(iInterface, (PVOID)&iReport);
-    Sleep(100);
-    //ok i left
     iReport.lButtons = 0x0;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.lButtons = cross;
     UpdateVJD(iInterface, (PVOID)&iReport);
-    Sleep(100);
+    Sleep(500);
     //down d pad again to go back to red sign
     iReport.bHats = ddown;
     iReport.lButtons = 0x0;
