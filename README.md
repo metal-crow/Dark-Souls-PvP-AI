@@ -14,6 +14,7 @@ The most recent commit to master should always have been tested and verified to 
 * Install [Cheat Engine](http://www.cheatengine.org/)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
  * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. If you dont want to use them, figure out how to do that yourself.
+ * Ill soon have a better table up where locking the camera doesnt crash Dark Souls. Just use a script that AOB scans `F3 0F 11 83 44 01 00 00 80 BB 63 02 00 00 00`, noops, then lock camera x normally.
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
 * (If you want the gui) Import the folder for the GUI into eclipse and run that. Or run the included .jar file.
