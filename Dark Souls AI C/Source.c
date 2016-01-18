@@ -5,7 +5,6 @@
 
 //vjoy settings/variables
 #pragma comment( lib, "VJOYINTERFACE" )//load vjoy library
-#define iInterface 1// Default target vJoy device
 JOYSTICK_POSITION iReport;
 
 //neural net and desicion making settings/variables
@@ -34,46 +33,7 @@ int SetupandLoad(){
     Enemy_base_add += memorybase;
     player_base_add += memorybase;
 
-    //TODO THESE HAVE TO BE REREAD, AS THE END ADDRESS CAN CHANGE
-    //MOVE TO SETUP METHOD in CharacterStruct
-    //add the pointer offsets to the address. This can be slow because its startup only
-    Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
-    Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
-    Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
-    Enemy.animationType_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationType_offsets_length, Enemy_animationType_offsets);
-    Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
-    Enemy.stamina_address = 0;
-    Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
-    Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
-    Enemy.animationTimer_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer_offsets_length, Enemy_animationTimer_offsets);
-    Enemy.animationTimer2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer2_offsets_length, Enemy_animationTimer2_offsets);
-    Enemy.animationId_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID_offsets_length, Enemy_animationID_offsets);
-    Enemy.animationId2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID2_offsets_length, Enemy_animationID2_offsets);
-    Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
-    Enemy.readyState_address = 0;
-    Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
-    Enemy.locked_on_address = 0;
-    Enemy.twoHanding_address = 0;
-    Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
-
-    Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
-    Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
-    Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
-    Player.animationType_address = FindPointerAddr(processHandle, player_base_add, Player_animationType_offsets_length, Player_animationType_offsets);
-    Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
-    Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
-    Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
-    Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
-    Player.animationTimer_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer_offsets_length, Player_animationTimer_offsets);
-    Player.animationTimer2_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer2_offsets_length, Player_animationTimer2_offsets);
-    Player.animationId_address = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
-    Player.animationId2_address = FindPointerAddr(processHandle, player_base_add, Player_animationID2_offsets_length, Player_animationID2_offsets);
-    Player.hurtboxActive_address = 0;
-    Player.readyState_address = FindPointerAddr(processHandle, player_base_add, Player_readyState_offsets_length, Player_readyState_offsets);
-    Player.velocity_address = 0;
-    Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
-    Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
-    Player.staminaRecoveryRate_address = 0;
+    ReadPointerEndAddresses(processHandle);
 
     //start gui
     guiStart();
@@ -94,6 +54,7 @@ int SetupandLoad(){
         return loadresult;
     }
     iReport.bDevice = (BYTE)iInterface;
+    ResetVJoyController();
 
     //set window focus
     HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
@@ -110,21 +71,14 @@ void MainLogicLoop(){
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
-        ReadPlayer(&Enemy, &processHandle, LocationMemoryEnemy);
-        ReadPlayer(&Player, &processHandle, LocationMemoryPlayer);
+        ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
+        ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
 
         //start the neural network threads
         WakeThread(defense_mind_input);
         WakeThread(attack_mind_input);
 
-		// reset struct info
-		iReport.wAxisX = MIDDLE;
-		iReport.wAxisY = MIDDLE;
-		iReport.wAxisZ = MIDDLE;//this is l2 and r2
-		iReport.wAxisYRot = MIDDLE;
-		iReport.wAxisXRot = MIDDLE;
-        iReport.lButtons = 0x0;
-        iReport.bHats = 0x0;//d-pad
+        ResetVJoyController();
 
 		//begin reading enemy state, and handle w logic and subroutines
         char attackImminent = EnemyStateProcessing(&Player, &Enemy);

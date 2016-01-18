@@ -82,8 +82,9 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (
             (Player.stamina > 90) &&  //have enough stamina
             (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
-            (rand()<RAND_MAX/5) &&                              //random limitor
-            (distanceInput > 1)  //dont attack when right in enemy face to try and avoid getting parried
+            distanceInput <= Player.weaponRange &&  //in range
+            (distanceInput > 1 &&  //dont attack when right in enemy face to try and avoid getting parried
+            (rand()<RAND_MAX / 5)) //random limitor
            ){
             AttackChoice = GhostHitId;
         }

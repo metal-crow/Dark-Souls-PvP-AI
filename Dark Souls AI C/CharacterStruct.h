@@ -63,6 +63,9 @@ typedef struct {
     //stamina recovery rate
     ullong staminaRecoveryRate_address;
     int staminaRecoveryRate;
+    //player visual state. used for auto red signing
+    ullong visualStatus_address;
+    int visualStatus;
 } Character;
 
 //initalize the phantom and player
@@ -70,17 +73,19 @@ Character Enemy;
 Character Player;
 
 //read memory for the character's variables
-void ReadPlayer(Character * c, HANDLE * processHandle, int characterId);
+void ReadPlayer(Character * c, HANDLE processHandle, int characterId);
 
-void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...);
+void ReadPlayerDEBUGGING(Character * c, HANDLE processHandle, ...);
+
+void ReadPointerEndAddresses(HANDLE processHandle);
 
 //TODO prune as many of these as possible. what needs to be kept for only one char?
 
 //basic values and offsets we use
 //the base address, which offsets are added to
 //this MUST be 64 bits to account for max possible address space
-static ullong Enemy_base_add = 0x00F7DC70;
-static ullong player_base_add = 0x00F7D644;
+extern ullong Enemy_base_add;
+extern ullong player_base_add;
 //offsets and length for x location
 static const int Enemy_loc_x_offsets[] = { 0x4, 0x4, 0x2C, 0x260 };
 static const int Player_loc_x_offsets[] = { 0x3C, 0x330, 0x4, 0x20C, 0x3C0 };
@@ -167,6 +172,9 @@ static const int Player_Lock_on_offsets_length = 5;
 //handed state of player
 static const int Player_twohanding_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x0 };
 static const int Player_twohanding_offsets_length = 5;
+//visual state of player (phantom, host, invader, etc)
+static const int Player_visual_offsets[] = { 0x28, 0x0, 0x30, 0xC, 0x70 };
+static const int Player_visual_offsets_length = 5;
 //stamina recovery rate of enemy
 static const int Enemy_stamRecovery_offsets[] = { 0x4, 0x4, 0x170, 0x34C, 0x408 };
 static const int Enemy_stamRecovery_offsets_length = 5;
