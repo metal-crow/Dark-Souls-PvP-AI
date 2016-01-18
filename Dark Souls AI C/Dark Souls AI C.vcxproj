@@ -99,6 +99,7 @@
     <ClCompile Include="MemoryEdits.c" />
     <ClCompile Include="Source.c" />
     <ClCompile Include="SubRoutines.c" />
+    <ClCompile Include="vjoyhelper.c" />
     <ClCompile Include="WeaponData.c" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +115,7 @@
     <ClInclude Include="public.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="SubRoutines.h" />
+    <ClInclude Include="vjoyhelper.h" />
     <ClInclude Include="vjoyinterface.h" />
     <ClInclude Include="WeaponData.h" />
   </ItemGroup>
