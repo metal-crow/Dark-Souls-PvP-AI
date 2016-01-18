@@ -4,54 +4,56 @@
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to float
 #pragma warning( disable: 4305 )
 
+ullong Enemy_base_add = 0x00F7DC70;
+ullong player_base_add = 0x00F7D644;
+
 #define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
-void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
-    HANDLE processHandle_nonPoint = *processHandle;
+void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //TODO read large block that contains all data, then parse in process
     //read x location
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->location_x_address), &(c->loc_x), 4, 0);
     guiPrint("%d,0:X:%f", characterId, c->loc_x);
     //read y location
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->location_y_address), &(c->loc_y), 4, 0);
     guiPrint("%d,1:Y:%f", characterId, c->loc_y);
     //read rotation of player
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->rotation_address), &(c->rotation), 4, 0);
     //Player rotation is pi. 0 to pi,-pi to 0. Same as atan2
     //convert to radians, then to degrees
     c->rotation = (c->rotation + PI) * (180.0 / PI);
     guiPrint("%d,2:Rotation:%f", characterId, c->rotation);
     //read current animation type
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationType_address), &(c->animationType_id), 2, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->animationType_address), &(c->animationType_id), 2, 0);
     guiPrint("%d,3:Animation Type:%d", characterId, c->animationType_id);
     //read hp
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     guiPrint("%d,4:HP:%d", characterId, c->hp);
     //read stamina
     if (c->stamina_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
         guiPrint("%d,5:Stamina:%d", characterId, c->stamina);
     }
     //read what weapon they currently have in right hand
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->r_weapon_address), &(c->r_weapon_id), 4, 0);
     guiPrint("%d,6:R Weapon:%d", characterId, c->r_weapon_id);
     //read what weapon they currently have in left hand
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->l_weapon_address), &(c->l_weapon_id), 4, 0);
     guiPrint("%d,7:L Weapon:%d", characterId, c->l_weapon_id);
 
     //read if hurtbox is active on enemy weapon
     if (c->hurtboxActive_address){
         unsigned char hurtboxActiveState;
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->hurtboxActive_address), &hurtboxActiveState, 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->hurtboxActive_address), &hurtboxActiveState, 1, 0);
         if (hurtboxActiveState){
             c->subanimation = AttackSubanimationActiveDuringHurtbox;
         }
     }
     int animationid;
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId_address), &animationid, 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->animationId_address), &animationid, 4, 0);
     //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
     int animationid2;
-    ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
 
     //keep track of enemy animations in memory
     bool newAid = false;
@@ -108,7 +110,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
 
         if (curAnimationid){
             float animationTimer;
-            ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
+            ReadProcessMemory(processHandle, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
             //handle the timer not being reset to 0 as soon as a new animation starts
             if (newAid){
@@ -118,7 +120,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
             //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it.
             if (CombineLastAnimation(curAnimationid)){
                 float animationTimer2;
-                ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
+                ReadProcessMemory(processHandle, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
                 animationTimer += animationTimer2;
             }
 
@@ -165,7 +167,7 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //read if in ready state(can transition to another animation)
     if (c->readyState_address){
         unsigned char readyState;
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->readyState_address), &readyState, 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->readyState_address), &readyState, 1, 0);
         if(readyState){
             c->subanimation = SubanimationRecover;
         } /*else{ Not adding this now because it would lock out subanimations every time i move
@@ -177,17 +179,17 @@ void ReadPlayer(Character * c, HANDLE * processHandle, int characterId){
     //read the current velocity
     //player doesnt use this, and wont have the address set. enemy will
     if (c->velocity_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->velocity_address), &(c->velocity), 4, 0);
         guiPrint("%d,11:Velocity:%f", characterId, c->velocity);
     }
     //read if the player is locked on
     if (c->locked_on_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->locked_on_address), &(c->locked_on), 1, 0);
         guiPrint("%d,12:Locked On:%d", characterId, c->locked_on);
     }
     //read two handed state of player
     if (c->twoHanding_address){
-        ReadProcessMemory(processHandle_nonPoint, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
+        ReadProcessMemory(processHandle, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
         guiPrint("%d,13:Two Handing:%d", characterId, c->twoHanding);
     }
 }
@@ -202,4 +204,45 @@ void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
     c->l_weapon_id = 900000;
     c->subanimation = SubanimationNeutral;
     c->velocity = 0;
+}
+
+void ReadPointerEndAddresses(HANDLE processHandle){
+    //add the pointer offsets to the address. This can be slow because its startup only
+    Enemy.location_x_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_x_offsets_length, Enemy_loc_x_offsets);
+    Enemy.location_y_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_loc_y_offsets_length, Enemy_loc_y_offsets);
+    Enemy.rotation_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_rotation_offsets_length, Enemy_rotation_offsets);
+    Enemy.animationType_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationType_offsets_length, Enemy_animationType_offsets);
+    Enemy.hp_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hp_offsets_length, Enemy_hp_offsets);
+    Enemy.stamina_address = 0;
+    Enemy.r_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_r_weapon_offsets_length, Enemy_r_weapon_offsets);
+    Enemy.l_weapon_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_l_weapon_offsets_length, Enemy_l_weapon_offsets);
+    Enemy.animationTimer_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer_offsets_length, Enemy_animationTimer_offsets);
+    Enemy.animationTimer2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer2_offsets_length, Enemy_animationTimer2_offsets);
+    Enemy.animationId_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID_offsets_length, Enemy_animationID_offsets);
+    Enemy.animationId2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID2_offsets_length, Enemy_animationID2_offsets);
+    Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
+    Enemy.readyState_address = 0;
+    Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
+    Enemy.locked_on_address = 0;
+    Enemy.twoHanding_address = 0;
+    Enemy.visualStatus_address = 0;
+
+    Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
+    Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
+    Player.rotation_address = FindPointerAddr(processHandle, player_base_add, Player_rotation_offsets_length, Player_rotation_offsets);
+    Player.animationType_address = FindPointerAddr(processHandle, player_base_add, Player_animationType_offsets_length, Player_animationType_offsets);
+    Player.hp_address = FindPointerAddr(processHandle, player_base_add, Player_hp_offsets_length, Player_hp_offsets);
+    Player.stamina_address = FindPointerAddr(processHandle, player_base_add, Player_stamina_offsets_length, Player_stamina_offsets);
+    Player.r_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_r_weapon_offsets_length, Player_r_weapon_offsets);
+    Player.l_weapon_address = FindPointerAddr(processHandle, player_base_add, Player_l_weapon_offsets_length, Player_l_weapon_offsets);
+    Player.animationTimer_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer_offsets_length, Player_animationTimer_offsets);
+    Player.animationTimer2_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer2_offsets_length, Player_animationTimer2_offsets);
+    Player.animationId_address = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
+    Player.animationId2_address = FindPointerAddr(processHandle, player_base_add, Player_animationID2_offsets_length, Player_animationID2_offsets);
+    Player.hurtboxActive_address = 0;
+    Player.readyState_address = FindPointerAddr(processHandle, player_base_add, Player_readyState_offsets_length, Player_readyState_offsets);
+    Player.velocity_address = 0;
+    Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
+    Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
+    Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
 }

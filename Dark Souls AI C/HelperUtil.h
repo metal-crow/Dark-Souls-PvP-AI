@@ -35,6 +35,11 @@ int loadvJoy(UINT iInterface);
 #define r3 0x200
 #define select 0x400
 #define start 0x800
+#define dup 0x0
+#define dright 0x1
+#define ddown 0x2
+#define dleft 0x3
+#define dcenter 0x4
 
 typedef struct{
 	long first;

@@ -8,10 +8,14 @@
 #include "AIMethods.h"
 #include "SubRoutines.h"
 #include "MindRoutines.h"
+#include "vjoyhelper.h"
 
 #include "fann.h"
 
 extern HANDLE processHandle;
+
+#define iInterface 1// Default target vJoy device
+extern JOYSTICK_POSITION iReport;
 
 int SetupandLoad();
 
