@@ -129,5 +129,8 @@
     <ClInclude Include="WeaponData.h">
       <Filter>HelperUtils</Filter>
     </ClInclude>
+    <ClInclude Include="vjoyhelper.h">
+      <Filter>VJoy</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
