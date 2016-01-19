@@ -75,10 +75,8 @@ int StaminaEstimationEnemy(){
             staminaEstimate -= 28;
         }
         else if (isAttackAnimation(last_animation_types_enemy[i])){
-            //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, i know)
-            int baseWepStamUse = BaseStaminaUseForWeapon(Enemy.r_weapon_id);
-
-            //apply multiply modifier based on the type of attack
+            //assuming they havent switched weapons during this time, use their right weapon and the attack type to get the stamina drain
+            staminaEstimate -= StaminaDrainForAttack(Enemy.r_weapon_id, Enemy.animationType_id);
         }
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){

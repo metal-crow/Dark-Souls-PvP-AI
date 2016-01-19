@@ -1,6 +1,6 @@
 #ifndef WeaponData_H
 #define WeaponData_H
 
-int BaseStaminaUseForWeapon(unsigned int weaponId);
+int StaminaDrainForAttack(unsigned int weapon_id, unsigned short animationType_id);
 
 #endif
