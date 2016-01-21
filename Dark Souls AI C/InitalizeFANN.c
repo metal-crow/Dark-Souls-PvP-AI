@@ -40,8 +40,6 @@ DWORD WINAPI ListentoContinue(void* data) {
 
 #define RRAND(min,max) (min + rand() % (max - min))
 #define backstab_animation 225
-int num_input = 4;
-int num_output = 1;
 
 /*
 void getTrainingDataforBackstab(void)
@@ -177,11 +175,11 @@ void getTrainingDataforAttack(void)
     fclose(fpatk);
 }
 
-/*
+
 //use the file to train the network
 int trainFromFile(void){
     //create new, empty network
-    struct fann *net = fann_create_shortcut(2, num_input, num_output);//set up net without hidden layers. 4 inputs, 1 output
+    struct fann *net = fann_create_shortcut(2, 47, 1);//set up net without hidden layers. N inputs, 1 output
     fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
     fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(net, FANN_LINEAR);
@@ -194,7 +192,7 @@ int trainFromFile(void){
     unsigned int max_neurons = 30;
     const float desired_error = (const float)0.05;
 
-    struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train");
+    struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train");
 
     fann_scale_train_data(data, -1, 1);
 
@@ -206,14 +204,13 @@ int trainFromFile(void){
     //save and clean up
     fann_print_connections(net);
 
-    fann_save(net, "E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
+    fann_save(net, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Attack_dark_souls_ai.net");
 
     fann_destroy_train(data);
     fann_destroy(net);
 
     return 0;
 }
-*/
 
 /*
 void testData(void){
@@ -257,5 +254,6 @@ void testData(void){
 
 int mainFANN(void){
     getTrainingDataforAttack();
+    //trainFromFile();
     return 0;
 }
