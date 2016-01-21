@@ -131,13 +131,10 @@ void getTrainingDataforAttack(void)
 
     SetupandLoad();
 
-    float poiseEnemy;
-    float weaponPoiseDamage;
+    HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
 
     while (listening){
-
-        ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
-        ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
+        MainLogicLoop();
 
         AppendDistance(distance(&Player, &Enemy));
         AppendAnimationTypeEnemy(Enemy.animationType_id);
@@ -161,20 +158,21 @@ void getTrainingDataforAttack(void)
             trainingLinesCountAtk++;
 
             //output the array of distance values
-            //output int estimatedStaminaEnemy = StaminaEstimationEnemy();
+            for (int i = 0; i < DistanceMemoryLENGTH; i++){
+                fprintf(fpatk, "%f ", DistanceMemory[i]);
+            }
+            //output estimated stamina
+            fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
+            //TODO output the enemy's current poise
+            //TODO output the attack's poise damage
+            //output result
+            fprintf(fpatk, "%f\n", result);
 
-            /*fprintf(fpatk, "%f %f %f\n",
-                (float)stateBuffer[3]->animation_id,
-                (float)stateBuffer[2]->animation_id,
-                result
-                );*/
-
-            //save
-            //printf("result:%f, SelfAnimation %f, EnmyAnimation %f\n", result, (float)stateBuffer[2]->animation_id, (float)stateBuffer[3]->animation_id);
+            printf("result:%f\n", result);
         }
     }
 
-    fprintf(fpatk, "## = %d\n", trainingLinesCountAtk);
+    fprintf(fpatk, "%d 51 1\n", trainingLinesCountAtk);
 
     fclose(fpatk);
 }
@@ -257,7 +255,7 @@ void testData(void){
 }
 */
 
-int main1(void){
+int mainFANN(void){
     getTrainingDataforAttack();
     return 0;
 }

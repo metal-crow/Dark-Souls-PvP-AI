@@ -18,8 +18,9 @@ HANDLE processHandle;
 int SetupandLoad(){
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
-    Enemy.weaponRange = 6;//TODO temp hardcoding
     memset(&Player, 0, sizeof(Character));
+    //TODO temp hardcoding
+    Enemy.weaponRange = 6;
     Player.weaponRange = 2.5;
 
     //get access to dark souls memory

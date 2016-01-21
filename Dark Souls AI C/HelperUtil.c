@@ -66,7 +66,7 @@ bool AnglesWithinRange(float ang1, float ang2, float range){
 int StaminaEstimationEnemy(){
     int staminaEstimate = 192;//assume their max stamina is max
 
-    for (unsigned int i = last_animation_types_enemy_LENGTH - 1; i > 1; i--){
+    for (int i = last_animation_types_enemy_LENGTH - 1; i >= 0; i--){
         //backsteps. these have diff stamina drain from other rolls
         if (last_animation_types_enemy[i] == 38 || last_animation_types_enemy[i] == 100){
             staminaEstimate -= 19;
@@ -81,11 +81,13 @@ int StaminaEstimationEnemy(){
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){
             staminaEstimate += Enemy.staminaRecoveryRate / 10;
-
-            //cap max stam
-            if (staminaEstimate > 192){
-                staminaEstimate = 192;
-            }
+        }
+        //cap max and min stam
+        if (staminaEstimate > 192){
+            staminaEstimate = 192;
+        } 
+        else if (staminaEstimate < -40){
+            staminaEstimate = -40;
         }
     }
 
