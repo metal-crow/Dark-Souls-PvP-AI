@@ -51,7 +51,6 @@ resolution at 1440x810
     * CE camera lock script causes crashes.
 
   * **HIGH Priority**
-    * have fully automated version. When in world, put down sign. When enemy detected, enable ai. Put on server, steam.
     * refine behind enemy safe state to be more behind enemy. Cone like?
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
@@ -66,12 +65,11 @@ resolution at 1440x810
     * true pathfinding. Read ripped maps
     * Get different base addresses for all possible enemies, allow switching of main target.
     * projectile or lingering hurtboxes.
-    * Pointers have to be reread for characters because end address changes when invading  
     * Must lock camera(x and y pos), rotation x set to PI or 0 depending on map.
     * Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   * **LOW Priority**
-    * Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around.  
+    * Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around. When the method is called, it checks if there is an entry in the cache, if not, it computes it and adds it, then returns the value. If there is, it returns that value. AT the end of each logic tick, the cache is invalidated.  
     * ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
     * Better Vjoy loading/unloading    
     * Have a build flag which determines if the program uses my handwritten neural network or a library's neural network    
