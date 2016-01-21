@@ -26,6 +26,10 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read current animation type
     ReadProcessMemory(processHandle, (LPCVOID)(c->animationType_address), &(c->animationType_id), 2, 0);
     guiPrint("%d,3:Animation Type:%d", characterId, c->animationType_id);
+    //remember enemy animation types
+    if (characterId == EnemyId){
+        AppendAnimationTypeEnemy(Enemy.animationType_id);
+    }
     //read hp
     ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     guiPrint("%d,4:HP:%d", characterId, c->hp);
@@ -57,7 +61,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
 
     //keep track of enemy animations in memory
     bool newAid = false;
-    if (characterId == LocationMemoryEnemy){
+    if (characterId == EnemyId){
         if (animationid){
             newAid = AppendLastAnimationIdEnemy(animationid);
         } else {
@@ -148,7 +152,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             }
 
             // time before the windup ends where we can still alter rotation (only for player)
-            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == LocationMemoryPlayer){
+            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == PlayerId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
         }

@@ -74,6 +74,8 @@ typedef struct {
 //initalize the phantom and player
 Character Enemy;
 Character Player;
+#define EnemyId 0
+#define PlayerId 1
 
 //read memory for the character's variables
 void ReadPlayer(Character * c, HANDLE processHandle, int characterId);

@@ -72,8 +72,11 @@ void MainLogicLoop(){
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
-        ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
-        ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
+        ReadPlayer(&Enemy, processHandle, EnemyId);
+        ReadPlayer(&Player, processHandle, PlayerId);
+
+        //log distance in memory
+        AppendDistance(distance(&Player, &Enemy));
 
         //start the neural network threads
         WakeThread(defense_mind_input);
