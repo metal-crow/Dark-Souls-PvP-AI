@@ -19,16 +19,18 @@ FILE* fpdef;
 
 void DumpStaminaMem(){
     int* staminaarray = malloc(99872);
-    ReadProcessMemory(processHandle, 0x03C2D4A8, (LPVOID)staminaarray, 99872, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)0x03B5D4A8, (LPVOID)staminaarray, 99872, 0);
 
-    int row = 0;
     for (int i = 0; i < 99872 / 4; i += 8){
-        if (row != 4 && row != 5 && row != 12 && row != 13 && row != 16 && row != 19 && row != 20 && row != 21 && row != 22 && row != 24 && row != 25 && row != 26 && row != 27 && row != 32){
-            fprintf(fpdef, "%d,%d,%d\n", staminaarray[i + 0], staminaarray[i + 1], staminaarray[i + 5]);
-        }
-        row++;
-        if (row == 33){
-            row = 0;
+        int animType = staminaarray[i + 1];
+        if (animType != 40 && animType != 50 && 
+            animType != 240 && animType != 250 && 
+            animType != 400 && 
+            animType != 430 && animType != 440 && animType != 450 && animType != 490 && 
+            animType != 505 && animType != 510 && animType != 515 && animType != 516 &&
+            animType != 600)
+        {
+            fprintf(fpdef, "%d,%d,%d\n", staminaarray[i + 0], animType, staminaarray[i + 5]);
         }
     }
 }
