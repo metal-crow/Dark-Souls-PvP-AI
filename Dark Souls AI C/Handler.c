@@ -44,12 +44,15 @@ void PutDownRedSign(){
 
 static bool RereadPointerEndAddress = true;
 
+#define AutoRedSign 1
+
 int main(void){
     if (SetupandLoad()){
         return EXIT_FAILURE;
     }
 
     while (1){
+#if AutoRedSign
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
@@ -84,6 +87,9 @@ int main(void){
             Sleep(10000);//ensure we're out of loading screen
             PutDownRedSign();
         }
+#else
+        MainLogicLoop();
+#endif
     }
 
     Exit();
