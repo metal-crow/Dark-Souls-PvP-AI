@@ -18,8 +18,9 @@ HANDLE processHandle;
 int SetupandLoad(){
     //memset to ensure we dont have unusual char attributes at starting
     memset(&Enemy, 0, sizeof(Character));
-    Enemy.weaponRange = 6;//TODO temp hardcoding
     memset(&Player, 0, sizeof(Character));
+    //TODO temp hardcoding
+    Enemy.weaponRange = 6;
     Player.weaponRange = 2.5;
 
     //get access to dark souls memory
@@ -35,6 +36,19 @@ int SetupandLoad(){
 
     ReadPointerEndAddresses(processHandle);
 
+    //start gui
+    guiStart();
+
+    //get current camera details to lock
+    readCamera(&processHandle, memorybase);
+
+    //load neural network and threads
+    int error = ReadyThreads();
+    if (error){
+        return error;
+    }
+
+    //TODO load vJoy driver(we ONLY want the driver loaded when program running)
     //want to use controller input, instead of keyboard, as analog stick is more precise movement
     int loadresult = loadvJoy(iInterface);
     if (loadresult != 0){
@@ -43,24 +57,10 @@ int SetupandLoad(){
     iReport.bDevice = (BYTE)iInterface;
     ResetVJoyController();
 
-    //load neural network and threads
-    int error = ReadyThreads();
-    if (error){
-        return error;
-    }
-
-    //start gui
-    guiStart();
-
-    //get current camera details to lock
-    readCamera(&processHandle, memorybase);
-
     //set window focus
     HWND h = FindWindow(NULL, TEXT("DARK SOULS"));
     SetForegroundWindow(h);
     SetFocus(h);
-
-    //TODO load vJoy driver(we ONLY want the driver loaded when program running)
 
     return EXIT_SUCCESS;
 }
@@ -72,8 +72,11 @@ void MainLogicLoop(){
 		//lockCamera(&processHandle);
 
 		//read the data at these pointers, now that offsets have been added and we have a static address
-        ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
-        ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
+        ReadPlayer(&Enemy, processHandle, EnemyId);
+        ReadPlayer(&Player, processHandle, PlayerId);
+
+        //log distance in memory
+        AppendDistance(distance(&Player, &Enemy));
 
         //start the neural network threads
         WakeThread(defense_mind_input);

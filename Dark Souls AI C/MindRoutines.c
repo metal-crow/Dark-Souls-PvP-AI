@@ -63,28 +63,39 @@ DWORD WINAPI AttackMindProcess(void* data){
             SleepConditionVariableCS(&(attack_mind_input->cond), &(attack_mind_input->crit), INFINITE);
         }
 
-        //fann_type* out = fann_run(attack_mind_input->mind, (fann_type*)&(attack_mind_input->input));
-        //AttackChoice = (unsigned char)(*out);
+        //generate inputs and scale from -1 to 1 
+        fann_type input[DistanceMemoryLENGTH+1];
 
-        float distanceInput = distance(&Player, &Enemy);
+        //copy distances into input and scale
+        for (int i = 0; i < DistanceMemoryLENGTH; i++){
+            //min:0 max:10
+            input[i] = 2 * (DistanceMemory[i] / 10.0) - 1;
+            //cut off above and below
+            input[i] = input[i] > 1 ? 1 : input[i];
+            input[i] = input[i] < -1 ? -1 : input[i];
+        }
+        //scale stamina estimate min:-40 max:192
+        input[DistanceMemoryLENGTH] = 2 * (StaminaEstimationEnemy() - -40) / (192 - -40) - 1;
+
+        fann_type* out = fann_run(attack_mind_input->mind, input);
 
         if (!Player.twoHanding){
             AttackChoice = TwoHandId;
         }
         else if (
             //not in range
-            distanceInput > Player.weaponRange ||
+            DistanceMemory[0] > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab
-            BackstabDetection(&Player, &Enemy, distanceInput) == 1)
+            BackstabDetection(&Player, &Enemy, DistanceMemory[0]) == 1)
         {
             AttackChoice = MoveUpId;
         }
         if (
             (Player.stamina > 90) &&  //have enough stamina
             (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
-            distanceInput <= Player.weaponRange &&  //in range
-            (distanceInput > 1 &&  //dont attack when right in enemy face to try and avoid getting parried
-            (rand()<RAND_MAX / 5)) //random limitor
+            DistanceMemory[0] <= Player.weaponRange &&  //in range
+            (DistanceMemory[0] > 1) &&  //dont attack when right in enemy face to try and avoid getting parried
+            (*out > 0) //neural network says so
            ){
             AttackChoice = GhostHitId;
         }

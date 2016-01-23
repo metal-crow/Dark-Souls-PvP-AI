@@ -63,10 +63,10 @@ bool AnglesWithinRange(float ang1, float ang2, float range){
 }
 
 //since stamina isnt sent over wire estimate the enemy's from last_animation_types_enemy
-float StaminaEstimationEnemy(){
-    float staminaEstimate = 192;//assume their max stamina is max
+int StaminaEstimationEnemy(){
+    int staminaEstimate = 192;//assume their max stamina is max
 
-    for (unsigned int i = last_animation_types_enemy_LENGTH - 1; i > 1; i--){
+    for (int i = last_animation_types_enemy_LENGTH - 1; i >= 0; i--){
         //backsteps. these have diff stamina drain from other rolls
         if (last_animation_types_enemy[i] == 38 || last_animation_types_enemy[i] == 100){
             staminaEstimate -= 19;
@@ -75,26 +75,23 @@ float StaminaEstimationEnemy(){
             staminaEstimate -= 28;
         }
         else if (isAttackAnimation(last_animation_types_enemy[i])){
-            //take their current weapon id's default stam damage rate (we assume they havent switched weapons in this time, and are only using the r hand weapon. Bad assumptions, but works and less work)
-            float baseWepStamDamg = AverageStaminaDamageForWeapon(Enemy.r_weapon_id);
-
-            //apply multiply modifier based on the type of attack
+            //assuming they havent switched weapons during this time, use their right weapon and the attack type to get the stamina drain
+            staminaEstimate -= StaminaDrainForAttack(Enemy.r_weapon_id, Enemy.animationType_id);
         }
         //bug: this includes running, which drains stamina
         else if (last_animation_types_enemy[i] == 0){
-            //base regen of 45 stam per sec
-
-            //if child mask + 14.85
-            //if grass crest + 22.5
-            //if green blossoms + 40
-
-
-            //cap max stam
-            if (staminaEstimate > 192){
-                staminaEstimate = 192;
-            }
+            staminaEstimate += Enemy.staminaRecoveryRate / 10;
+        }
+        //cap max and min stam
+        if (staminaEstimate > 192){
+            staminaEstimate = 192;
+        } 
+        else if (staminaEstimate < -40){
+            staminaEstimate = -40;
         }
     }
+
+    return staminaEstimate;
 }
 
 //handles rollover from 360 to 0

@@ -6,14 +6,15 @@
 #include <WinSock2.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "CharacterStruct.h"
 #pragma comment(lib, "Ws2_32.lib") //load winsock library
 
 #define ENABLEGUI 1
 #define ENABLEPRINT 0
 #define REDIRECTTOFILE 1
 
-#define LocationMemoryEnemy 0
-#define LocationMemoryPlayer 1
+#define LocationMemoryEnemy EnemyId
+#define LocationMemoryPlayer PlayerId
 #define LocationDetection "2"
 #define LocationState "3"
 #define LocationJoystick "4"

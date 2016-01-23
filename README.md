@@ -16,50 +16,46 @@ The most recent commit to master should always have been tested and verified to 
  * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. If you dont want to use them, figure out how to do that yourself.
  * Ill soon have a better table up where locking the camera doesnt crash Dark Souls. Just use a script that AOB scans `F3 0F 11 83 44 01 00 00 80 BB 63 02 00 00 00`, noops, then lock camera x normally.
 * Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
-* Train the defense neural network and put the .net file in a folder in the .exe's location called "Neural Nets"
+* Train the defense neural network (see the methods in InitalizeFANN, use the main method in there with them) and put the .net file in a folder in the .exe's location called "Neural Nets"
+ * Or use the already trained nets in the latest release
 * (If you want the gui) Import the folder for the GUI into eclipse and run that. Or run the included .jar file.
 * Run the PvP AI whenever the opponent is ready.
 
 ## Neural Networks
 Defense Network Inputs:  
-  -Player Distance from Enemy  
-  -The angle the enemy is off from directly in front of the player  
-  -The enemy velocity  
-  -The rotation difference between the enemy and the player  
+
+  * Player Distance from Enemy  
+  * The angle the enemy is off from directly in front of the player  
+  * The enemy velocity  
+  * The rotation difference between the enemy and the player  
 
 Attack Network Inputs:  
-  -TODO. Undecided currently.
-how do you decide someone is about to attack you?
-they move up on you head on
-they roll up
-spacing in general
-How do you decide when you should attack?
- usually tell how they attack by how long it's been since they last attacked and how far away they are
- enemy stamina, cant read directly. can infer from memory of enemy animations.
-will they backstab punish me? will the attack poise break them? if not, do a quicker attack.
-try feeding an array of distance inputs for last x seconds
+
+  * Array of distance between AI and enemy over 5 second period
+  * Estimated stamina of enemy
+  * TODO estimated poise of enemy
+  * TODO poise damage of AI's attack
+  * NOTES:
+    * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO
 resolution at 1440x810
 
   * **TOP Priority**
-    * too prone to trading, imrpove attack neural network  
-    * spear game too strong
-    * cannot truly protect against parrying. Have min range for attack to mitigate it.
+    * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
-    * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
+    * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes.
+    * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
-    * have fully automated version. When in world, put down sign. When enemy detected, enable ai. Put on server, steam.
     * refine behind enemy safe state to be more behind enemy. Cone like?
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
     * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
     * detect when player in backstab or parry, and when enemy in backstab or parry. know not to do stuff when they are.
     * make this strafe in the same direction as the enemy strafe  
-    * teach poise  
+    * Teach poise. Additional inputs for attack neural network: Poise damage of the poise damage of AI's attack and poise of enemy. Their max is sent over wire, but how do i detect hits? Including phantom poise damage.  
     * at closer ranges, perfect block and strafe for bs.
 
   * **MEDIUM Priority**
@@ -67,12 +63,11 @@ resolution at 1440x810
     * true pathfinding. Read ripped maps
     * Get different base addresses for all possible enemies, allow switching of main target.
     * projectile or lingering hurtboxes.
-    * Pointers have to be reread for characters because end address changes when invading  
-    * Must lock camera(x and y pos), rotation x set to PI or 0 depending on map.
+    * Lock camera(x and y pos) programaticly, rotation x set to PI
     * Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   * **LOW Priority**
-    * Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around.  
+    * Some cacheing layer. The first time ex:distance is computed in a tick, it is stored in a cache struct, and all subsequent distance calls use the already computed value. Easier then passing it around. When the method is called, it checks if there is an entry in the cache, if not, it computes it and adds it, then returns the value. If there is, it returns that value. AT the end of each logic tick, the cache is invalidated.  
     * ReadPlayer should read memory in chunks, not individual calls to ReadMemory  
     * Better Vjoy loading/unloading    
     * Have a build flag which determines if the program uses my handwritten neural network or a library's neural network    

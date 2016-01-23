@@ -26,6 +26,10 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read current animation type
     ReadProcessMemory(processHandle, (LPCVOID)(c->animationType_address), &(c->animationType_id), 2, 0);
     guiPrint("%d,3:Animation Type:%d", characterId, c->animationType_id);
+    //remember enemy animation types
+    if (characterId == EnemyId){
+        AppendAnimationTypeEnemy(Enemy.animationType_id);
+    }
     //read hp
     ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     guiPrint("%d,4:HP:%d", characterId, c->hp);
@@ -57,7 +61,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
 
     //keep track of enemy animations in memory
     bool newAid = false;
-    if (characterId == LocationMemoryEnemy){
+    if (characterId == EnemyId){
         if (animationid){
             newAid = AppendLastAnimationIdEnemy(animationid);
         } else {
@@ -148,7 +152,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             }
 
             // time before the windup ends where we can still alter rotation (only for player)
-            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == LocationMemoryPlayer){
+            if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == PlayerId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
         }
@@ -192,6 +196,16 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         ReadProcessMemory(processHandle, (LPCVOID)(c->twoHanding_address), &(c->twoHanding), 1, 0);
         guiPrint("%d,13:Two Handing:%d", characterId, c->twoHanding);
     }
+    //read stamina recovery of enemy
+    if (c->staminaRecoveryRate_address){
+        ReadProcessMemory(processHandle, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
+        guiPrint("%d,14:Stamina Recovery Rate:%d", characterId, c->staminaRecoveryRate);
+    }
+    //read poise of enemy
+    if (c->maxPoise_address){
+        ReadProcessMemory(processHandle, (LPCVOID)(c->maxPoise_address), &(c->maxPoise), 4, 0);
+        guiPrint("%d,15:Max Poise:%f", characterId, c->maxPoise);
+    }
 }
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
@@ -226,6 +240,8 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.locked_on_address = 0;
     Enemy.twoHanding_address = 0;
     Enemy.visualStatus_address = 0;
+    Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
+    Enemy.maxPoise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_maxPoise_offsets_length, Enemy_maxPoise_offsets);
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -245,4 +261,6 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
     Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
+    Player.staminaRecoveryRate_address = 0;
+    Player.maxPoise_address = 0;
 }

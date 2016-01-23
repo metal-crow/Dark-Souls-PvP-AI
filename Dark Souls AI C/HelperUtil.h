@@ -50,8 +50,9 @@ float distance(Character * Player, Character * Phantom);
 
 float angleDeltaFromFront(Character * Player, Character * Phantom);
 
-//determine if two angles are withing x degreees of eacho ther
 bool AnglesWithinRange(float ang1, float ang2, float range);
+
+int StaminaEstimationEnemy();
 
 unsigned char BackstabDetection(Character* Perspective, Character* Target, float distance);
 

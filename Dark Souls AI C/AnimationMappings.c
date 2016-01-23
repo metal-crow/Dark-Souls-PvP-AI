@@ -104,10 +104,10 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
         //2h r1 bounce back
         case 108:
             return 2;//uh, i saw this be a normal attack once
-        //2h r1 combo
+        //2h r1 combo 1
         case 109:
             return 2;
-        //2h r1 combo
+        //2h r1 combo 2
         case 110:
             return 2;
         //2h kick replacement

@@ -60,14 +60,22 @@ typedef struct {
     //if player is two handing or not
     ullong twoHanding_address;
     unsigned char twoHanding;
-    //player visual state. used for auto red signing
+    //stamina recovery rate
+    ullong staminaRecoveryRate_address;
+    int staminaRecoveryRate;
+    //visual state. used for auto red signing
     ullong visualStatus_address;
     int visualStatus;
+    //max poise, not current actual
+    ullong maxPoise_address;
+    float maxPoise;
 } Character;
 
 //initalize the phantom and player
 Character Enemy;
 Character Player;
+#define EnemyId 0
+#define PlayerId 1
 
 //read memory for the character's variables
 void ReadPlayer(Character * c, HANDLE processHandle, int characterId);
@@ -172,4 +180,10 @@ static const int Player_twohanding_offsets_length = 5;
 //visual state of player (phantom, host, invader, etc)
 static const int Player_visual_offsets[] = { 0x28, 0x0, 0x30, 0xC, 0x70 };
 static const int Player_visual_offsets_length = 5;
+//stamina recovery rate of enemy
+static const int Enemy_stamRecovery_offsets[] = { 0x4, 0x4, 0x170, 0x34C, 0x408 };
+static const int Enemy_stamRecovery_offsets_length = 5;
+//max poise of enemy (not their actual current)
+static const int Enemy_maxPoise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C4 };
+static const int Enemy_maxPoise_offsets_length = 5;
 #endif
