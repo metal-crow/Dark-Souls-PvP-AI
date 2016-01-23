@@ -82,7 +82,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         c->subanimation = PoiseBrokenSubanimation;
     }
     //---subanimations based on animation type---
-    else if (isDodgeAnimation(c->animationType_id)){
+    else if (isDodgeAnimation(c->animationType_id) && animationid != -1){//in theory these two should never conflict. In practice, one might be slow.
         c->subanimation = LockInSubanimation;
     }
 
@@ -164,7 +164,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         c->subanimation = AttackSubanimationActiveDuringHurtbox;
     }
     else{
-    //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation
+    //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1
         c->subanimation = SubanimationNeutral;
     }
 

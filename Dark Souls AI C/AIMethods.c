@@ -101,7 +101,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //ensure we actually enter dodge roll in game so another subanimation cant override it
     //or we get poise broken out
-    if (isDodgeAnimation(Player->animationType_id) || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
+    if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
         guiPrint(LocationState",0:end dodge roll");
         subroutine_states[DodgeTypeIndex] = 0;
         subroutine_states[DodgeStateIndex] = 0;
