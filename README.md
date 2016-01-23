@@ -23,30 +23,28 @@ The most recent commit to master should always have been tested and verified to 
 
 ## Neural Networks
 Defense Network Inputs:  
-  -Player Distance from Enemy  
-  -The angle the enemy is off from directly in front of the player  
-  -The enemy velocity  
-  -The rotation difference between the enemy and the player  
+
+  * Player Distance from Enemy  
+  * The angle the enemy is off from directly in front of the player  
+  * The enemy velocity  
+  * The rotation difference between the enemy and the player  
 
 Attack Network Inputs:  
-  -TODO. Undecided currently.
-how do you decide someone is about to attack you?
-they move up on you head on
-they roll up
-spacing in general
-How do you decide when you should attack?
- usually tell how they attack by how long it's been since they last attacked and how far away they are
- enemy stamina, cant read directly. can infer from memory of enemy animations.
-will they backstab punish me? will the attack poise break them? if not, do a quicker attack.
-try feeding an array of distance inputs for last x seconds
+
+  * Array of distance between AI and enemy over 5 second period
+  * Estimated stamina of enemy
+  * TODO estimated poise of enemy
+  * TODO poise damage of AI's attack
+  * NOTES:
+    * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO
 resolution at 1440x810
 
   * **TOP Priority**
-    * spear game too strong
+    * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
-    * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
+    * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
     * CE camera lock script causes crashes. Fix under testing.
 
@@ -65,7 +63,7 @@ resolution at 1440x810
     * true pathfinding. Read ripped maps
     * Get different base addresses for all possible enemies, allow switching of main target.
     * projectile or lingering hurtboxes.
-    * Must lock camera(x and y pos), rotation x set to PI or 0 depending on map.
+    * Lock camera(x and y pos) programaticly, rotation x set to PI
     * Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   * **LOW Priority**
