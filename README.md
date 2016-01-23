@@ -44,13 +44,11 @@ try feeding an array of distance inputs for last x seconds
 resolution at 1440x810
 
   * **TOP Priority**
-    * too prone to trading, imrpove attack neural network  
     * spear game too strong
-    * cannot truly protect against parrying. Have min range for attack to mitigate it.
     * any attack can be parried. allow ai to parry sometimes.
     * should attack even when enemy attacking, just determine their direciton and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes.
+    * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
     * refine behind enemy safe state to be more behind enemy. Cone like?
@@ -59,7 +57,7 @@ resolution at 1440x810
     * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
     * detect when player in backstab or parry, and when enemy in backstab or parry. know not to do stuff when they are.
     * make this strafe in the same direction as the enemy strafe  
-    * teach poise  
+    * Teach poise. Additional inputs for attack neural network: Poise damage of the poise damage of AI's attack and poise of enemy. Their max is sent over wire, but how do i detect hits? Including phantom poise damage.  
     * at closer ranges, perfect block and strafe for bs.
 
   * **MEDIUM Priority**
