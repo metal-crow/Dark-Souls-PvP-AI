@@ -164,6 +164,7 @@ public class GUI{
               innerGui.HandleGUIUpdate(updateData);
           }catch(Exception e){
               e.printStackTrace();
+              System.err.println(updateData);
           }
         }
         //serverSocket.close();
