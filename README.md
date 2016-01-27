@@ -42,7 +42,6 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * walking off edge on respawn on win.
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
