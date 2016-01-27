@@ -35,10 +35,10 @@ Attack Network Inputs:
   * Estimated stamina of enemy
   * TODO(HARD) estimated poise of enemy 
   * TODO(requires above) poise damage of AI's attack
-  * TODO the AI's current poise
+  * the AI's current poise
   * TODO base poise damage of enemy's attack
-  * TODO array of AI's HP over time
-  * TODO array of AI's subanimations over time
+  * array of AI's HP over time
+  * array of AI's subanimations over time
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 

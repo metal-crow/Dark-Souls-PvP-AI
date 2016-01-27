@@ -24,4 +24,9 @@ extern float DistanceMemory[DistanceMemoryLENGTH];
 
 void AppendDistance(float distance);
 
+#define AIHPMemoryLENGTH 20
+extern unsigned int AIHPMemory[AIHPMemoryLENGTH];
+
+void AppendAIHP(unsigned int hp);
+
 #endif

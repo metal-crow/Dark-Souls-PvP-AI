@@ -33,6 +33,9 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read hp
     ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     guiPrint("%d,4:HP:%d", characterId, c->hp);
+    if (characterId == PlayerId){
+        AppendAIHP(Player.hp);
+    }
     //read stamina
     if (c->stamina_address){
         ReadProcessMemory(processHandle, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
