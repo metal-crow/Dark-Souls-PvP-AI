@@ -134,10 +134,7 @@ void getTrainingDataforAttack(void)
     while (listening){
         MainLogicLoop();
 
-        AppendDistance(distance(&Player, &Enemy));
-        AppendAnimationTypeEnemy(Enemy.animationType_id);
-
-        if (isAttackAnimation(Player.animationType_id)){
+        if (subroutine_states[AttackTypeIndex] == GhostHitId){
             int startingHp = Player.hp;
 
             while (isAttackAnimation(Player.animationType_id)){
@@ -163,6 +160,9 @@ void getTrainingDataforAttack(void)
             fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
             //TODO output the enemy's current poise
             //TODO output the attack's poise damage
+            //TODO output the AI's current poise
+            //TODO output array of AI's HP over time
+            //TODO output array of AI's subanimations
             //output result
             fprintf(fpatk, "%f\n", result);
 

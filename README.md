@@ -33,8 +33,12 @@ Attack Network Inputs:
 
   * Array of distance between AI and enemy over 5 second period
   * Estimated stamina of enemy
-  * TODO estimated poise of enemy
-  * TODO poise damage of AI's attack
+  * TODO(HARD) estimated poise of enemy 
+  * TODO(requires above) poise damage of AI's attack
+  * TODO the AI's current poise
+  * TODO base poise damage of enemy's attack
+  * TODO array of AI's HP over time
+  * TODO array of AI's subanimations over time
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
@@ -42,6 +46,9 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
+    * Not dodging avelin
+    * If taking heavy damage, change to more dodging/careful tactics.
+    * When poise low, change to dodging until it regens
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
@@ -50,9 +57,6 @@ resolution at 1440x810
     * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
-    * Not dodging avelin
-    * If taking heavy damage, change to more dodging/careful tactics.
-    * When poise low, change to dodging until it regens
     * refine behind enemy safe state to be more behind enemy. Cone like?
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
