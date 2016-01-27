@@ -54,7 +54,7 @@ void guiPrint(const char* format, ...){
     vsnprintf(buffer, MAXSTRINGSIZE, format, ap);
     va_end(ap);
 
-    send(s, buffer, MAXSTRINGSIZE, 0);
+    sendto(s, buffer, MAXSTRINGSIZE, 0, 0, 0);
 #endif
 #if ENABLEPRINT
     printf("%s\n",buffer);

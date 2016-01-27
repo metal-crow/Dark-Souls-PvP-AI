@@ -56,7 +56,7 @@ int main(void){
     while (1){
 #if AutoRedSign
         guiPrint(LocationHandler",0:RereadPointerEndAddress %d", RereadPointerEndAddress);
-        guiPrint(LocationHandler",1:Enemy.loc_x %f", Enemy.loc_x);
+        guiPrint(LocationHandler",1:Enemy.loc_x %f\nvisualStatus %d", Enemy.loc_x, Player.visualStatus);
         guiPrint(LocationHandler",2:");
 
         if (RereadPointerEndAddress){
