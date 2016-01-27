@@ -42,6 +42,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
+    * Auto sign doesnt trigger on respawn correctly.
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
@@ -50,6 +51,8 @@ resolution at 1440x810
     * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
+    * Not dodging avelin
+    * If taking heavy damage, change to more dodging/careful tactics.
     * refine behind enemy safe state to be more behind enemy. Cone like?
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
@@ -64,7 +67,7 @@ resolution at 1440x810
     * true pathfinding. Read ripped maps
     * Get different base addresses for all possible enemies, allow switching of main target.
     * projectile or lingering hurtboxes.
-    * Lock camera(x and y pos) programaticly, rotation x set to PI
+    * Lock camera(x and y pos) programaticly, rotation x set to PI or 0 depending on map
     * Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   * **LOW Priority**
