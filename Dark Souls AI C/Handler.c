@@ -45,7 +45,7 @@ void PutDownRedSign(){
 }
 
 static bool RereadPointerEndAddress = true;
-
+static long LastRedSignTime = 0;
 #define AutoRedSign 1
 
 int main(void){
@@ -55,6 +55,10 @@ int main(void){
 
     while (1){
 #if AutoRedSign
+        guiPrint(LocationHandler",0:RereadPointerEndAddress %d", RereadPointerEndAddress);
+        guiPrint(LocationHandler",1:Enemy.loc_x %f", Enemy.loc_x);
+        guiPrint(LocationHandler",2:");
+
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
@@ -80,14 +84,22 @@ int main(void){
             }
             //if enemy player far away, black crystal out
             else{
+                guiPrint(LocationHandler",2:BlackCrystalOut");
                 RereadPointerEndAddress = true;
                 BlackCrystalOut();
             }
         }
         //if AI in host world, and red sign not down, put down red sign
-        else if (Player.visualStatus == 0 && !RedSignDown){
-            Sleep(10000);//ensure we're out of loading screen
-            PutDownRedSign();
+        else if (Player.visualStatus == 0){
+            //ocasionally reput down red sign(failed to join session error catcher)
+            if (!RedSignDown){
+                guiPrint(LocationHandler",2:PutDownRedSign");
+                Sleep(10000);//ensure we're out of loading screen
+                PutDownRedSign();
+            } else if (clock() >= LastRedSignTime + 360000){//6 min
+                LastRedSignTime = clock();
+                RedSignDown = false;
+            }
         }
 #else
         MainLogicLoop();

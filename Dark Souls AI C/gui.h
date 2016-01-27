@@ -18,6 +18,7 @@
 #define LocationDetection "2"
 #define LocationState "3"
 #define LocationJoystick "4"
+#define LocationHandler "5"
 
 int guiStart();
 
