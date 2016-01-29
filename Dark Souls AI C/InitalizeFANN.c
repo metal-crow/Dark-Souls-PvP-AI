@@ -120,70 +120,66 @@ void getTrainingDataforBackstab(void)
 }
 */
 
+FILE* fpatk;
+unsigned int trainingLinesCountAtk = 0;
+
 //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
-void getTrainingDataforAttack(void)
-{
-    FILE* fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
+void TrainingDataforAttack(){
+    MainLogicLoop();
 
-    unsigned int trainingLinesCountAtk = 0;
+    if (subroutine_states[AttackTypeIndex] == GhostHitId){
+        int startingHp = Player.hp;
+        float startingPoiseAI = Player.poise;
+        float startingPoiseEnemy = Enemy.poise;
 
-    SetupandLoad();
-
-    HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
-
-    while (listening){
-        MainLogicLoop();
-
-        if (subroutine_states[AttackTypeIndex] == GhostHitId){
-            int startingHp = Player.hp;
-            float startingPoise = Player.poise;
-
-            while (isAttackAnimation(Player.animationType_id)){
-                ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
-            }
-
-            float result = 0;
-            //bad outcome
-            if (startingHp != Player.hp){
-                result = -1;
-            }
-            //good outcome
-            else{
-                result = 1;
-            }
-            trainingLinesCountAtk++;
-
-            //output the array of distance values
-            for (int i = 0; i < DistanceMemoryLENGTH; i++){
-                fprintf(fpatk, "%f ", DistanceMemory[i]);
-            }
-            //output estimated stamina
-            fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
-            //TODO output the enemy's current poise
-            //TODO output the AI's attack's poise damage
-            //output the AI's current poise
-            fprintf(fpatk, "%f ", startingPoise);
-            //TODO base poise damage of enemy's attack
-            //output array of AI's HP over time
-            for (int i = 0; i < AIHPMemoryLENGTH; i++){
-                fprintf(fpatk, "%f ", AIHPMemory[i]);
-            }
-            //output array of AI's subanimations
-            for (int i = 0; i < last_subroutine_states_self_LENGTH; i++){
-                fprintf(fpatk, "%f ", last_subroutine_states_self[i]);
-            }
-            //output result
-            fprintf(fpatk, "%f\n", result);
-
-            printf("result:%f\n", result);
+        while (subroutine_states[AttackTypeIndex] == GhostHitId){
+            MainLogicLoop();
         }
+
+        float result = 0;
+        //bad outcome
+        if (startingHp != Player.hp){
+            result = -1;
+        }
+        //good outcome
+        else{
+            result = 1;
+        }
+        trainingLinesCountAtk++;
+
+        //output the array of distance values
+        for (int i = 0; i < DistanceMemoryLENGTH; i++){
+            fprintf(fpatk, "%f ", DistanceMemory[i]);
+        }
+        //output estimated stamina
+        fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
+        //output the enemy's current poise
+        fprintf(fpatk, "%f ", startingPoiseEnemy);
+        //output the AI's attack's poise damage (just r1 for now)
+        fprintf(fpatk, "%f ", PoiseDamageForAttack(Player.r_weapon_id, 46));
+        //output the AI's current poise
+        fprintf(fpatk, "%f ", startingPoiseAI);
+        //base poise damage of enemy's attack (treat r1 as base)
+        fprintf(fpatk, "%f ", PoiseDamageForAttack(Enemy.r_weapon_id, 46));
+        //output array of AI's HP over time
+        for (int i = 0; i < AIHPMemoryLENGTH; i++){
+            fprintf(fpatk, "%f ", (float)AIHPMemory[i]);
+        }
+        //output array of AI's subanimations
+        for (int i = 0; i < last_subroutine_states_self_LENGTH; i++){
+            fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
+        }
+        //output result
+        fprintf(fpatk, "%f\n", result);
+
+        printf("result:%f\n", result);
+
+        unsigned int resethp = 2000;
+
+        //reset hp so we dont die
+        WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
     }
-
-    fprintf(fpatk, "%d 51 1\n", trainingLinesCountAtk);
-
-    fclose(fpatk);
 }
-
 
 //use the file to train the network
 int trainFromFile(void){
@@ -261,8 +257,10 @@ void testData(void){
 }
 */
 
-int mainFANN(void){
-    getTrainingDataforAttack();
-    //trainFromFile();
-    return 0;
+void SetupTraining(){
+    fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
+}
+
+void SaveTrainingState(){
+    fprintf(fpatk, "%d %d 1\n", trainingLinesCountAtk, DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH);
 }

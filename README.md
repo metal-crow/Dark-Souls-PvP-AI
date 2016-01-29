@@ -46,10 +46,11 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * Run ai against itself, train neural networks.
+    * a big settings file for the defines?
+    * Run ai against itself, train neural networks. Against humans as well.
     * Not dodging avelin
-    * If taking heavy damage, change to more dodging/careful tactics.
-    * When poise low, change to dodging until it regens
+    * If taking heavy damage, change to more dodging/careful tactics. only neural network or static? 
+    * When poise low, change to dodging until it regens.  only neural network or static? 
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.

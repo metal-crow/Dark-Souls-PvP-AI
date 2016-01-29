@@ -108,12 +108,14 @@
     <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="InitalizeFANN.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="HelperUtil.h" />
     <ClInclude Include="MemoryEdits.h" />
     <ClInclude Include="public.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="SubRoutines.h" />
     <ClInclude Include="vjoyhelper.h" />

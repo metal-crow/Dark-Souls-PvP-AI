@@ -1,7 +1,7 @@
 #include "gui.h"
+#include "Settings.h"
 
 #define MAXSTRINGSIZE 500 // max space for string
-#define PORT 4149
 
 SOCKET s;
 char* buffer;
@@ -59,7 +59,9 @@ void guiPrint(const char* format, ...){
 #if ENABLEPRINT
     printf("%s\n",buffer);
 #endif
+#if ENABLEGUI
     memset(buffer, 0, MAXSTRINGSIZE);//reset buffer
+#endif
 }
 
 void guiClose(){

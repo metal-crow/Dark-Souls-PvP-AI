@@ -1,5 +1,7 @@
 #include "Source.h"
 #include <stdlib.h>
+#include "InitalizeFANN.h"
+#include "Settings.h"
 
 void BlackCrystalOut(){
     ResetVJoyController();
@@ -46,15 +48,17 @@ void PutDownRedSign(){
 
 static bool RereadPointerEndAddress = true;
 static long LastRedSignTime = 0;
-#define AutoRedSign 1
 
 int main(void){
     if (SetupandLoad()){
         return EXIT_FAILURE;
     }
+    #if TrainNeuralNet
+    SetupTraining();
+    #endif
 
     while (1){
-#if AutoRedSign
+    #if AutoRedSign
         guiPrint(LocationHandler",0:RereadPointerEndAddress %d", RereadPointerEndAddress);
         guiPrint(LocationHandler",1:Enemy.loc_x %f\nvisualStatus %d", Enemy.loc_x, Player.visualStatus);
         guiPrint(LocationHandler",2:");
@@ -77,14 +81,21 @@ int main(void){
             //once one character dies
             if (Player.hp <= 0 || Enemy.hp <= 0){
                 RereadPointerEndAddress = true;
+                #if TrainNeuralNet
+                SaveTrainingState();
+                #endif
             }
 
             //enemy player is fairly close
             if (distance(&Player, &Enemy) < 50){
+            #if TrainNeuralNet
+                TrainingDataforAttack();
+            #else
                 MainLogicLoop();
+            #endif
             }
             //if enemy player far away, black crystal out
-            else{
+            else if (!RereadPointerEndAddress){
                 guiPrint(LocationHandler",2:BlackCrystalOut");
                 RereadPointerEndAddress = true;
                 BlackCrystalOut();
@@ -102,9 +113,9 @@ int main(void){
                 RedSignDown = false;
             }
         }
-#else
+    #else
         MainLogicLoop();
-#endif
+    #endif
     }
 
     Exit();

@@ -1,7 +1,7 @@
 #include "HelperUtil.h"
 #include <stdio.h>//printf
+#include "Settings.h"
 
-#define OolicelMap 1
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
 //store camera settings
