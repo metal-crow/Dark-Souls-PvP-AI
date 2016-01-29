@@ -128,11 +128,13 @@ void TrainingDataforAttack(){
     MainLogicLoop();
 
     if (subroutine_states[AttackTypeIndex] == GhostHitId){
-        int startingHp = Player.hp;
+        unsigned int startingHp = Player.hp;
         float startingPoiseAI = Player.poise;
         float startingPoiseEnemy = Enemy.poise;
 
-        while (subroutine_states[AttackTypeIndex] == GhostHitId){
+        //2 seconds
+        long startTime = clock();
+        while (clock() - startTime < 2000){
             MainLogicLoop();
         }
 
