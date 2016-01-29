@@ -132,23 +132,6 @@ void TrainingDataforAttack(){
         float startingPoiseAI = Player.poise;
         float startingPoiseEnemy = Enemy.poise;
 
-        //2 seconds
-        long startTime = clock();
-        while (clock() - startTime < 2000){
-            MainLogicLoop();
-        }
-
-        float result = 0;
-        //bad outcome
-        if (startingHp != Player.hp){
-            result = -1;
-        }
-        //good outcome
-        else{
-            result = 1;
-        }
-        trainingLinesCountAtk++;
-
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpatk, "%f ", DistanceMemory[i]);
@@ -171,6 +154,24 @@ void TrainingDataforAttack(){
         for (int i = 0; i < last_subroutine_states_self_LENGTH; i++){
             fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
         }
+
+        //2.5 seconds
+        long startTime = clock();
+        while (clock() - startTime < 2500){
+            MainLogicLoop();
+        }
+
+        float result = 0;
+        //bad outcome
+        if (startingHp != Player.hp){
+            result = -1;
+        }
+        //good outcome
+        else{
+            result = 1;
+        }
+        trainingLinesCountAtk++;
+
         //output result
         fprintf(fpatk, "%f\n", result);
 
@@ -261,8 +262,5 @@ void testData(void){
 
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
-}
-
-void SaveTrainingState(){
-    fprintf(fpatk, "%d %d 1\n", trainingLinesCountAtk, DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH);
+    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH);
 }

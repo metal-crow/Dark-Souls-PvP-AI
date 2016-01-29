@@ -82,9 +82,6 @@ int main(void){
             //once one character dies
             if (Player.hp <= 0 || Enemy.hp <= 0){
                 RereadPointerEndAddress = true;
-                #if TrainNeuralNet
-                SaveTrainingState();
-                #endif
             }
 
             //enemy player is fairly close

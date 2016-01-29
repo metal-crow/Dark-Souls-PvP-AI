@@ -5,6 +5,4 @@ void SetupTraining();
 
 void TrainingDataforAttack();
 
-void SaveTrainingState();
-
 #endif
