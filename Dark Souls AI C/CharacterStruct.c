@@ -167,7 +167,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         c->subanimation = AttackSubanimationActiveDuringHurtbox;
     }
     else{
-    //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1
+        //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1
         c->subanimation = SubanimationNeutral;
     }
 
@@ -179,7 +179,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             c->subanimation = SubanimationRecover;
         } /*else{ Not adding this now because it would lock out subanimations every time i move
             c->subanimation = LockInSubanimation;
-        }*/
+            }*/
     }
     guiPrint("%d,10:Subanimation:%d", characterId, c->subanimation);
 
@@ -204,16 +204,9 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         ReadProcessMemory(processHandle, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
         guiPrint("%d,14:Stamina Recovery Rate:%d", characterId, c->staminaRecoveryRate);
     }
-    //read poise of enemy
-    if (c->maxPoise_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->maxPoise_address), &(c->maxPoise), 4, 0);
-        guiPrint("%d,15:Max Poise:%f", characterId, c->maxPoise);
-    }
-    //read current poise of player
-    if (c->poise_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->poise_address), &(c->poise), 4, 0);
-        guiPrint("%d,16:Poise:%f", characterId, c->poise);
-    }
+    //read current poise
+    ReadProcessMemory(processHandle, (LPCVOID)(c->poise_address), &(c->poise), 4, 0);
+    guiPrint("%d,15:Poise:%f", characterId, c->poise);
 }
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
@@ -249,8 +242,7 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.twoHanding_address = 0;
     Enemy.visualStatus_address = 0;
     Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
-    Enemy.maxPoise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_maxPoise_offsets_length, Enemy_maxPoise_offsets);
-    Enemy.poise_address = 0;
+    Enemy.poise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_Poise_offsets_length, Enemy_Poise_offsets);
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -271,6 +263,5 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
     Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
     Player.staminaRecoveryRate_address = 0;
-    Player.maxPoise_address = 0;
     Player.poise_address = FindPointerAddr(processHandle, player_base_add, Player_Poise_offsets_length, Player_Poise_offsets);
 }

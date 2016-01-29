@@ -66,9 +66,6 @@ typedef struct {
     //visual state. used for auto red signing
     ullong visualStatus_address;
     int visualStatus;
-    //max poise, not current actual
-    ullong maxPoise_address;
-    float maxPoise;
     //current poise
     ullong poise_address;
     float poise;
@@ -186,10 +183,9 @@ static const int Player_visual_offsets_length = 5;
 //stamina recovery rate of enemy
 static const int Enemy_stamRecovery_offsets[] = { 0x4, 0x4, 0x170, 0x34C, 0x408 };
 static const int Enemy_stamRecovery_offsets_length = 5;
-//max poise of enemy (not their actual current)
-static const int Enemy_maxPoise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C4 };
-static const int Enemy_maxPoise_offsets_length = 5;
-//current poise of player
+//current poise
 static const int Player_Poise_offsets[] = { 0x28, 0x18, 0xE0, 0xC, 0x1C0 };
 static const int Player_Poise_offsets_length = 5;
+static const int Enemy_Poise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C0 };
+static const int Enemy_Poise_offsets_length = 5;
 #endif

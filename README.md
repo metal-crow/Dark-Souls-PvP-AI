@@ -46,6 +46,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
+    * Run ai against itself, train neural networks.
     * Not dodging avelin
     * If taking heavy damage, change to more dodging/careful tactics.
     * When poise low, change to dodging until it regens
