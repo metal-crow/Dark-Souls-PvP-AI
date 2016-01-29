@@ -68,6 +68,7 @@ int main(void){
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
             ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             ResetVJoyController();//just in case
+            UpdateVJD(iInterface, (PVOID)&iReport);
         }
         ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
 

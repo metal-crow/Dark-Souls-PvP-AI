@@ -177,7 +177,7 @@ void TrainingDataforAttack(){
         unsigned int resethp = 2000;
 
         //reset hp so we dont die
-        WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
+        //WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
     }
 }
 

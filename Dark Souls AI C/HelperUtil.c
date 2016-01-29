@@ -115,7 +115,7 @@ static bool InBackstabRange(float enemy, float player){
 //check if player behind enemy, and if they're in +-60 degree bs window
 #define BackstabRange 1.5
 //the determiner for if behind someone also must include both characters body widths. or it could be a cone, instead of a line. not sure.
-#define RealBehindRange 0.4
+#define RealBehindRange 0.04
 unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;

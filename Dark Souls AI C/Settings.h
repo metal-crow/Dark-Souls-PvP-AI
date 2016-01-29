@@ -6,7 +6,7 @@
 #define TrainNeuralNet 1
 
 //used in helper utils (for camera)
-#define OolicelMap 0
+#define OolicelMap 1
 
 //used in gui
 #define ENABLEGUI 1
