@@ -3,4 +3,6 @@
 
 int StaminaDrainForAttack(unsigned int weapon_id, unsigned short animationType_id);
 
+float PoiseDamageForAttack(unsigned int weapon_id, unsigned short animationType_id);
+
 #endif
