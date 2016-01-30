@@ -187,7 +187,7 @@ void TrainingDataforAttack(){
 //use the file to train the network
 int trainFromFile(void){
     //create new, empty network
-    struct fann *net = fann_create_shortcut(2, 47, 1);//set up net without hidden layers. N inputs, 1 output
+    struct fann *net = fann_create_shortcut(2, 95, 1);//set up net without hidden layers. N inputs, 1 output
     fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
     fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(net, FANN_LINEAR);
@@ -197,7 +197,7 @@ int trainFromFile(void){
     fann_print_parameters(net);
 
     //load training data
-    unsigned int max_neurons = 30;
+    unsigned int max_neurons = 100;
     const float desired_error = (const float)0.05;
 
     struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train");
