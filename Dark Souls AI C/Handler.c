@@ -87,7 +87,7 @@ int main(void){
             //enemy player is fairly close
             if (distance(&Player, &Enemy) < 50){
             #if TrainNeuralNet
-                TrainingDataforAttack();
+                GetTrainingData();
             #else
                 MainLogicLoop();
             #endif

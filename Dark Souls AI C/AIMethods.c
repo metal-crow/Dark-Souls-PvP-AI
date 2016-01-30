@@ -18,7 +18,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             //if in an animation where subanimation is not used for hurtbox
             (AtkID == 3 && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox) ||
             //or animation where it is
-            ((AtkID == 2 || AtkID == 4) && Phantom->subanimation == AttackSubanimationWindupClosing)
+            ((AtkID == 2 || AtkID == 4) && (Phantom->subanimation == AttackSubanimationWindupClosing || Phantom->subanimation == AttackSubanimationActiveDuringHurtbox))
 			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
@@ -265,6 +265,39 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
     }
 }
 
+static void PerfectBlock(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Perfect Block");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + 30){
+        iReport->lButtons = l1;
+    }
+
+    if (curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end Perfect Block");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(PerfectBlockId);
+    }
+}
+
+static void Parry(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Parry");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + 30){
+        iReport->lButtons = l2;
+    }
+
+    if (curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end Parry");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(ParryId);
+    }
+}
+
+
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
     if (!inActiveSubroutine() && Player->subanimation >= LockInSubanimation){
@@ -279,6 +312,10 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
                 else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+                }
+                //if we dont have enough time to roll, perfect block
+                else if (Phantom->dodgeTimeRemaining < 0.15){
+                    subroutine_states[DodgeTypeIndex] = PerfectBlockId;
                 }
                 //otherwise, normal roll
                 else{
@@ -311,6 +348,9 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 break;
             case ToggleEscapeId:
                 ToggleEscape(Player, Phantom, iReport);
+                break;
+            case PerfectBlockId:
+                PerfectBlock(Player, Phantom, iReport);
                 break;
             //should never be reached
             default:

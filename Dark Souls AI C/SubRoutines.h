@@ -25,6 +25,8 @@ extern long startTimeDefense;
 #define L1AttackId 5
 #define ReverseRollBSId 6
 #define ToggleEscapeId 7
+#define PerfectBlockId 8
+#define ParryId 9
 //Attack Ids
 #define MoveUpId 1
 #define GhostHitId 2

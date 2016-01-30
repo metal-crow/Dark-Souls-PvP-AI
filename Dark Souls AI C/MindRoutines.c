@@ -79,10 +79,7 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
-        if (!Player.twoHanding){
-            AttackChoice = TwoHandId;
-        }
-        else if (
+        if (
             //not in range
             DistanceMemory[0] > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab

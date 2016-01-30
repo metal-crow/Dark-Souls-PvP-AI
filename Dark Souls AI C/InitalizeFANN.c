@@ -16,117 +16,30 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define PI 3.14159265
-
-volatile bool listening = true;
-volatile bool inTraining = false;
-
-DWORD WINAPI ListentoContinue(void* data) {
-    printf("e to exit, t to train, p to pause\n");
-    while (listening){
-        char input = getchar();
-        if (input=='e'){//exit
-            listening = false;
-        } 
-        else if (input == 't'){//train
-            inTraining = true;
-        } 
-        else if (input == 'p'){//pause
-            inTraining = false;
-        }
-    }
-    return 0;
-}
-
-#define RRAND(min,max) (min + rand() % (max - min))
-#define backstab_animation 225
-
-/*
-void getTrainingDataforBackstab(void)
-{
-    FILE* fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-
-    unsigned int trainingLinesCountDef = 0;
-
-    //memset to ensure we dont have unusual char attributes at starting
-    memset(&Enemy, 0, sizeof(Character));
-    memset(&Player, 0, sizeof(Character));
-
-    HANDLE processHandle = readingSetup();
-
-    CharState** stateBuffer = calloc(4, sizeof(CharState*));
-    //initalize so we dont read null
-    stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
-    stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
-
-    HANDLE thread = CreateThread(NULL, 0, ListentoContinue, NULL, 0, NULL);
-
-    while (listening){
-        //listen to both chars, use during normal play
-        //read the state of the player and enemy every couple seconds, and keep a buffer of their states.
-        //when we find the player is in a specific state(i.e backstab if we're training defense), get the last state of the enemy and use it here
-        //also, ocasionally get an enemy state when player not in state, and use it
-
-        //mathmaticly impossible to not double count AND never miss with random ping times
-        //also cant check if the last buffer enemy was in backstab, because they could immediatly do another baskstab, and we'll miss a new one
-        //this works pretty well, never misses, rairly double counts
-        Sleep(RRAND(2500, 4000));
-
-        readPointers(processHandle);
-
-        //move buffer down
-        if (stateBuffer[3] && stateBuffer[4]){
-            free(stateBuffer[3]);
-            free(stateBuffer[2]);
-        }
-
-        stateBuffer[3] = stateBuffer[1];
-        stateBuffer[2] = stateBuffer[0];
-
-        stateBuffer[1] = ReadPlayerFANN(&Enemy, processHandle);
-        stateBuffer[0] = ReadPlayerFANN(&Player, processHandle);
-
-        //trigger on backstab
-        bool bsActivateState = stateBuffer[1]->animation_id == backstab_animation;
-
-        //check state and train
-        if (
-            (bsActivateState || (rand() < 800))
-            && inTraining
-           )
-        {
-            float distance = distanceFANN(stateBuffer[2], stateBuffer[3]);
-            float angleDelta = angleDeltaFromFrontFANN(stateBuffer[2], stateBuffer[3]);
-            float rotationDelta = rotationDifferenceFromSelfFANN(stateBuffer[2], stateBuffer[3]);//rotation with respect to self rotation
-
-            //write the input floats, then the output float
-            fprintf(fpdef, "%f %f %f %f %f\n", 
-                distance,
-                angleDelta,
-                stateBuffer[3]->velocity,
-                rotationDelta,
-                (bsActivateState ? 1.0 : 0.0)
-                );
-            trainingLinesCountDef++;
-
-            //save
-            printf("backstab:%s distance %f, angleD %f, velocity %f, rotation enemy %f\n", bsActivateState ? "true" : "false", distance, angleDelta, stateBuffer[3]->velocity, rotationDelta);
-        }
-    }
-
-    fprintf(fpdef, "## = %d\n", trainingLinesCountDef);
-
-    fclose(fpdef);
-}
-*/
-
+FILE* fpdef;
 FILE* fpatk;
-unsigned int trainingLinesCountAtk = 0;
+Character* TwoSecStore[20];
+static long lastCopyTime = 0;
 
-//have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
-void TrainingDataforAttack(){
+void GetTrainingData(){
     MainLogicLoop();
 
+    //store copy of player and enemy structs every 100 ms for 2 sec
+    if (clock() - lastCopyTime > 100){
+        free(TwoSecStore[19]);
+        free(TwoSecStore[18]);
+        for (unsigned int i = 19; i > 1; i--){
+            TwoSecStore[i] = TwoSecStore[i - 2];
+        }
+        TwoSecStore[1] = (Character*)malloc(sizeof(Character));
+        memcpy(TwoSecStore[1], &Enemy, sizeof(Character));
+        TwoSecStore[0] = malloc(sizeof(Character));
+        memcpy(TwoSecStore[0], &Player, sizeof(Character));
+
+        lastCopyTime = clock();
+    }
+
+    //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
     if (subroutine_states[AttackTypeIndex] == GhostHitId){
         unsigned int startingHp = Player.hp;
         float startingPoiseAI = Player.poise;
@@ -155,9 +68,9 @@ void TrainingDataforAttack(){
             fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
         }
 
-        //2.5 seconds
+        //2 seconds
         long startTime = clock();
-        while (clock() - startTime < 2500){
+        while (clock() - startTime < 2000){
             MainLogicLoop();
         }
 
@@ -170,17 +83,34 @@ void TrainingDataforAttack(){
         else{
             result = 1;
         }
-        trainingLinesCountAtk++;
 
         //output result
         fprintf(fpatk, "%f\n", result);
 
-        printf("result:%f\n", result);
+        printf("Attack result:%f\n", result);
 
         unsigned int resethp = 2000;
 
         //reset hp so we dont die
         //WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
+    }
+
+    //player in backstab or random positive data
+    if ((Player.animationType_id == 108 || (rand() < 5 && clock() - lastCopyTime > 70)) && TwoSecStore[19] != NULL){
+
+        //output the array of distance values
+        for (int i = 0; i < DistanceMemoryLENGTH; i++){
+            fprintf(fpdef, "%f ", DistanceMemory[i]);
+        }
+
+        fprintf(fpdef, "%f %f %f %f\n",
+            angleDeltaFromFront(TwoSecStore[18], TwoSecStore[19]),
+            TwoSecStore[19]->velocity,
+            rotationDifferenceFromSelf(TwoSecStore[18], TwoSecStore[19]),
+            (Player.animationType_id == 108 ? 1.0 : -1.0)
+            );
+
+        printf("BackStab result:%f\n", Player.animationType_id == 108);
     }
 }
 
@@ -262,5 +192,7 @@ void testData(void){
 
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
+    fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
     fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH);
+    fprintf(fpdef, "X %d 1\n", DistanceMemoryLENGTH+3);
 }

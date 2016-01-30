@@ -24,7 +24,7 @@ The most recent commit to master should always have been tested and verified to 
 ## Neural Networks
 Defense Network Inputs:  
 
-  * Player Distance from Enemy  
+  * Array of distance between AI and enemy over 5 second period 
   * The angle the enemy is off from directly in front of the player  
   * The enemy velocity  
   * The rotation difference between the enemy and the player  
@@ -46,8 +46,10 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * a big settings file for the defines?
-    * Run ai against itself, train neural networks. Against humans as well.
+    * hardcode estus is vulerable
+    * fix attack enural network to actualyl attack.
+    * train backstab neural entwork more
+    * if L hand not shield, switch back
     * Not dodging avelin
     * If taking heavy damage, change to more dodging/careful tactics. only neural network or static? 
     * When poise low, change to dodging until it regens.  only neural network or static? 

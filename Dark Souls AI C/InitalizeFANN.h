@@ -3,6 +3,6 @@
 
 void SetupTraining();
 
-void TrainingDataforAttack();
+void GetTrainingData();
 
 #endif
