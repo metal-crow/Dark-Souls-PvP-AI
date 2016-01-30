@@ -43,8 +43,6 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 2;
         case R1_2H:
             return 2;
-        case R1_2H_Deflect:
-            return 2;//uh, i saw this be a normal attack once
         case R1_2H_Combo1:
             return 2;
         case R1_2H_Combo2:
@@ -122,6 +120,15 @@ unsigned char isVulnerableAnimation(int animation_id){
             return 1;
         //shield break light
         case 160:
+            return 1;
+        //estus chug 1
+        case 7585:
+            return 1;
+        //estus chug 2
+        case 7586:
+            return 1;
+        //estus chug 3
+        case 7587:
             return 1;
         //out of casts
         case 6299:

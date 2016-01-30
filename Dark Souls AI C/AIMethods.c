@@ -531,8 +531,6 @@ static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION *
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
-	//TODO need timing analysis. Opponent can move outside range during windup
-
     //procede with subroutine if we are not in one already
     //special case for asyncronous backstabs.
     if ((!inActiveSubroutine() || attackInfo == InBSPosition) && Player->subanimation >= SubanimationRecover){

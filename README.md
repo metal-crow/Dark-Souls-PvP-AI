@@ -40,6 +40,7 @@ Attack Network Inputs:
   * array of AI's HP over time
   * array of AI's subanimations over time
   * stamina of AI
+  * array of enemy animation types
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
@@ -47,8 +48,7 @@ Attack Network Inputs:
 resolution at 1440x810
 
   * **TOP Priority**
-    * hardcode estus is vulerable
-    * Neural net work. Ensure that it works, and whether i should have static logic.
+    * Neural net work. Ensure that it works.
     * if L hand not shield, switch back
     * Not dodging avelin
     * If behind enemy, dont have to dodge, if their attack wont hit me.

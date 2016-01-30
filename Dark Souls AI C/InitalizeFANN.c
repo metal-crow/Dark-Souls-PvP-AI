@@ -69,6 +69,10 @@ void GetTrainingData(){
         }
         //stamina of AI
         fprintf(fpatk, "%f ", Player.stamina);
+        //output array of enemy animation types
+        for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
+            fprintf(fpatk, "%f ", (float)last_animation_types_enemy[i]);
+        }
 
         //2 seconds
         long startTime = clock();
@@ -97,8 +101,8 @@ void GetTrainingData(){
         //WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
     }
 
-    //player in backstab or random positive data
-    if ((Player.animationType_id == 108 || (rand() < 3 && clock() - lastCopyTime > 90)) && TwoSecStore[19] != NULL){
+    //enemy backstabbing us or random positive data
+    if ((Enemy.animationType_id == Backstab || (rand() < 3 && clock() - lastCopyTime > 90)) && TwoSecStore[19] != NULL){
 
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
@@ -193,6 +197,6 @@ void testData(void){
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
     fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH + 1);
-    fprintf(fpdef, "X %d 1\n", DistanceMemoryLENGTH+3);
+    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH + 1 + last_animation_types_enemy_LENGTH);
+    fprintf(fpdef, "X %d 1\n", DistanceMemoryLENGTH + 3);
 }

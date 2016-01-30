@@ -51,7 +51,6 @@ enum AnimationTypesE{
     Backstep_2H = 100,
     RollingAttack_2H = 103,
     R1_2H = 107,
-    R1_2H_Deflect = 108,
     R1_2H_Combo1 = 109,
     R1_2H_Combo2 = 110,
     Kick_2H = 112,
