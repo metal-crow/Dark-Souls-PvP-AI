@@ -4,6 +4,7 @@
 //used in handler
 #define AutoRedSign 1
 #define TrainNeuralNet 1
+#define FeedNeuralNet 0
 
 //used in helper utils (for camera)
 #define OolicelMap 1

@@ -50,11 +50,14 @@ static bool RereadPointerEndAddress = true;
 static long LastRedSignTime = 0;
 
 int main(void){
+    #if FeedNeuralNet
+        trainFromFile();
+    #endif
     if (SetupandLoad()){
         return EXIT_FAILURE;
     }
     #if TrainNeuralNet
-    SetupTraining();
+        SetupTraining();
     #endif
 
     while (1){

@@ -96,7 +96,7 @@ void GetTrainingData(){
     }
 
     //player in backstab or random positive data
-    if ((Player.animationType_id == 108 || (rand() < 5 && clock() - lastCopyTime > 70)) && TwoSecStore[19] != NULL){
+    if ((Player.animationType_id == 108 || (rand() < 3 && clock() - lastCopyTime > 90)) && TwoSecStore[19] != NULL){
 
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
@@ -115,7 +115,7 @@ void GetTrainingData(){
 }
 
 //use the file to train the network
-int trainFromFile(void){
+void trainFromFile(void){
     //create new, empty network
     struct fann *net = fann_create_shortcut(2, 95, 1);//set up net without hidden layers. N inputs, 1 output
     fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
@@ -146,8 +146,6 @@ int trainFromFile(void){
 
     fann_destroy_train(data);
     fann_destroy(net);
-
-    return 0;
 }
 
 /*

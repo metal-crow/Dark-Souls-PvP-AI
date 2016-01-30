@@ -5,4 +5,6 @@ void SetupTraining();
 
 void GetTrainingData();
 
+void trainFromFile(void);
+
 #endif
