@@ -39,6 +39,7 @@ Attack Network Inputs:
   * base poise damage of enemy's attack
   * array of AI's HP over time
   * array of AI's subanimations over time
+  * stamina of AI
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
@@ -47,12 +48,9 @@ resolution at 1440x810
 
   * **TOP Priority**
     * hardcode estus is vulerable
-    * fix attack enural network to actualyl attack.
-    * train backstab neural entwork more
+    * Neural net work. Ensure that it works, and whether i should have static logic.
     * if L hand not shield, switch back
     * Not dodging avelin
-    * If taking heavy damage, change to more dodging/careful tactics. only neural network or static? 
-    * When poise low, change to dodging until it regens.  only neural network or static? 
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.

@@ -49,7 +49,7 @@ void GetTrainingData(){
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpatk, "%f ", DistanceMemory[i]);
         }
-        //output estimated stamina
+        //output estimated stamina of enemy
         fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
         //output the enemy's current poise
         fprintf(fpatk, "%f ", startingPoiseEnemy);
@@ -67,6 +67,8 @@ void GetTrainingData(){
         for (int i = 0; i < last_subroutine_states_self_LENGTH; i++){
             fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
         }
+        //stamina of AI
+        fprintf(fpatk, "%f ", Player.stamina);
 
         //2 seconds
         long startTime = clock();
@@ -191,6 +193,6 @@ void testData(void){
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
     fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH);
+    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH + 1);
     fprintf(fpdef, "X %d 1\n", DistanceMemoryLENGTH+3);
 }

@@ -9,217 +9,77 @@ because of this, have to specify if we need to look at subanimation
 0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created, 4 is same as 2 but override behind enemy safety*/
 unsigned char isAttackAnimation(unsigned short animationType_id){
     switch (animationType_id){
-        //nothing
-        //case 0:
-        //    return 0;
-        //could not use
-        //case 21:
-        //    return 0;
-        //1h rolling attack
-        case 41:
+        case RollingAttack_1H:
             return 2;
-        //sheild poke
-        case 45:
+        case ShieldPoke:
             return 2;
-        //1h r1
-        case 46:
+        case R1_1H:
             return 2;
-        //1h r1 swing 2
-        case 48:
+        case R1_1H_Combo1:
             return 2;
-        //1h r1 swing 3
-        case 49:
+        case R1_1H_Combo2:
             return 2;
-        //1h kick or kick special attack
-        case 52:
+        case Kick_1H:
             return 2;
-        //jumping 1 hand
-        case 53:
+        case Jumping_1H:
             return 2;
-        //left hand attack
-        case 55:
+        case LeftHandAttack:
             return 2;
-        //backstep attack 1h
-        case 59:
+        case Backstep_Attack_1H:
             return 2;
-        //backstep attack 2h
-        case 60:
+        case Backstep_Attack_2H:
             return 2;
-        //crossbow/bow windup 2h
-        case 65:
-            return 0;
-        //bow hold
-        case 66:
-            return 0;
-        //crossbow/bow attack 2h
-        case 67:
+        case Bow_Release_2H:
             return 3;
-        //crossbow recover 2h
-        //case 68:
-        //    return 0;
-        //crossbow windup 1h
-        case 69:
-            return 0;
-        //crossbow attack 1h
-        case 70:
+        case Crossbow_Release_1H:
             return 3;
-        //crossbow recover 1h
-        //case 71:
-        //    return 0;
-        //shield raise while walking
-        //case 75:
-        //shield raise
-        //case 76:
-        //    return 0;
-        //shield up
-        //case 77:
-        //    return 0;
-        //shied lower
-        //case 78:
-        //    return 0;
-        //lower shield while walking
-        //case 79:
-        //start walking w shield
-        //case 80:
-        //walking w shield
-        //case 81:
-        //parry
-        //case 86:
-        //    return 0;
-        //1h r1 into r2 combo
-        case 88:
+        case R1_1H_into_R2:
             return 2;
-        //1h r2
-        case 89:
+        case R2_1H:
             return 2;
-        //1h r2 combo
-        case 90:
+        case R2_1H_Combo1:
             return 2;
-        //rolling attack 2h
-        case 103:
+        case RollingAttack_2H:
             return 2;
-        //2h r1
-        case 107:
+        case R1_2H:
             return 2;
-        //2h r1 bounce back
-        case 108:
+        case R1_2H_Deflect:
             return 2;//uh, i saw this be a normal attack once
-        //2h r1 combo 1
-        case 109:
+        case R1_2H_Combo1:
             return 2;
-        //2h r1 combo 2
-        case 110:
+        case R1_2H_Combo2:
             return 2;
-        //2h kick replacement
-        case 112:
+        case Kick_2H:
             return 2;
-        //jumping 2 hand
-        case 113:
+        case Jumping_2H:
             return 2;
-        //2h r1 into r2 combo
-        case 114:
+        case R1_2H_into_R2:
             return 2;
-        //2h r2
-        case 115:
+        case R2_2H:
             return 2;
-        //2h r2 combo
-        case 116:
+        case R2_2H_Combo1:
             return 2;
-        //fire surge windup
-        case 135:
-            return 0;
-        //fire surge cast
-        //since this has no windup after the first cast, treat as instant
-        case 136:
-            return 3;
-        //fire surge recover
-        case 137:
-            return 0;
-        //miricle projectile windup
-        case 143:
-            return 0;
-        //miricle projectile cast
-        case 144:
+        case FireSurge_Cast:
+            return 3;//since this has no windup after the first cast, treat as instant
+        case Miricle_Projectile_Cast:
             return 2;
-        //miricle AOE windup (treat this as real attack, because actual is too fast)
-        case 145:
+        case Miricle_AOE_Windup:
             return 4;
-        //miricle AOE cast
-        case 146:
-            return 0;
-        //miricle ground attack windup
-        case 155:
-            return 0;
-        //miricle ground attack cast
-        case 156:
+        case Miricle_Ground_Cast:
             return 3;
-        //magic cast windup
-        //TODO includes all dark magic casts and normal magic casts, + homing soul masses 
-        case 157:
-            return 0;
-        //magic cast fire
-        case 158:
+        case Magic_Cast_Cast:
             return 3;
-        //homing dark magic windup 
-        case 159:
-            return 0;
-        //homing dark magic ready
-        //TODO this is not fire!
-        case 160:
-            return 3;
-        //fire whip windup
-        case 161:
-            return 0;
-        //fire whip cast
-        case 162:
+        case FireWhip_Cast:
             return 2;
-        //firestorm windup
-        case 163:
-            return 0;//is a windup, but want to attack during it
-        //firstorm
-        case 164:
+        case FireStorm_Cast:
             return 3;
-        //combustion windup (treat this as real attack, because actual is too fast)
-        case 167:
+        case Combustion_Windup:
             return 2;
-        //combustion attack
-        case 168:
-            return 0;
-        //pyro ball windup
-        case 173:
+        case FireBall_Windup:
             return 1;
-        //pyro ball throw
-        case 174:
+        case FireBall_Cast:
             return 3;
-        //1 hand weapon
-        //case 185:
-        //    return 0;
-        //1 hand weapon
-        //case 188:
-        //    return 0;
-        //2 hand weapon
-        //case 199:
-        //    return 0;
-        //2 hand weapon
-        //case 203:
-        //    return 0;
-        //weapon switch r
-        //case 209:
-        //    return 0;
-        //weapon switch r
-        //case 213:
-        //    return 0;
-        //weapon switch l
-        //case 217:
-        //    return 0;
-        //weapon switch l
-        //case 221:
-        //    return 0;
-        //backstab
-        //case 225:
-        //    return 0;
         default:
-            guiPrint(LocationDetection",3:unknown animation type %d", animationType_id);
             return 0;
     }
 }
@@ -227,35 +87,25 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
 
 unsigned char isDodgeAnimation(unsigned short animationType_id){
     switch (animationType_id){
-        //1 hand roll
-        case 32:
+        case Roll_1H:
             return 1;
-        //1 hand backwards roll
-        case 33:
+        case RollBackwards_1H:
             return 1;
-        //1h lockon right roll
-        case 34:
+        case RollRight_1H:
             return 1;
-        //1h lockon left roll
-        case 35:
+        case RollLeft_1H:
             return 1;
-        //backstep 1h
-        case 38:
+        case Backstep_1H:
             return 1;
-        //2 hand roll
-        case 94:
+        case Roll_2H:
             return 1;
-        //2 hand backwards roll
-        case 95:
+        case RollBackwards_2H:
             return 1;
-        //2h lockon right roll
-        case 96:
+        case RollRight_2H:
             return 1;
-        //2h lockon left roll
-        case 97:
+        case RollLeft_2H:
             return 1;
-        //backstep 2h
-        case 100:
+        case Backstep_2H:
             return 1;
         default:
             return 0;

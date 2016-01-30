@@ -281,7 +281,7 @@ static void PerfectBlock(Character * Player, Character * Phantom, JOYSTICK_POSIT
     }
 }
 
-static void Parry(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+static void ParrySubroutine(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:Parry");
     long curTime = clock();
 

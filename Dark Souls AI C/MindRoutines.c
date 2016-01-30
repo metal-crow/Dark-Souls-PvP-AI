@@ -88,12 +88,13 @@ DWORD WINAPI AttackMindProcess(void* data){
             AttackChoice = MoveUpId;
         }
         if (
-            (Player.stamina > 90) &&  //have enough stamina
+            (Player.stamina > 90) &&  //TODO NEural net handles
             (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
             DistanceMemory[0] <= Player.weaponRange &&  //in range
-            //(DistanceMemory[0] > 1) &&  //dont attack when right in enemy face to try and avoid getting parried
-            (*out > 0) //neural network says so
-            //(rand()<RAND_MAX / 5) //random limitor
+            (
+                (*out > 0) || 
+                Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2 || Enemy.animationType_id == EstusSwig_part3 || Enemy.animationType_id == UseItem
+            ) //neural network says so, or enemy is super weak
            ){
             AttackChoice = GhostHitId;
         }
