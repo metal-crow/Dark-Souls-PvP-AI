@@ -314,7 +314,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
                 //if we dont have enough time to roll, perfect block
-                else if (Phantom->dodgeTimeRemaining < 0.15){
+                else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0){
                     subroutine_states[DodgeTypeIndex] = PerfectBlockId;
                 }
                 //otherwise, normal roll
