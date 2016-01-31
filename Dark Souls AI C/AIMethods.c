@@ -66,7 +66,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //start to turn, and wait until the turing animation starts in game
     if (curTime < startTimeDefense + 350){
-        double rollOffset = 40.0;//To avoid taking too long in turning, only turn 40 degrees max
+        double rollOffset = 100.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
             rollOffset = 0;
