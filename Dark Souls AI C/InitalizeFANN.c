@@ -71,7 +71,7 @@ void GetTrainingData(){
             fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
         }
         //stamina of AI
-        fprintf(fpatk, "%f ", Player.stamina);
+        fprintf(fpatk, "%f ", (float)Player.stamina);
         //output array of enemy animation types
         for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
             fprintf(fpatk, "%f ", (float)last_animation_types_enemy[i]);
