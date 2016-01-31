@@ -79,6 +79,10 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
+        //l hand bare handed, not holding shield
+        if (Player.l_weapon_id == 900000){
+            DefenseChoice = ToggleEscapeId;
+        }
         if (
             //not in range
             DistanceMemory[0] > Player.weaponRange ||
@@ -95,6 +99,7 @@ DWORD WINAPI AttackMindProcess(void* data){
                 (Enemy.subanimation >= LockInSubanimation && Enemy.subanimation < SubanimationNeutral)  //enemy in vulnerable state, and can't immediatly transition
             ) ||
             (*out > 0)//neural network says so
+            || (Enemy.subanimation >= LockInSubanimation && (rand()<RAND_MAX / 5))
            )
         {
             AttackChoice = GhostHitId;

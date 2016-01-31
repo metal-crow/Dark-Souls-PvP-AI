@@ -437,10 +437,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         guiPrint(LocationState",1:r1");
         iReport->lButtons += r1;
     }
-    //point 50 degreees off angle from directly towards enemy
+    //point X degreees off angle from directly towards enemy
     else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
-        angle = 50.0 + angle;
+        angle = 20.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;

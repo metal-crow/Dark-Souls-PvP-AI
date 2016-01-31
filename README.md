@@ -49,9 +49,8 @@ resolution at 1440x810
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.
-    * if L hand not shield, switch back
     * why is greatsword not being dodged
-    * why is perfect block sometimes being triggered
+    * need to dodge homing soul masses
     * Not dodging avelin
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
