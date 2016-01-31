@@ -16,10 +16,13 @@
 #include <stdbool.h>
 #include <time.h>
 
+#define RRAND(min,max) (min + rand() % (max - min))
+
 FILE* fpdef;
 FILE* fpatk;
 Character* TwoSecStore[20];
 static long lastCopyTime = 0;
+static long lastBsCheckTime = 0;
 
 void GetTrainingData(){
     MainLogicLoop();
@@ -102,8 +105,9 @@ void GetTrainingData(){
     }
 
     //enemy backstabbing us or random positive data
-    if ((Enemy.animationType_id == Backstab || (rand() < 3 && clock() - lastCopyTime > 90)) && TwoSecStore[19] != NULL){
+    bool backstabCheckTime = clock() - lastBsCheckTime > RRAND(2500, 4000);
 
+    if ((Enemy.animationType_id == Backstab || (rand() < 800 && backstabCheckTime)) && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
@@ -113,10 +117,14 @@ void GetTrainingData(){
             angleDeltaFromFront(TwoSecStore[18], TwoSecStore[19]),
             TwoSecStore[19]->velocity,
             rotationDifferenceFromSelf(TwoSecStore[18], TwoSecStore[19]),
-            (Player.animationType_id == 108 ? 1.0 : -1.0)
+            (Enemy.animationType_id == Backstab ? 1.0 : -1.0)
             );
 
-        printf("BackStab result:%f\n", Player.animationType_id == 108);
+        printf("BackStab result:%f\n", Enemy.animationType_id == Backstab);
+    }
+
+    if (backstabCheckTime){
+        lastBsCheckTime = clock();
     }
 }
 

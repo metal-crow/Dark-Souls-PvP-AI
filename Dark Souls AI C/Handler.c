@@ -115,7 +115,11 @@ int main(void){
             }
         }
     #else
-        MainLogicLoop();
+        #if TrainNeuralNet
+            GetTrainingData();
+        #else
+            MainLogicLoop();
+        #endif
     #endif
     }
 

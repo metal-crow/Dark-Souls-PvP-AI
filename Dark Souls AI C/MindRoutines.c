@@ -92,7 +92,7 @@ DWORD WINAPI AttackMindProcess(void* data){
             //static checks for attack
             (
                 (Player.stamina > 90) && //safety buffer for stamina
-                (Enemy.subanimation >= LockInSubanimation)  //enemy in vulnerable state
+                (Enemy.subanimation >= LockInSubanimation && Enemy.subanimation < SubanimationNeutral)  //enemy in vulnerable state, and can't immediatly transition
             ) ||
             (*out > 0)//neural network says so
            )

@@ -309,8 +309,14 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 if (Player->subanimation == PoiseBrokenSubanimation){
                     subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
                 }
-                //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
+                //if the reverse roll is close enough to put us behind the enemy
+                //we have enough windup time to reverse roll
+                //and it doesnt have a stupid long lasting hurtbox
+                else if (
+                    distance(Player, Phantom) <= 3 
+                    && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining
+                    && Phantom->animationType_id != Combustion_Windup
+                ){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
                 //if we dont have enough time to roll, perfect block

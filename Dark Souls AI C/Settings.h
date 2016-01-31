@@ -2,12 +2,12 @@
 #define Settings_H
 
 //used in handler
-#define AutoRedSign 1
+#define AutoRedSign 0
 #define TrainNeuralNet 1
 #define FeedNeuralNet 0
 
 //used in helper utils (for camera)
-#define OolicelMap 1
+#define OolicelMap 0
 
 //used in gui
 #define ENABLEGUI 1
