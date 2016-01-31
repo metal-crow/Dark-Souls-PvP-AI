@@ -58,14 +58,24 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 
 /* ------------- DODGE Actions ------------- */
 
-//also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
     guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
 
-    //start to turn, and wait until the turing animation starts in game
-    if (curTime < startTimeDefense + 350){
+    //roll
+    if (curTime < startTimeDefense + 100){
+        guiPrint(LocationState",1:circle");
+        iReport->lButtons = circle;
+        //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
+        //this will cause this roll to occur in lockon state, but subroutine will exit without lockon. Nothing major
+        if (Player->locked_on){
+            iReport->lButtons += r3;
+        }
+    }
+
+    //turning
+    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 300){
         double rollOffset = 100.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
@@ -87,16 +97,6 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         }
 
         guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
-    }
-    //once we've starting turing in game, queue the roll. It will start as soon as the turning ends in game
-    if (curTime < startTimeDefense + 200 && curTime > startTimeDefense + 125){
-        guiPrint(LocationState",1:circle");
-        iReport->lButtons = circle;
-        //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
-        //this will cause this roll to occur in lockon state, but subroutine will exit without lockon. Nothing major
-        if (Player->locked_on){
-            iReport->lButtons += r3;
-        }
     }
 
     //ensure we actually enter dodge roll in game so another subanimation cant override it

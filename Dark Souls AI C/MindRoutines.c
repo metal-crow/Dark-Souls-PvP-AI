@@ -94,13 +94,13 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (
             DistanceMemory[0] <= Player.weaponRange && //in range
             //static checks for attack
-            (
+            ((
                 (Player.stamina > 90) && //safety buffer for stamina
                 (Enemy.subanimation >= LockInSubanimation && Enemy.subanimation < SubanimationNeutral)  //enemy in vulnerable state, and can't immediatly transition
             ) ||
             (*out > 0)//neural network says so
             || (Enemy.subanimation >= LockInSubanimation && (rand()<RAND_MAX / 5))
-           )
+           ))
         {
             AttackChoice = GhostHitId;
         }

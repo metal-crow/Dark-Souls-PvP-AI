@@ -86,20 +86,21 @@ int main(void){
             if (Player.hp <= 0 || Enemy.hp <= 0){
                 RereadPointerEndAddress = true;
             }
-
-            //enemy player is fairly close
-            if (distance(&Player, &Enemy) < 50){
-            #if TrainNeuralNet
-                GetTrainingData();
-            #else
-                MainLogicLoop();
-            #endif
-            }
-            //if enemy player far away, black crystal out
-            else if (!RereadPointerEndAddress){
-                guiPrint(LocationHandler",2:BlackCrystalOut");
-                RereadPointerEndAddress = true;
-                BlackCrystalOut();
+            else{
+                //enemy player is fairly close
+                if (distance(&Player, &Enemy) < 50){
+                #if TrainNeuralNet
+                    GetTrainingData();
+                #else
+                    MainLogicLoop();
+                #endif
+                }
+                //if enemy player far away, black crystal out
+                else if (!RereadPointerEndAddress){
+                    guiPrint(LocationHandler",2:BlackCrystalOut");
+                    RereadPointerEndAddress = true;
+                    BlackCrystalOut();
+                }
             }
         }
         //if AI in host world, and red sign not down, put down red sign

@@ -43,7 +43,7 @@ void GetTrainingData(){
     }
 
     //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
-    if (subroutine_states[AttackTypeIndex] == GhostHitId){
+    if (isAttackAnimation(Player.animationType_id) && DistanceMemory[49] != 0){
         unsigned int startingHp = Player.hp;
         float startingPoiseAI = Player.poise;
         float startingPoiseEnemy = Enemy.poise;
@@ -107,7 +107,7 @@ void GetTrainingData(){
     //enemy backstabbing us or random positive data
     bool backstabCheckTime = clock() - lastBsCheckTime > RRAND(2500, 4000);
 
-    if ((Enemy.animationType_id == Backstab || (rand() < 800 && backstabCheckTime)) && TwoSecStore[19] != NULL){
+    if ((Enemy.animationType_id == Backstab || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
@@ -120,7 +120,7 @@ void GetTrainingData(){
             (Enemy.animationType_id == Backstab ? 1.0 : -1.0)
             );
 
-        printf("BackStab result:%f\n", Enemy.animationType_id == Backstab);
+        printf("BackStab result:%d\n", Enemy.animationType_id == Backstab);
     }
 
     if (backstabCheckTime){

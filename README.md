@@ -47,6 +47,9 @@ Attack Network Inputs:
 ## TODO
 resolution at 1440x810
 
+bug w defense neural net training detecting parries/ not detecting backstabs
+bug with attack nerual net training enemy subroutine data
+
   * **TOP Priority**
     * Neural net work. Ensure that it works.
     * why is greatsword not being dodged
