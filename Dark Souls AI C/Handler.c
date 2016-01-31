@@ -96,11 +96,11 @@ int main(void){
                 #endif
                 }
                 //if enemy player far away, black crystal out
-                else if (!RereadPointerEndAddress){
+                /*else if (!RereadPointerEndAddress){
                     guiPrint(LocationHandler",2:BlackCrystalOut");
                     RereadPointerEndAddress = true;
                     BlackCrystalOut();
-                }
+                }*/
             }
         }
         //if AI in host world, and red sign not down, put down red sign

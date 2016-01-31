@@ -528,6 +528,21 @@ static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION *
     }
 }
 
+static void SwitchWeapon(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Switch Weapon");
+    long curTime = clock();
+
+    if (curTime < startTimeAttack + 30){
+        iReport->bHats = dleft;
+    }
+
+    if (curTime > startTimeAttack + 500){
+        guiPrint(LocationState",0:end Switch Weapon");
+        subroutine_states[AttackTypeIndex] = 0;
+        subroutine_states[AttackStateIndex] = 0;
+        AppendLastSubroutineSelf(SwitchWeaponId);
+    }
+}
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
@@ -578,6 +593,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
             //two hand
             case TwoHandId:
                 twoHand(Player, Phantom, iReport);
+                break;
+            case SwitchWeaponId:
+                SwitchWeapon(Player, Phantom, iReport);
                 break;
             default:
                 guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);

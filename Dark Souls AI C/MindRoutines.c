@@ -81,7 +81,7 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         //l hand bare handed, not holding shield
         if (Player.l_weapon_id == 900000){
-            DefenseChoice = ToggleEscapeId;
+            AttackChoice = SwitchWeaponId;
         }
         if (
             //not in range
