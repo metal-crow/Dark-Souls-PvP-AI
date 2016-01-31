@@ -49,6 +49,7 @@ resolution at 1440x810
 
 bug w defense neural net training detecting parries/ not detecting backstabs
 bug with attack nerual net training enemy subroutine data
+toggle escape to siwtch shield is too short, it repeats a bunch
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.

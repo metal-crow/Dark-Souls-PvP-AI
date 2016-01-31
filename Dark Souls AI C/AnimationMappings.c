@@ -58,7 +58,7 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
         case R2_2H_Combo1:
             return 2;
         case FireSurge_Cast:
-            return 3;//since this has no windup after the first cast, treat as instant
+            return 2;
         case Miricle_Projectile_Cast:
             return 2;
         case Miricle_AOE_Windup:
