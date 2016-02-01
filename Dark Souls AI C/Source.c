@@ -14,6 +14,7 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
 HANDLE processHandle;
+ullong memorybase;
 
 int SetupandLoad(){
     //memset to ensure we dont have unusual char attributes at starting
