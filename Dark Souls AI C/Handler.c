@@ -83,8 +83,6 @@ int main(void){
     if (SetupandLoad()){
         return EXIT_FAILURE;
     }
-    visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
-    selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x2658, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
     #if TrainNeuralNet
         SetupTraining();
     #endif
@@ -97,6 +95,8 @@ int main(void){
 
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
+            visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
+            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x2658, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
             ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             ResetVJoyController();//just in case
