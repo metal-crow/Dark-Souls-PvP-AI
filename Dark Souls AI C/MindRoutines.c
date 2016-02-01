@@ -104,6 +104,9 @@ DWORD WINAPI AttackMindProcess(void* data){
         {
             AttackChoice = GhostHitId;
         }
+        if (Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1){
+            AttackChoice = HealId;
+        }
 
         //prevent rerun
         attack_mind_input->runNetwork = false;

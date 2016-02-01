@@ -544,6 +544,23 @@ static void SwitchWeapon(Character * Player, Character * Phantom, JOYSTICK_POSIT
     }
 }
 
+static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Heal");
+    long curTime = clock();
+
+    if (curTime < startTimeAttack + 30){
+        iReport->lButtons = square;
+    }
+
+    //1830 ms to use db
+    if (curTime > startTimeAttack + 1830){
+        guiPrint(LocationState",0:end Heal");
+        subroutine_states[AttackTypeIndex] = 0;
+        subroutine_states[AttackStateIndex] = 0;
+        AppendLastSubroutineSelf(HealId);
+    }
+}
+
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
     //procede with subroutine if we are not in one already
@@ -596,6 +613,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             case SwitchWeaponId:
                 SwitchWeapon(Player, Phantom, iReport);
+                break;
+            case HealId:
+                Heal(Player, Phantom, iReport);
                 break;
             default:
                 guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);

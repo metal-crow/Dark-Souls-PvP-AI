@@ -13,6 +13,7 @@
 #include "fann.h"
 
 extern HANDLE processHandle;
+extern ullong memorybase;
 
 #define iInterface 1// Default target vJoy device
 extern JOYSTICK_POSITION iReport;

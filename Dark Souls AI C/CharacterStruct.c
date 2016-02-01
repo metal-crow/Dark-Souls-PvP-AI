@@ -241,7 +241,6 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
     Enemy.twoHanding_address = 0;
-    Enemy.visualStatus_address = 0;
     Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
     Enemy.poise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_Poise_offsets_length, Enemy_Poise_offsets);
 
@@ -262,7 +261,6 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
-    Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
     Player.staminaRecoveryRate_address = 0;
     Player.poise_address = FindPointerAddr(processHandle, player_base_add, Player_Poise_offsets_length, Player_Poise_offsets);
 }

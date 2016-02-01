@@ -6,7 +6,8 @@
 
 enum AnimationTypesE{
     Nothing = 0,
-    UseItem = 15,
+    EatItem = 1,
+    CrushUseItem = 15,
     EstusSwig_part1 = 16,
     EstusSwig_part2 = 18,
     EstusSwig_part3 = 19,

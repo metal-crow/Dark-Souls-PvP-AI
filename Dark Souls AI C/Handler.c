@@ -3,6 +3,19 @@
 #include "InitalizeFANN.h"
 #include "Settings.h"
 
+//visual state. used for auto red signing
+static const int Player_visual_offsets[] = { 0x28, 0x0, 0x30, 0xC, 0x70 };
+static const int Player_visual_offsets_length = 5;
+static ullong visualStatus_address;
+static int visualStatus;
+//current selected item
+static const int Player_selectedItem_offsets[] = { 0x39c, 0x348, 0x5b4, 0x270, 0x2d4 };
+static const int Player_selectedItem_offsets_length = 5;
+static ullong selectedItem_address;
+static int selectedItem;
+
+#define RedSoapstone 101
+
 void BlackCrystalOut(){
     ResetVJoyController();
     //switch to black crystal
@@ -38,10 +51,24 @@ static bool RedSignDown = false;
 
 void PutDownRedSign(){
     ResetVJoyController();
+    if (selectedItem != RedSoapstone){
+        iReport.bHats = ddown;
+        UpdateVJD(iInterface, (PVOID)&iReport);
+        Sleep(100);
+        iReport.bHats = dcenter;
+        UpdateVJD(iInterface, (PVOID)&iReport);
+        Sleep(1000); //gotta wait for menu to change
+    }
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.lButtons = 0x0;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    //change back selected item for when summoned
+    iReport.bHats = ddown;
+    UpdateVJD(iInterface, (PVOID)&iReport);
+    Sleep(100);
+    iReport.bHats = dcenter;
     UpdateVJD(iInterface, (PVOID)&iReport);
     RedSignDown = true;
 }
@@ -56,6 +83,8 @@ int main(void){
     if (SetupandLoad()){
         return EXIT_FAILURE;
     }
+    visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
+    selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x2658, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
     #if TrainNeuralNet
         SetupTraining();
     #endif
@@ -63,7 +92,7 @@ int main(void){
     while (1){
     #if AutoRedSign
         guiPrint(LocationHandler",0:RereadPointerEndAddress %d", RereadPointerEndAddress);
-        guiPrint(LocationHandler",1:Enemy.loc_x %f\nvisualStatus %d", Enemy.loc_x, Player.visualStatus);
+        guiPrint(LocationHandler",1:Enemy.loc_x %f\nvisualStatus %d", Enemy.loc_x, visualStatus);
         guiPrint(LocationHandler",2:");
 
         if (RereadPointerEndAddress){
@@ -73,10 +102,11 @@ int main(void){
             ResetVJoyController();//just in case
             UpdateVJD(iInterface, (PVOID)&iReport);
         }
-        ReadProcessMemory(processHandle, (LPCVOID)(Player.visualStatus_address), &(Player.visualStatus), 4, 0);//this memory read isnt directly AI related
+        ReadProcessMemory(processHandle, (LPCVOID)(visualStatus_address), &(visualStatus), 4, 0);//this memory read isnt directly AI related
+        ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
 
         //if AI is a red phantom
-        if (Player.visualStatus == 2){
+        if (visualStatus == 2){
             RedSignDown = false;
             //check that we got the enemy's struct address by ensuring their x loc is pos.
             if (Enemy.loc_x > 0){
@@ -104,7 +134,7 @@ int main(void){
             }
         }
         //if AI in host world, and red sign not down, put down red sign
-        else if (Player.visualStatus == 0){
+        else if (visualStatus == 0){
             //ocasionally reput down red sign(failed to join session error catcher)
             if (!RedSignDown){
                 guiPrint(LocationHandler",2:PutDownRedSign");

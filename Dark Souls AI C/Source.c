@@ -30,7 +30,7 @@ int SetupandLoad(){
     //open the handle
     processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
     //get the base address of the process and append all other addresses onto it
-    ullong memorybase = GetModuleBase(processId, processName);
+    memorybase = GetModuleBase(processId, processName);
     Enemy_base_add += memorybase;
     player_base_add += memorybase;
 

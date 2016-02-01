@@ -33,6 +33,7 @@ extern long startTimeDefense;
 #define BackstabId 3
 #define TwoHandId 4
 #define SwitchWeaponId 5
+#define HealId 6
 
 //find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
 bool inActiveSubroutine();
