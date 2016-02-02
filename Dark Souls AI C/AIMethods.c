@@ -74,7 +74,8 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     }
 
     //roll
-    if (curTime < startTimeDefense + 100){
+    //AUUUGH FUCK IT JUST HAMMER THE BUTTON
+    if (curTime < startTimeDefense + 50 || (curTime > startTimeDefense + 100 && curTime < startTimeDefense + 150) || (curTime > startTimeDefense + 200 && curTime < startTimeDefense + 250)){
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
         //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
@@ -85,7 +86,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     }
 
     //turning
-    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 400){
+    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 300){
         double rollOffset = 100.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
@@ -441,7 +442,7 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
     //point X degreees off angle from directly towards enemy
     else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
-        angle = 20.0 + angle;
+        angle = -20.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;

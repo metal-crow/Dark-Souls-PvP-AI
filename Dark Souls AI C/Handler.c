@@ -9,7 +9,7 @@ static const int Player_visual_offsets_length = 5;
 static ullong visualStatus_address;
 static int visualStatus;
 //current selected item
-static const int Player_selectedItem_offsets[] = { 0x76c, 0x5a8, 0x1b0, 0x374, 0x2d4 };
+static const int Player_selectedItem_offsets[] = { 0x170, 0x70, 0x34, 0x10, 0x2D4 };
 static const int Player_selectedItem_offsets_length = 5;
 static ullong selectedItem_address;
 static int selectedItem;
@@ -96,7 +96,7 @@ int main(void){
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
             visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
-            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x2658, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
+            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x161298, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
             ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             ResetVJoyController();//just in case

@@ -171,7 +171,7 @@ float dodgeTimings(int animation_id){
     case 100: return 0.5;//catch all for all kicks
     case 6407: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
     case 6507: return 0.65;//rhand version of above
-    case 6222: return 0.63;//this animation actually never goes past 0.33, but lie to account for .3 of next animation
+    case 6222: return 0.7;//this animation actually never goes past 0.33, but lie to account for .3 of next animation
     case 6517: return 1.1;
     case 6522: return 0.3;
     case 203000: return 0.25;
@@ -398,6 +398,7 @@ float dodgeTimings(int animation_id){
     case 503301: return 0.7555;
     case 503310: return 0.55325;
     case 503500: return 0.622083;
+    case 503600: return 0.9;
     case 503900: return 0.4865;
     case 504000: return 0.720833;
     case 504001: return 0.75525;
