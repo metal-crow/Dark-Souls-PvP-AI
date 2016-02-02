@@ -165,7 +165,6 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     }
     else if (attackAnimationInfo == 3){
         c->subanimation = AttackSubanimationActiveDuringHurtbox;
-        c->dodgeTimeRemaining = 0.1;//ehhh
     }
     else{
         //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1

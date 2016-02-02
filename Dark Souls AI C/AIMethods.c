@@ -63,6 +63,16 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
 
+    //ensure we actually enter dodge roll in game so another subanimation cant override it
+    //or we get poise broken out
+    if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
+        guiPrint(LocationState",0:end dodge roll");
+        subroutine_states[DodgeTypeIndex] = 0;
+        subroutine_states[DodgeStateIndex] = 0;
+        AppendLastSubroutineSelf(StandardRollId);
+        return;
+    }
+
     //roll
     if (curTime < startTimeDefense + 100){
         guiPrint(LocationState",1:circle");
@@ -75,7 +85,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     }
 
     //turning
-    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 300){
+    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 400){
         double rollOffset = 100.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
@@ -97,15 +107,6 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         }
 
         guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
-    }
-
-    //ensure we actually enter dodge roll in game so another subanimation cant override it
-    //or we get poise broken out
-    if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
-        guiPrint(LocationState",0:end dodge roll");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
-        AppendLastSubroutineSelf(StandardRollId);
     }
 }
 

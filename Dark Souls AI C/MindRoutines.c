@@ -79,10 +79,6 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
-        //l hand bare handed, not holding shield
-        if (Player.l_weapon_id == 900000){
-            AttackChoice = SwitchWeaponId;
-        }
         if (
             //not in range
             DistanceMemory[0] > Player.weaponRange ||
@@ -90,6 +86,10 @@ DWORD WINAPI AttackMindProcess(void* data){
             BackstabDetection(&Player, &Enemy, DistanceMemory[0]) == 1)
         {
             AttackChoice = MoveUpId;
+        }
+        //l hand bare handed, not holding shield
+        if (Player.l_weapon_id == 900000){
+            AttackChoice = SwitchWeaponId;
         }
         if (
             DistanceMemory[0] <= Player.weaponRange && //in range
