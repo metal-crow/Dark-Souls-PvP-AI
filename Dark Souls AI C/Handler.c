@@ -145,6 +145,9 @@ int main(void){
                 RedSignDown = false;
             }
         }
+        else{
+            RereadPointerEndAddress = true;
+        }
     #else
         #if TrainNeuralNet
             GetTrainingData();

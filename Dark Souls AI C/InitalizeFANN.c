@@ -130,36 +130,54 @@ void GetTrainingData(){
 
 //use the file to train the network
 void trainFromFile(void){
-    //create new, empty network
-    struct fann *net = fann_create_shortcut(2, 95, 1);//set up net without hidden layers. N inputs, 1 output
-    fann_set_training_algorithm(net, FANN_TRAIN_RPROP);
-    fann_set_activation_function_hidden(net, FANN_SIGMOID_SYMMETRIC);
-    fann_set_activation_function_output(net, FANN_LINEAR);
-    fann_set_train_error_function(net, FANN_ERRORFUNC_LINEAR);
-    fann_set_bit_fail_limit(net, (fann_type)0.9);
-    fann_set_train_stop_function(net, FANN_STOPFUNC_BIT);
-    fann_print_parameters(net);
+    //create new, empty networks
+    struct fann *attacknet = fann_create_shortcut(2, 195, 1);//set up net without hidden layers. N inputs, 1 output
+    fann_set_training_algorithm(attacknet, FANN_TRAIN_RPROP);
+    fann_set_activation_function_hidden(attacknet, FANN_SIGMOID_SYMMETRIC);
+    fann_set_activation_function_output(attacknet, FANN_LINEAR);
+    fann_set_train_error_function(attacknet, FANN_ERRORFUNC_LINEAR);
+    fann_set_bit_fail_limit(attacknet, (fann_type)0.9);
+    fann_set_train_stop_function(attacknet, FANN_STOPFUNC_BIT);
+    fann_print_parameters(attacknet);
+
+    struct fann *backstabnet = fann_create_shortcut(2, 53, 1);//set up net without hidden layers. N inputs, 1 output
+    fann_set_training_algorithm(backstabnet, FANN_TRAIN_RPROP);
+    fann_set_activation_function_hidden(backstabnet, FANN_SIGMOID_SYMMETRIC);
+    fann_set_activation_function_output(backstabnet, FANN_LINEAR);
+    fann_set_train_error_function(backstabnet, FANN_ERRORFUNC_LINEAR);
+    fann_set_bit_fail_limit(backstabnet, (fann_type)0.9);
+    fann_set_train_stop_function(backstabnet, FANN_STOPFUNC_BIT);
+    fann_print_parameters(backstabnet);
 
     //load training data
-    unsigned int max_neurons = 100;
+    unsigned int max_neurons_attack = 200;
+    unsigned int max_neurons_backstab = 70;
     const float desired_error = (const float)0.05;
 
-    struct fann_train_data *data = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train");
+    struct fann_train_data *attackdata = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train");
+    struct fann_train_data *backstabdata = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train");
 
-    fann_scale_train_data(data, -1, 1);
+    fann_scale_train_data(attackdata, -1, 1);
+    fann_scale_train_data(backstabdata, -1, 1);
 
     //train network
-    fann_cascadetrain_on_data(net, data, max_neurons, 0, desired_error);
+    fann_cascadetrain_on_data(attacknet, attackdata, max_neurons_attack, 0, desired_error);
+    fann_cascadetrain_on_data(backstabnet, backstabdata, max_neurons_backstab, 0, desired_error);
 
     //TODO test trained network on test data
 
     //save and clean up
-    fann_print_connections(net);
+    fann_print_connections(attacknet);
+    fann_print_connections(backstabnet);
 
-    fann_save(net, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Attack_dark_souls_ai.net");
+    fann_save(attacknet, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Attack_dark_souls_ai.net");
+    fann_save(backstabnet, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Defense_dark_souls_ai.net");
 
-    fann_destroy_train(data);
-    fann_destroy(net);
+    fann_destroy_train(attackdata);
+    fann_destroy_train(backstabdata);
+
+    fann_destroy(attacknet);
+    fann_destroy(backstabnet);
 }
 
 /*
