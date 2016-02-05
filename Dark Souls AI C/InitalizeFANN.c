@@ -232,6 +232,4 @@ void testData(void){
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
     fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
-    fprintf(fpatk, "X %d 1\n", DistanceMemoryLENGTH + 1 + 1 + 1 + 1 + 1 + AIHPMemoryLENGTH + last_subroutine_states_self_LENGTH + 1 + last_animation_types_enemy_LENGTH);
-    fprintf(fpdef, "X %d 1\n", DistanceMemoryLENGTH + 3);
 }

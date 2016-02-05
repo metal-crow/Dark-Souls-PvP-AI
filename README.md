@@ -47,10 +47,11 @@ Attack Network Inputs:
 ## TODO
 resolution at 1440x810
 
-bug w defense neural net training detecting parries/ not detecting backstabs
-bug with attack nerual net training enemy subroutine data
-wog issue, dodging too early
+when a weapon can poise break immediatly, doa more cautous back away attack style
 add if shield rase, stam regen cut to stam estimation
+vulnerable to parrying
+roll away if toggling
+crashing when gui disabled
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.

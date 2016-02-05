@@ -13,14 +13,14 @@ int guiStart(){
 
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
     {
-        printf("Failed. Error Code : %d", WSAGetLastError());
+        printf("Failed. Error Code : %d\n", WSAGetLastError());
         return 1;
     }
 
     //Create a socket
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
     {
-        printf("Could not create socket : %d", WSAGetLastError());
+        printf("Could not create socket : %d\n", WSAGetLastError());
         return 1;
     }
 
@@ -31,7 +31,7 @@ int guiStart(){
     //Connect to server
     if (connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
-        puts("connect error");
+        printf("connect error\n");
         return 1;
     }
 

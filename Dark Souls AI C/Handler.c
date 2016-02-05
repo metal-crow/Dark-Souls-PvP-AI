@@ -9,7 +9,7 @@ static const int Player_visual_offsets_length = 5;
 static ullong visualStatus_address;
 static int visualStatus;
 //current selected item
-static const int Player_selectedItem_offsets[] = { 0x170, 0x70, 0x34, 0x10, 0x2D4 };
+static const int Player_selectedItem_offsets[] = { 0x6C4, 0x670, 0x110, 0x730, 0x2D4 };
 static const int Player_selectedItem_offsets_length = 5;
 static ullong selectedItem_address;
 static int selectedItem;
@@ -51,13 +51,14 @@ static bool RedSignDown = false;
 
 void PutDownRedSign(){
     ResetVJoyController();
-    if (selectedItem != RedSoapstone){
+    while (selectedItem != RedSoapstone){
         iReport.bHats = ddown;
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(100);
         iReport.bHats = dcenter;
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(1000); //gotta wait for menu to change
+        ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
     }
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
@@ -97,7 +98,7 @@ int main(void){
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
             visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
-            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0x161298, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
+            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0xF783C0, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
             ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             ResetVJoyController();//just in case

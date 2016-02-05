@@ -66,6 +66,8 @@ enum AnimationTypesE{
     Miricle_Projectile_Cast = 144,
     Miricle_AOE_Windup = 145,
     Miricle_AOE_Cast = 146,
+    Miricle_Throw_Windup = 147,
+    Miricle_Throw_Cast = 148,
     Miricle_Ground_Windup = 155,
     Miricle_Ground_Cast = 156,
     Magic_Cast_Windup = 157,

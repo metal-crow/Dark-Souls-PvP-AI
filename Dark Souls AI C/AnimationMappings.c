@@ -63,6 +63,8 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 2;
         case Miricle_AOE_Windup:
             return 4;
+        case Miricle_Throw_Cast:
+            return 3;
         case Miricle_Ground_Cast:
             return 3;
         case Magic_Cast_Cast:
