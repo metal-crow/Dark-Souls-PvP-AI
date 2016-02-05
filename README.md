@@ -50,7 +50,7 @@ resolution at 1440x810
 bug w defense neural net training detecting parries/ not detecting backstabs
 bug with attack nerual net training enemy subroutine data
 wog issue, dodging too early
-am i dodging jump attack early?
+add if shield rase, stam regen cut to stam estimation
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.

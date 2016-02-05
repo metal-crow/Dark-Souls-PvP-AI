@@ -68,7 +68,7 @@ int StaminaEstimationEnemy(){
 
     for (int i = last_animation_types_enemy_LENGTH - 1; i >= 0; i--){
         //backsteps. these have diff stamina drain from other rolls
-        if (last_animation_types_enemy[i] == 38 || last_animation_types_enemy[i] == 100){
+        if (last_animation_types_enemy[i] == Backstep_1H || last_animation_types_enemy[i] == Backstep_2H){
             staminaEstimate -= 19;
         }
         else if (isDodgeAnimation(last_animation_types_enemy[i])){
@@ -79,9 +79,13 @@ int StaminaEstimationEnemy(){
             staminaEstimate -= StaminaDrainForAttack(Enemy.r_weapon_id, Enemy.animationType_id);
         }
         //bug: this includes running, which drains stamina
-        else if (last_animation_types_enemy[i] == 0){
+        else if (last_animation_types_enemy[i] == Nothing){
             staminaEstimate += Enemy.staminaRecoveryRate / 10;
         }
+        else if (last_animation_ids_enemy[i] == Shield_Held_Up || last_animation_ids_enemy[i] == Shield_Held_Up_walking){
+
+        }
+
         //cap max and min stam
         if (staminaEstimate > 192){
             staminaEstimate = 192;

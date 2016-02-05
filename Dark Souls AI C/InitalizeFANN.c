@@ -94,7 +94,7 @@ void GetTrainingData(){
         }
 
         //output result
-        fprintf(fpatk, "%f\n", result);
+        fprintf(fpatk, "\n%f\n", result);
 
         printf("Attack result:%f\n", result);
 
@@ -113,7 +113,7 @@ void GetTrainingData(){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
         }
 
-        fprintf(fpdef, "%f %f %f %f\n",
+        fprintf(fpdef, "%f %f %f\n%f\n",
             angleDeltaFromFront(TwoSecStore[18], TwoSecStore[19]),
             TwoSecStore[19]->velocity,
             rotationDifferenceFromSelf(TwoSecStore[18], TwoSecStore[19]),
@@ -129,55 +129,64 @@ void GetTrainingData(){
 }
 
 //use the file to train the network
-void trainFromFile(void){
-    //create new, empty networks
-    struct fann *attacknet = fann_create_shortcut(2, 195, 1);//set up net without hidden layers. N inputs, 1 output
-    fann_set_training_algorithm(attacknet, FANN_TRAIN_RPROP);
-    fann_set_activation_function_hidden(attacknet, FANN_SIGMOID_SYMMETRIC);
-    fann_set_activation_function_output(attacknet, FANN_LINEAR);
-    fann_set_train_error_function(attacknet, FANN_ERRORFUNC_LINEAR);
-    fann_set_bit_fail_limit(attacknet, (fann_type)0.9);
-    fann_set_train_stop_function(attacknet, FANN_STOPFUNC_BIT);
-    fann_print_parameters(attacknet);
-
-    struct fann *backstabnet = fann_create_shortcut(2, 53, 1);//set up net without hidden layers. N inputs, 1 output
-    fann_set_training_algorithm(backstabnet, FANN_TRAIN_RPROP);
-    fann_set_activation_function_hidden(backstabnet, FANN_SIGMOID_SYMMETRIC);
-    fann_set_activation_function_output(backstabnet, FANN_LINEAR);
-    fann_set_train_error_function(backstabnet, FANN_ERRORFUNC_LINEAR);
-    fann_set_bit_fail_limit(backstabnet, (fann_type)0.9);
-    fann_set_train_stop_function(backstabnet, FANN_STOPFUNC_BIT);
-    fann_print_parameters(backstabnet);
-
-    //load training data
-    unsigned int max_neurons_attack = 200;
-    unsigned int max_neurons_backstab = 70;
+void trainFromFile(unsigned int max_neurons,const char* training_file, const char* output_file){
+    struct fann *ann;
+    struct fann_train_data *train_data;
     const float desired_error = (const float)0.05;
+    unsigned int neurons_between_reports = 5;
+    fann_type steepness;
+    int multi = 0;
+    enum fann_activationfunc_enum activation;
+    enum fann_train_enum training_algorithm = FANN_TRAIN_RPROP;
 
-    struct fann_train_data *attackdata = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train");
-    struct fann_train_data *backstabdata = fann_read_train_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train");
+    printf("Reading data.\n");
 
-    fann_scale_train_data(attackdata, -1, 1);
-    fann_scale_train_data(backstabdata, -1, 1);
+    train_data = fann_read_train_from_file(training_file);
 
-    //train network
-    fann_cascadetrain_on_data(attacknet, attackdata, max_neurons_attack, 0, desired_error);
-    fann_cascadetrain_on_data(backstabnet, backstabdata, max_neurons_backstab, 0, desired_error);
+    fann_scale_train_data(train_data, -1, 1);
 
-    //TODO test trained network on test data
+    printf("Creating network.\n");
+    printf("input number:%d, output number:%d\n", fann_num_input_train_data(train_data), fann_num_output_train_data(train_data));
 
-    //save and clean up
-    fann_print_connections(attacknet);
-    fann_print_connections(backstabnet);
+    ann = fann_create_shortcut(2, fann_num_input_train_data(train_data), fann_num_output_train_data(train_data));
 
-    fann_save(attacknet, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Attack_dark_souls_ai.net");
-    fann_save(backstabnet, "E:/Code Workspace/Dark Souls AI C/Neural Nets/Defense_dark_souls_ai.net");
+    fann_set_training_algorithm(ann, training_algorithm);
+    fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+    fann_set_activation_function_output(ann, FANN_LINEAR);
+    fann_set_train_error_function(ann, FANN_ERRORFUNC_LINEAR);
 
-    fann_destroy_train(attackdata);
-    fann_destroy_train(backstabdata);
+    if (!multi)
+    {
+        /*steepness = 0.5;*/
+        steepness = 1;
+        fann_set_cascade_activation_steepnesses(ann, &steepness, 1);
+        /*activation = FANN_SIN_SYMMETRIC;*/
+        activation = FANN_SIGMOID_SYMMETRIC;
 
-    fann_destroy(attacknet);
-    fann_destroy(backstabnet);
+        fann_set_cascade_activation_functions(ann, &activation, 1);
+        fann_set_cascade_num_candidate_groups(ann, 8);
+    }
+
+    if (training_algorithm == FANN_TRAIN_QUICKPROP)
+    {
+        fann_set_learning_rate(ann, 0.35f);
+        fann_randomize_weights(ann, -2.0f, 2.0f);
+    }
+
+    fann_set_bit_fail_limit(ann, (fann_type)0.9);
+    fann_set_train_stop_function(ann, FANN_STOPFUNC_BIT);
+    fann_print_parameters(ann);
+
+    printf("Training network.\n");
+    fann_cascadetrain_on_data(ann, train_data, max_neurons, neurons_between_reports, desired_error);
+    fann_print_connections(ann);
+
+    printf("Saving network.\n");
+    fann_save(ann, output_file);
+
+    printf("Cleaning up.\n");
+    fann_destroy_train(train_data);
+    fann_destroy(ann);
 }
 
 /*
