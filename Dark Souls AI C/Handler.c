@@ -58,6 +58,7 @@ void PutDownRedSign(){
         iReport.bHats = dcenter;
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(1000); //gotta wait for menu to change
+        selectedItem_address = FindPointerAddr(processHandle, memorybase + 0xF783C0, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
         ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
         guiPrint(LocationHandler",2:Selected Item:%d", selectedItem);
     }
