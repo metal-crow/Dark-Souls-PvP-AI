@@ -9,6 +9,7 @@ static const int Player_visual_offsets_length = 5;
 static ullong visualStatus_address;
 static int visualStatus;
 //current selected item
+#define SelectedItemBaseAddr 0xF783C0
 static const int Player_selectedItem_offsets[] = { 0x6C4, 0x670, 0x110, 0x730, 0x2D4 };
 static const int Player_selectedItem_offsets_length = 5;
 static ullong selectedItem_address;
@@ -58,7 +59,7 @@ void PutDownRedSign(){
         iReport.bHats = dcenter;
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(1000); //gotta wait for menu to change
-        selectedItem_address = FindPointerAddr(processHandle, memorybase + 0xF783C0, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
+        selectedItem_address = FindPointerAddr(processHandle, memorybase + SelectedItemBaseAddr, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
         ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
         guiPrint(LocationHandler",2:Selected Item:%d", selectedItem);
     }
@@ -100,7 +101,7 @@ int main(void){
         if (RereadPointerEndAddress){
             ReadPointerEndAddresses(processHandle);
             visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
-            selectedItem_address = FindPointerAddr(processHandle, memorybase + 0xF783C0, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
+            selectedItem_address = FindPointerAddr(processHandle, memorybase + SelectedItemBaseAddr, Player_selectedItem_offsets_length, Player_selectedItem_offsets);
             ReadPlayer(&Enemy, processHandle, LocationMemoryEnemy);
             ReadPlayer(&Player, processHandle, LocationMemoryPlayer);
             ResetVJoyController();//just in case
