@@ -92,7 +92,9 @@ DWORD WINAPI AttackMindProcess(void* data){
             AttackChoice = SwitchWeaponId;
         }
         if (
+            //sanity checks
             DistanceMemory[0] <= Player.weaponRange && //in range
+            (Player.stamina > 20) && //just to ensure we have enough to roll
             //static checks for attack
             ((
                 (Player.stamina > 90) && //safety buffer for stamina
