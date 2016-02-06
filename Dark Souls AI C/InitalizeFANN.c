@@ -25,11 +25,17 @@ Character* TwoSecStore[20];
 static long lastCopyTime = 0;
 static long lastBsCheckTime = 0;
 
+static const int Player_AnimationId3_offsets[] = { 0x3C, 0x10C };
+static const int Player_AnimationId3_offsets_length = 2;
+ullong AnimationId3_Addr;
+int AnimationId3;
+
 void GetTrainingData(){
     #if DisableAi
     ReadPlayer(&Enemy, processHandle, EnemyId);
     ReadPlayer(&Player, processHandle, PlayerId);
     AppendDistance(distance(&Player, &Enemy));
+    ReadProcessMemory(processHandle, (LPCVOID)(AnimationId3_Addr), &(AnimationId3), 4, 0);
     #else
     MainLogicLoop();
     #endif
@@ -110,7 +116,8 @@ void GetTrainingData(){
     //enemy backstabbing us or random positive data
     bool backstabCheckTime = clock() - lastBsCheckTime > RRAND(2500, 4000);
 
-    if ((Enemy.animationType_id == Backstab || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
+    //player in backstab state when animation id 3 is 9000, 9140, or others in that area
+    if ((AnimationId3 >= 9000 || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
@@ -235,4 +242,5 @@ void testData(void){
 void SetupTraining(){
     fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
     fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
+    AnimationId3_Addr = FindPointerAddr(processHandle, player_base_add, Player_AnimationId3_offsets_length, Player_AnimationId3_offsets);
 }

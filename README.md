@@ -46,9 +46,8 @@ Attack Network Inputs:
 
 ## TODO
 resolution at 1440x810
-
-more neural net training
-have it listen to my playing
+better velocity measure
+train neural net by listening to human (me)
 --ignore any case where phantom present
 
 move away if casting fire surge
