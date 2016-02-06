@@ -48,10 +48,12 @@ Attack Network Inputs:
 resolution at 1440x810
 
 when a weapon can poise break immediatly, doa more cautous back away attack style
+blood loss
 add if shield rase, stam regen cut to stam estimation
 vulnerable to parrying
-roll away if toggling
+roll away if toggling!!!
 crashing when gui disabled
+weird issue wiht standing still when switching sheild back
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.

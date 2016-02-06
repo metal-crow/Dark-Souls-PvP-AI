@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
+volatile unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
 
 void AppendLastSubroutineSelf(unsigned char subroutineId){
     for (unsigned int i = last_subroutine_states_self_LENGTH - 1; i > 0; i--){
