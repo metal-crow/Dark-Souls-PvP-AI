@@ -59,6 +59,7 @@ void PutDownRedSign(){
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(1000); //gotta wait for menu to change
         ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
+        guiPrint(LocationHandler",2:Selected Item:%d", selectedItem);
     }
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);

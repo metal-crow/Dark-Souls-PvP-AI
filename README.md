@@ -47,6 +47,7 @@ Attack Network Inputs:
 ## TODO
 resolution at 1440x810
 
+move away if casting fire surge
 when a weapon can poise break immediatly, doa more cautous back away attack style
 blood loss
 vulnerable to parrying
