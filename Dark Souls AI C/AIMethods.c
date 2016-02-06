@@ -530,11 +530,16 @@ static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION *
     }
 }
 
+//lock on roll back to keep distance: prevent bs's, attacks 
 static void SwitchWeapon(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     guiPrint(LocationState",0:Switch Weapon");
     long curTime = clock();
 
     if (curTime < startTimeAttack + 30){
+        iReport->lButtons = r3;
+    }
+    else if (curTime < startTimeAttack + 300){
+        iReport->wAxisY = YBOTTOM;
         iReport->bHats = dleft;
     }
 

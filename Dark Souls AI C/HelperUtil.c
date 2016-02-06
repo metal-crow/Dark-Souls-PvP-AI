@@ -79,11 +79,8 @@ int StaminaEstimationEnemy(){
             staminaEstimate -= StaminaDrainForAttack(Enemy.r_weapon_id, Enemy.animationType_id);
         }
         //bug: this includes running, which drains stamina
-        else if (last_animation_types_enemy[i] == Nothing){
+        else if (last_animation_types_enemy[i] == Nothing || last_animation_ids_enemy[i] == Shield_Held_Up || last_animation_ids_enemy[i] == Shield_Held_Up_walking){
             staminaEstimate += Enemy.staminaRecoveryRate / 10;
-        }
-        else if (last_animation_ids_enemy[i] == Shield_Held_Up || last_animation_ids_enemy[i] == Shield_Held_Up_walking){
-
         }
 
         //cap max and min stam
