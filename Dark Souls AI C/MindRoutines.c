@@ -101,7 +101,6 @@ DWORD WINAPI AttackMindProcess(void* data){
                 (Enemy.subanimation >= LockInSubanimation && Enemy.subanimation < SubanimationNeutral)  //enemy in vulnerable state, and can't immediatly transition
             ) ||
             (*out > 0)//neural network says so
-            || (Enemy.subanimation >= LockInSubanimation && (rand()<RAND_MAX / 5))
            ))
         {
             AttackChoice = GhostHitId;
