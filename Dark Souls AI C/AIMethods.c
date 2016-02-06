@@ -315,8 +315,8 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
                     subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                 }
-                //if we dont have enough time to roll, perfect block
-                else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0){
+                //if we dont have enough time to roll, and we didnt just toggle, perfect block
+                else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId){
                     subroutine_states[DodgeTypeIndex] = PerfectBlockId;
                 }
                 //otherwise, normal roll
