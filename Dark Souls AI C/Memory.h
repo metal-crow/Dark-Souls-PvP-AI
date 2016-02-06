@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define last_subroutine_states_self_LENGTH 20
-extern unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
+extern volatile unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
 
 void AppendLastSubroutineSelf(unsigned char subroutineId);
 
