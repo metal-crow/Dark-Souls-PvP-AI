@@ -2,8 +2,9 @@
 #define Settings_H
 
 //used in handler
-#define AutoRedSign 1
-#define TrainNeuralNet 0
+#define AutoRedSign 0
+#define DisableAi 1
+#define TrainNeuralNet 1
 #define FeedNeuralNet 0
 
 //used in helper utils (for camera)

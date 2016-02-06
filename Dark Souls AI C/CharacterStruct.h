@@ -66,6 +66,9 @@ typedef struct {
     //current poise
     ullong poise_address;
     float poise;
+    //current bleed state
+    ullong bleedStatus_address;
+    int bleedStatus;
 } Character;
 
 //initalize the phantom and player
@@ -182,4 +185,7 @@ static const int Player_Poise_offsets[] = { 0x28, 0x18, 0xE0, 0xC, 0x1C0 };
 static const int Player_Poise_offsets_length = 5;
 static const int Enemy_Poise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C0 };
 static const int Enemy_Poise_offsets_length = 5;
+//bleed status
+static const int Player_BleedStatus_offsets[] = { 0x3C, 0x308 };
+static const int Player_BleedStatus_offsets_length = 2;
 #endif

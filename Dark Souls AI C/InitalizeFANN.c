@@ -2,6 +2,7 @@
 #pragma warning(disable: 4244)
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "Settings.h"
 #include "Source.h"
 #include "MemoryEdits.h"
 #include "CharacterStruct.h"
@@ -25,7 +26,13 @@ static long lastCopyTime = 0;
 static long lastBsCheckTime = 0;
 
 void GetTrainingData(){
+    #if DisableAi
+    ReadPlayer(&Enemy, processHandle, EnemyId);
+    ReadPlayer(&Player, processHandle, PlayerId);
+    AppendDistance(distance(&Player, &Enemy));
+    #else
     MainLogicLoop();
+    #endif
 
     //store copy of player and enemy structs every 100 ms for 2 sec
     if (clock() - lastCopyTime > 100){
@@ -45,8 +52,6 @@ void GetTrainingData(){
     //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
     if (isAttackAnimation(Player.animationType_id) && DistanceMemory[49] != 0){
         unsigned int startingHp = Player.hp;
-        float startingPoiseAI = Player.poise;
-        float startingPoiseEnemy = Enemy.poise;
 
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
@@ -55,20 +60,16 @@ void GetTrainingData(){
         //output estimated stamina of enemy
         fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
         //output the enemy's current poise
-        fprintf(fpatk, "%f ", startingPoiseEnemy);
+        fprintf(fpatk, "%f ", Enemy.poise);
         //output the AI's attack's poise damage (just r1 for now)
         fprintf(fpatk, "%f ", PoiseDamageForAttack(Player.r_weapon_id, 46));
         //output the AI's current poise
-        fprintf(fpatk, "%f ", startingPoiseAI);
+        fprintf(fpatk, "%f ", Player.poise);
         //base poise damage of enemy's attack (treat r1 as base)
         fprintf(fpatk, "%f ", PoiseDamageForAttack(Enemy.r_weapon_id, 46));
         //output array of AI's HP over time
         for (int i = 0; i < AIHPMemoryLENGTH; i++){
             fprintf(fpatk, "%f ", (float)AIHPMemory[i]);
-        }
-        //output array of AI's subanimations
-        for (int i = 0; i < last_subroutine_states_self_LENGTH; i++){
-            fprintf(fpatk, "%f ", (float)last_subroutine_states_self[i]);
         }
         //stamina of AI
         fprintf(fpatk, "%f ", (float)Player.stamina);
@@ -76,6 +77,8 @@ void GetTrainingData(){
         for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
             fprintf(fpatk, "%f ", (float)last_animation_types_enemy[i]);
         }
+        //current bleed built up
+        fprintf(fpatk, "%f ", (float)Player.bleedStatus);
 
         //2 seconds
         long startTime = clock();

@@ -207,6 +207,11 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read current poise
     ReadProcessMemory(processHandle, (LPCVOID)(c->poise_address), &(c->poise), 4, 0);
     guiPrint("%d,15:Poise:%f", characterId, c->poise);
+    //read current bleed status
+    if (c->bleedStatus_address){
+        ReadProcessMemory(processHandle, (LPCVOID)(c->bleedStatus_address), &(c->bleedStatus), 4, 0);
+        guiPrint("%d,16:Bleed Status:%f", characterId, c->bleedStatus);
+    }
 }
 
 void ReadPlayerDEBUGGING(Character * c, HANDLE * processHandle, ...){
@@ -242,6 +247,7 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.twoHanding_address = 0;
     Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
     Enemy.poise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_Poise_offsets_length, Enemy_Poise_offsets);
+    Enemy.bleedStatus_address = 0;
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -262,4 +268,5 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
     Player.staminaRecoveryRate_address = 0;
     Player.poise_address = FindPointerAddr(processHandle, player_base_add, Player_Poise_offsets_length, Player_Poise_offsets);
+    Player.bleedStatus_address = FindPointerAddr(processHandle, player_base_add, Player_BleedStatus_offsets_length, Player_BleedStatus_offsets);
 }

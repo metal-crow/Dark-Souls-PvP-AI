@@ -38,14 +38,18 @@ Attack Network Inputs:
   * the AI's current poise
   * base poise damage of enemy's attack
   * array of AI's HP over time
-  * array of AI's subanimations over time
   * stamina of AI
   * array of enemy animation types
+  * current bleed build up
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO
 resolution at 1440x810
+
+more neural net training
+have it listen to my playing
+--ignore any case where phantom present
 
 move away if casting fire surge
 when a weapon can poise break immediatly, doa more cautous back away attack style
