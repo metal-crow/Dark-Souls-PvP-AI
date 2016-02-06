@@ -1,6 +1,9 @@
 #include "MindRoutines.h"
 #pragma warning( disable: 4244 )
 
+#define SCALE(input, minVal, maxVal) (2 * ((float)input - minVal) / (maxVal - minVal) - 1)
+
+
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
     {
@@ -12,31 +15,26 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
 
         //generate inputs and scale from -1 to 1 
-        fann_type input[4];
+        fann_type input[DistanceMemoryLENGTH + 3];
 
-        float distanceInput = distance(&Player, &Enemy);
-        //min:0.3 max:5
-        input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
-
-        float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
-        //min:0 max:1.6
-        input[1] = 2 * (angleDeltaInput) / (1.6) - 1;
-
-        //min:-0.18 max:-0.04
-        input[2] = 2 * (Enemy.velocity - -0.18) / (-0.04 - -0.18) - 1;
-
-        float rotationDeltaInput = rotationDifferenceFromSelf(&Player, &Enemy);
-        //min:0 max:3.8
-        input[3] = 2 * (rotationDeltaInput) / (3.8) - 1;
-
+        //copy inputs into input and scale
+        for (int i = 0; i < DistanceMemoryLENGTH; i++){
+            input[i] = SCALE(DistanceMemory[i], 0, 10);
+            //cut off above and below
+            input[i] = input[i] > 1 ? 1 : input[i];
+            input[i] = input[i] < -1 ? -1 : input[i];
+        }
+        input[DistanceMemoryLENGTH] = SCALE(angleDeltaFromFront(&Player, &Enemy), 0, 1.6);
+        input[DistanceMemoryLENGTH + 1] = SCALE(Enemy.velocity, -0.18, -0.04);
+        input[DistanceMemoryLENGTH + 2] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
         if (*out < 1.5 && *out > 0.5
-            && distanceInput < 5){//hardcode bs distance
+            && DistanceMemory[0] < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
+        if (DistanceMemory[0] < 2 && BackstabDetection(&Enemy, &Player, DistanceMemory[0])){
             AttackChoice = GhostHitId;
         }
         //if we had to toggle escape, they're probably comboing. Get out.
@@ -64,18 +62,28 @@ DWORD WINAPI AttackMindProcess(void* data){
         }
 
         //generate inputs and scale from -1 to 1 
-        fann_type input[DistanceMemoryLENGTH+1];
+        fann_type input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1 + last_animation_types_enemy_LENGTH + 1];
 
-        //copy distances into input and scale
+        //copy inputs into input and scale
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
-            //min:0 max:10
-            input[i] = 2 * (DistanceMemory[i] / 10.0) - 1;
+            input[i] = SCALE(DistanceMemory[i], 0, 10);
             //cut off above and below
             input[i] = input[i] > 1 ? 1 : input[i];
             input[i] = input[i] < -1 ? -1 : input[i];
         }
-        //scale stamina estimate min:-40 max:192
-        input[DistanceMemoryLENGTH] = 2 * (StaminaEstimationEnemy() - -40) / (192 - -40) - 1;
+        input[DistanceMemoryLENGTH] = SCALE(StaminaEstimationEnemy(), -40, 192);
+        input[DistanceMemoryLENGTH + 1] = SCALE(Enemy.poise, 0, 120);
+        input[DistanceMemoryLENGTH + 2] = SCALE(PoiseDamageForAttack(Player.r_weapon_id, 46), 0, 80);
+        input[DistanceMemoryLENGTH + 3] = SCALE(Player.poise, 0, 120);
+        input[DistanceMemoryLENGTH + 4] = SCALE(PoiseDamageForAttack(Enemy.r_weapon_id, 46), 0, 80);
+        for (int i = 0; i < AIHPMemoryLENGTH; i++){
+            input[i + DistanceMemoryLENGTH + 5] = SCALE(AIHPMemory[i], 0, 2000);
+        }
+        input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH] = SCALE(Player.stamina, -40, 192);
+        for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
+            input[i + DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1] = SCALE(last_animation_types_enemy[i], 0, 255);
+        }
+        input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1 + last_animation_types_enemy_LENGTH] = SCALE(Player.bleedStatus, 0, 255);
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
