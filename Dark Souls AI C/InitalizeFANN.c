@@ -29,16 +29,22 @@ static const int Player_AnimationId3_offsets[] = { 0x3C, 0x10C };
 static const int Player_AnimationId3_offsets_length = 2;
 ullong AnimationId3_Addr;
 int AnimationId3;
+static const int Player_Timer3_offsets[] = { 0x3C, 0x28, 0x18, 0x7DC, 0x98 };
+static const int Player_Timer3_offsets_length = 5;
+ullong Timer3_Addr;
+float Timer3;
+
 
 void GetTrainingData(){
     #if DisableAi
     ReadPlayer(&Enemy, processHandle, EnemyId);
     ReadPlayer(&Player, processHandle, PlayerId);
     AppendDistance(distance(&Player, &Enemy));
-    ReadProcessMemory(processHandle, (LPCVOID)(AnimationId3_Addr), &(AnimationId3), 4, 0);
     #else
     MainLogicLoop();
     #endif
+    ReadProcessMemory(processHandle, (LPCVOID)(AnimationId3_Addr), &(AnimationId3), 4, 0);
+    ReadProcessMemory(processHandle, (LPCVOID)(Timer3_Addr), &(Timer3), 4, 0);
 
     //store copy of player and enemy structs every 100 ms for 2 sec
     if (clock() - lastCopyTime > 100){
@@ -118,11 +124,8 @@ void GetTrainingData(){
         //WriteProcessMemory(processHandle, (LPVOID)Player.hp_address, &resethp, 4, 0);
     }
 
-    //enemy backstabbing us or random positive data
-    bool backstabCheckTime = clock() - lastBsCheckTime > RRAND(2500, 4000);
-
     //player in backstab state when animation id 3 is 9000, 9420
-    if ((AnimationId3 == 9000 || AnimationId3 == 9420 || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
+    if ((AnimationId3 == 9000 || AnimationId3 == 9420 || rand() < 800) && Timer3 < 0.1 && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
@@ -136,10 +139,6 @@ void GetTrainingData(){
             );
 
         printf("BackStab result:%d\n", Enemy.animationType_id == Backstab);
-    }
-
-    if (backstabCheckTime){
-        lastBsCheckTime = clock();
     }
 }
 
@@ -248,4 +247,5 @@ void SetupTraining(){
     fpatk = fopen("Neural Nets/attack_training_data.train", "a");
     fpdef = fopen("Neural Nets/backstab_training_data.train", "a");
     AnimationId3_Addr = FindPointerAddr(processHandle, player_base_add, Player_AnimationId3_offsets_length, Player_AnimationId3_offsets);
+    Timer3_Addr = FindPointerAddr(processHandle, player_base_add, Player_Timer3_offsets_length, Player_Timer3_offsets);
 }
