@@ -121,8 +121,8 @@ void GetTrainingData(){
     //enemy backstabbing us or random positive data
     bool backstabCheckTime = clock() - lastBsCheckTime > RRAND(2500, 4000);
 
-    //player in backstab state when animation id 3 is 9000, 9140, or others in that area
-    if ((AnimationId3 >= 9000 || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
+    //player in backstab state when animation id 3 is 9000, 9420
+    if ((AnimationId3 == 9000 || AnimationId3 == 9420 || rand() < 800) && backstabCheckTime && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
