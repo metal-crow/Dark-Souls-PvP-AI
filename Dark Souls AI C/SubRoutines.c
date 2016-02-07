@@ -18,7 +18,7 @@ bool inActiveAttackSubroutine(){
 }
 
 void OverrideLowPriorityAttackSubroutines(){
-    if (subroutine_states[AttackTypeIndex] == MoveUpId){
+    if (subroutine_states[AttackTypeIndex] == MoveUpId || subroutine_states[AttackTypeIndex] == SwitchWeaponId){
         subroutine_states[AttackTypeIndex] = 0;
         subroutine_states[AttackStateIndex] = 0;
     }

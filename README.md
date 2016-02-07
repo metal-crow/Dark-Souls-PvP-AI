@@ -48,6 +48,7 @@ Attack Network Inputs:
 resolution at 1440x810
 better velocity measure
 train neural net by listening to human (me)
+MORE TRAINING 
 --ignore any case where phantom present
 
 move away if casting fire surge
@@ -55,6 +56,7 @@ when a weapon can poise break immediatly, doa more cautous back away attack styl
 blood loss
 vulnerable to parrying
 crashing when gui disabled
+scyte jumping too late
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.
