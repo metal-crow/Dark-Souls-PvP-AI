@@ -245,7 +245,7 @@ void testData(void){
 */
 
 void SetupTraining(){
-    fpatk = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/attack_training_data.train", "a");
-    fpdef = fopen("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_training_data.train", "a");
+    fpatk = fopen("Neural Nets/attack_training_data.train", "a");
+    fpdef = fopen("Neural Nets/backstab_training_data.train", "a");
     AnimationId3_Addr = FindPointerAddr(processHandle, player_base_add, Player_AnimationId3_offsets_length, Player_AnimationId3_offsets);
 }
