@@ -43,6 +43,8 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 2;
         case R1_2H:
             return 2;
+        case R1_2H_just2Handed:
+            return 2;
         case R1_2H_Combo1:
             return 2;
         case R1_2H_Combo2:

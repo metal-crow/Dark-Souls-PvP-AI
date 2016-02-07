@@ -210,7 +210,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read current bleed status
     if (c->bleedStatus_address){
         ReadProcessMemory(processHandle, (LPCVOID)(c->bleedStatus_address), &(c->bleedStatus), 4, 0);
-        guiPrint("%d,16:Bleed Status:%f", characterId, c->bleedStatus);
+        guiPrint("%d,16:Bleed Status:%d", characterId, c->bleedStatus);
     }
 }
 

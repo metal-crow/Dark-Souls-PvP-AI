@@ -48,6 +48,7 @@ Attack Network Inputs:
 resolution at 1440x810
 better velocity measure
 train neural net by listening to human (me)
+backstab detection neural net not working
 MORE TRAINING 
 --ignore any case where phantom present
 
