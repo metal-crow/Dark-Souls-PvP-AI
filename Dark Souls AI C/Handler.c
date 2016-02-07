@@ -85,9 +85,12 @@ int main(void){
     trainFromFile(200, "Neural Nets/attack_training_data.train", "Neural Nets/Attack_dark_souls_ai.net");
     trainFromFile(70, "Neural Nets/backstab_training_data.train", "Neural Nets/Defense_dark_souls_ai.net");
     #endif
-    if (SetupandLoad()){
+    int Setuperror = SetupandLoad();
+    #if !DisableAi
+    if (Setuperror){
         return EXIT_FAILURE;
     }
+    #endif
     #if TrainNeuralNet
         SetupTraining();
     #endif

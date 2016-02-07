@@ -58,6 +58,7 @@ void GetTrainingData(){
     //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
     if (isAttackAnimation(Player.animationType_id) && DistanceMemory[49] != 0){
         unsigned int startingHp = Player.hp;
+        unsigned int startingHpEnemy = Enemy.hp;
 
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
@@ -97,8 +98,12 @@ void GetTrainingData(){
         if (startingHp != Player.hp){
             result = -1;
         }
+        //neutral outcome
+        else if (startingHp == Player.hp && startingHpEnemy == Enemy.hp){
+            result = 0;
+        }
         //good outcome
-        else{
+        else if (startingHp == Player.hp && startingHpEnemy != Enemy.hp){
             result = 1;
         }
 
