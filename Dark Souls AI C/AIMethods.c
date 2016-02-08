@@ -75,7 +75,11 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //roll
     //AUUUGH FUCK IT JUST HAMMER THE BUTTON
-    if (curTime < startTimeDefense + 50 || (curTime > startTimeDefense + 100 && curTime < startTimeDefense + 150) || (curTime > startTimeDefense + 200 && curTime < startTimeDefense + 250)){
+    if (curTime < startTimeDefense + 50 || 
+       (curTime > startTimeDefense + 100 && curTime < startTimeDefense + 150) || 
+       (curTime > startTimeDefense + 200 && curTime < startTimeDefense + 250) || 
+       (curTime > startTimeDefense + 300 && curTime < startTimeDefense + 350))
+    {
         guiPrint(LocationState",1:circle");
         iReport->lButtons = circle;
         //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
@@ -252,8 +256,8 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 
 //this is more of a bandaid to the fact that the ai is ever getting hit
 static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:Toggle Escape");
     long curTime = clock();
+    guiPrint(LocationState",0:Toggle Escape:%d", curTime);
 
     if (curTime < startTimeDefense + 30){
         iReport->bHats = dleft;
@@ -308,7 +312,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         switch (attackInfo){
             case ImminentHit:
                 //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
-                if (Player->subanimation == PoiseBrokenSubanimation){
+                if (Player->subanimation == PoiseBrokenSubanimation && Phantom->dodgeTimeRemaining < 0.2){
                     subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
                 }
                 //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll

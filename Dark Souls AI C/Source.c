@@ -107,7 +107,7 @@ void MainLogicLoop(){
 #endif
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action
-        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || AttackChoice){
+        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || (AttackChoice && DefenseChoice<=0)){
             attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
             AttackChoice = 0;//unset neural network desision
         }
