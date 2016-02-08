@@ -125,7 +125,7 @@ void GetTrainingData(){
     }
 
     //player in backstab state when animation id 3 is 9000, 9420
-    if ((AnimationId3 == 9000 || AnimationId3 == 9420 || rand() < 800) && Timer3 < 0.1 && TwoSecStore[19] != NULL){
+    if ((((AnimationId3 == 9000 || AnimationId3 == 9420) && (Timer3 < 0.1 && Timer3 > 0)) || rand() < 800) && TwoSecStore[19] != NULL){
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
@@ -139,6 +139,7 @@ void GetTrainingData(){
             );
 
         printf("BackStab result:%d\n", Enemy.animationType_id == Backstab);
+        Sleep(100);
     }
 }
 
