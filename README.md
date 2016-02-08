@@ -46,19 +46,16 @@ Attack Network Inputs:
 
 ## TODO
 resolution at 1440x810
-trying to toggle when it shouldnt. only toggle when in stun animation and a new attack coming in. issue where get hit before timer says we should, and we read the attack that just hit us as a new attack
 better velocity measure
 train neural net by listening to human (me)
 backstab detection neural net not working
 MORE TRAINING 
 --ignore any case where phantom present
-
 move away if casting fire surge
 when a weapon can poise break immediatly, doa more cautous back away attack style
 blood loss
 vulnerable to parrying
 crashing when gui disabled
-scyte jumping too late
 
   * **TOP Priority**
     * Neural net work. Ensure that it works.

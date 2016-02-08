@@ -92,6 +92,7 @@ int StaminaEstimationEnemy(){
         }
     }
 
+    guiPrint("%d,5:Stamina Est:%d", EnemyId, staminaEstimate);
     return staminaEstimate;
 }
 
