@@ -65,9 +65,9 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //keep track of enemy animations in memory
     bool newAid = false;
     if (characterId == EnemyId){
-        if (animationid > 0){
+        if (animationid){
             newAid = AppendLastAnimationIdEnemy(animationid);
-        } else if (animationid2 > 0){
+        } else {
             newAid = AppendLastAnimationIdEnemy(animationid2);
         }
     }
