@@ -28,7 +28,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 		}
 		//windup, attack coming
         //TODO should start to plan an attack now and attack while they;re attacking while avoiding the attack
-        else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
+        else if (AtkID == 1 || ((AtkID == 2 || AtkID == 4) && Phantom->subanimation == AttackSubanimationWindup)){
 			guiPrint(LocationDetection",0:dont attack, enemy windup");
             returnVar = EnemyInWindup;
 		}
