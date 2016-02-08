@@ -140,12 +140,12 @@ void GetTrainingData(){
             (Enemy.animationType_id == Backstab ? 1.0 : -1.0)
             );
 
-        printf("BackStab result:%d\n", Enemy.animationType_id == Backstab);
+        printf("BackStab result:%d\n", (Enemy.animationType_id == Backstab ? 1 : -1));
         Sleep(100);
     }
 
     if (backstabCheckTime){
-        backstabCheckTime = clock();
+        lastBsCheckTime = clock();
     }
 }
 

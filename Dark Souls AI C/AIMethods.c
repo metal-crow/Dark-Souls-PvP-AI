@@ -257,7 +257,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
 //this is more of a bandaid to the fact that the ai is ever getting hit
 static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
-    guiPrint(LocationState",0:Toggle Escape:%d", curTime);
+    guiPrint(LocationState",0:Toggle Escape:%d", (curTime - startTimeDefense));
 
     if (curTime < startTimeDefense + 30){
         iReport->bHats = dleft;
@@ -312,20 +312,23 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         switch (attackInfo){
             case ImminentHit:
                 //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
-                if (Player->subanimation == PoiseBrokenSubanimation && Phantom->dodgeTimeRemaining < 0.2){
+                if (Player->subanimation == PoiseBrokenSubanimation && (Phantom->dodgeTimeRemaining > 0.2 && Phantom->dodgeTimeRemaining < 0.3)){
                     subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
                 }
-                //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
-                    subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
-                }
-                //if we dont have enough time to roll, and we didnt just toggle, perfect block
-                else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId){
-                    subroutine_states[DodgeTypeIndex] = PerfectBlockId;
-                }
-                //otherwise, normal roll
-                else{
-                    subroutine_states[DodgeTypeIndex] = StandardRollId;
+                //while staggered, dont enter any subroutines
+                if (Player->subanimation != PoiseBrokenSubanimation){
+                    //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
+                    if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
+                        subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+                    }
+                    //if we dont have enough time to roll, and we didnt just toggle, perfect block
+                    else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId){
+                        subroutine_states[DodgeTypeIndex] = PerfectBlockId;
+                    }
+                    //otherwise, normal roll
+                    else{
+                        subroutine_states[DodgeTypeIndex] = StandardRollId;
+                    }
                 }
                 break;
             //only defines backstab detection handling
