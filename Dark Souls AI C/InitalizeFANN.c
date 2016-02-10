@@ -21,7 +21,8 @@
 
 FILE* fpdef;
 FILE* fpatk;
-Character* TwoSecStore[20];
+#define TwoSecStoreLength 40
+Character* TwoSecStore[TwoSecStoreLength];
 static long lastCopyTime = 0;
 static long lastBsCheckTime = 0;
 
@@ -46,11 +47,11 @@ void GetTrainingData(){
     ReadProcessMemory(processHandle, (LPCVOID)(AnimationId3_Addr), &(AnimationId3), 4, 0);
     ReadProcessMemory(processHandle, (LPCVOID)(Timer3_Addr), &(Timer3), 4, 0);
 
-    //store copy of player and enemy structs every 100 ms for 2 sec
+    //store copy of player and enemy structs every 100 ms for 3.5 sec
     if (clock() - lastCopyTime > 100){
-        free(TwoSecStore[19]);
-        free(TwoSecStore[18]);
-        for (unsigned int i = 19; i > 1; i--){
+        free(TwoSecStore[TwoSecStoreLength-1]);
+        free(TwoSecStore[TwoSecStoreLength-2]);
+        for (unsigned int i = TwoSecStoreLength-1; i > 1; i--){
             TwoSecStore[i] = TwoSecStore[i - 2];
         }
         TwoSecStore[1] = (Character*)malloc(sizeof(Character));
@@ -62,7 +63,7 @@ void GetTrainingData(){
     }
 
     //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
-    if (isAttackAnimation(Player.animationType_id) && DistanceMemory[49] != 0){
+    if (isAttackAnimation(Player.animationType_id) && DistanceMemory[DistanceMemoryLENGTH-1] != 0 && TrainAttackNet){
         unsigned int startingHp = Player.hp;
         unsigned int startingHpEnemy = Enemy.hp;
 
@@ -127,20 +128,20 @@ void GetTrainingData(){
     bool backstabCheckTime = clock() - lastBsCheckTime > 3000;// RRAND(2500, 4000);
 
     //player in backstab state when animation id 3 is 9000, 9420
-    if ((((AnimationId3 == 9000 || AnimationId3 == 9420) && (Timer3 < 0.1 && Timer3 > 0)) || (rand() < 100 && backstabCheckTime)) && TwoSecStore[19] != NULL){
-        //output the array of distance values
-        for (int i = 0; i < DistanceMemoryLENGTH; i++){
+    if ((((AnimationId3 == 9000 || AnimationId3 == 9420) && (Timer3 < 0.1 && Timer3 > 0)) || (rand() < 1000 && backstabCheckTime)) && TwoSecStore[TwoSecStoreLength-1] != NULL && TrainBackstabNet){
+        //output an array of 5 distance values from 3500 ms ago
+        for (int i = TwoSecStoreLength - 5; i < TwoSecStoreLength; i++){
             fprintf(fpdef, "%f ", DistanceMemory[i]);
         }
 
         fprintf(fpdef, "%f %f %f\n%f\n",
-            angleDeltaFromFront(TwoSecStore[18], TwoSecStore[19]),
-            TwoSecStore[19]->velocity,
-            rotationDifferenceFromSelf(TwoSecStore[18], TwoSecStore[19]),
-            (Enemy.animationType_id == Backstab ? 1.0 : -1.0)
+            angleDeltaFromFront(TwoSecStore[TwoSecStoreLength-6], TwoSecStore[TwoSecStoreLength-7]),
+            TwoSecStore[TwoSecStoreLength-7]->velocity,
+            rotationDifferenceFromSelf(TwoSecStore[TwoSecStoreLength-6], TwoSecStore[TwoSecStoreLength-7]),
+            ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1.0 : -1.0)
             );
 
-        printf("BackStab result:%d\n", (Enemy.animationType_id == Backstab ? 1 : -1));
+        printf("BackStab result:%d\n", ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1 : -1));
         Sleep(100);
     }
 
@@ -155,10 +156,6 @@ void trainFromFile(unsigned int max_neurons,const char* training_file, const cha
     struct fann_train_data *train_data;
     const float desired_error = (const float)0.05;
     unsigned int neurons_between_reports = 5;
-    fann_type steepness;
-    int multi = 0;
-    enum fann_activationfunc_enum activation;
-    enum fann_train_enum training_algorithm = FANN_TRAIN_RPROP;
 
     printf("Reading data.\n");
 
@@ -171,29 +168,10 @@ void trainFromFile(unsigned int max_neurons,const char* training_file, const cha
 
     ann = fann_create_shortcut(2, fann_num_input_train_data(train_data), fann_num_output_train_data(train_data));
 
-    fann_set_training_algorithm(ann, training_algorithm);
+    fann_set_training_algorithm(ann, FANN_TRAIN_RPROP);
     fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(ann, FANN_LINEAR);
     fann_set_train_error_function(ann, FANN_ERRORFUNC_LINEAR);
-
-    if (!multi)
-    {
-        /*steepness = 0.5;*/
-        steepness = 1;
-        fann_set_cascade_activation_steepnesses(ann, &steepness, 1);
-        /*activation = FANN_SIN_SYMMETRIC;*/
-        activation = FANN_SIGMOID_SYMMETRIC;
-
-        fann_set_cascade_activation_functions(ann, &activation, 1);
-        fann_set_cascade_num_candidate_groups(ann, 8);
-    }
-
-    if (training_algorithm == FANN_TRAIN_QUICKPROP)
-    {
-        fann_set_learning_rate(ann, 0.35f);
-        fann_randomize_weights(ann, -2.0f, 2.0f);
-    }
-
     fann_set_bit_fail_limit(ann, (fann_type)0.9);
     fann_set_train_stop_function(ann, FANN_STOPFUNC_BIT);
     fann_print_parameters(ann);

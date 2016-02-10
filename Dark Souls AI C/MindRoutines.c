@@ -15,26 +15,31 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
 
         //generate inputs and scale from -1 to 1 
-        fann_type input[DistanceMemoryLENGTH + 3];
+        fann_type input[8];
 
         //copy inputs into input and scale
-        for (int i = 0; i < DistanceMemoryLENGTH; i++){
-            input[i] = SCALE(DistanceMemory[i], 0, 10);
+        float mostRecentDistance = distance(&Player, &Enemy);
+        input[0] = SCALE(mostRecentDistance, 0, 10);
+        input[0] = input[0] > 1 ? 1 : input[0];
+        input[0] = input[0] < -1 ? -1 : input[0];
+        for (int i = 0; i < 4; i++){
+            input[i+1] = SCALE(DistanceMemory[i+1], 0, 10);
             //cut off above and below
-            input[i] = input[i] > 1 ? 1 : input[i];
-            input[i] = input[i] < -1 ? -1 : input[i];
+            input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
+            input[i+1] = input[i+1] < -1 ? -1 : input[i+1];
         }
-        input[DistanceMemoryLENGTH] = SCALE(angleDeltaFromFront(&Player, &Enemy), 0, 1.6);
-        input[DistanceMemoryLENGTH + 1] = SCALE(Enemy.velocity, -0.18, -0.04);
-        input[DistanceMemoryLENGTH + 2] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
+        input[5] = SCALE(angleDeltaFromFront(&Player, &Enemy), 0, 1.6);
+        input[6] = SCALE(Enemy.velocity, -0.18, -0.04);
+        input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
+        printf("%f\n", *out);
         if (*out < 1.5 && *out > 0.5
-            && DistanceMemory[0] < 5){//hardcode bs distance
+            && mostRecentDistance < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        if (DistanceMemory[0] < 2 && BackstabDetection(&Enemy, &Player, DistanceMemory[0])){
+        if (mostRecentDistance < 2 && BackstabDetection(&Enemy, &Player, mostRecentDistance)){
             AttackChoice = GhostHitId;
         }
         //if we had to toggle escape, they're probably comboing. Get out.
@@ -65,11 +70,15 @@ DWORD WINAPI AttackMindProcess(void* data){
         fann_type input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1 + last_animation_types_enemy_LENGTH + 1];
 
         //copy inputs into input and scale
-        for (int i = 0; i < DistanceMemoryLENGTH; i++){
-            input[i] = SCALE(DistanceMemory[i], 0, 10);
+        float mostRecentDistance = distance(&Player, &Enemy);
+        input[0] = SCALE(mostRecentDistance, 0, 10);
+        input[0] = input[0] > 1 ? 1 : input[0];
+        input[0] = input[0] < -1 ? -1 : input[0];
+        for (int i = 0; i < DistanceMemoryLENGTH-1; i++){
+            input[i+1] = SCALE(DistanceMemory[i+1], 0, 10);
             //cut off above and below
-            input[i] = input[i] > 1 ? 1 : input[i];
-            input[i] = input[i] < -1 ? -1 : input[i];
+            input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
+            input[i+1] = input[i+1] < -1 ? -1 : input[i+1];
         }
         input[DistanceMemoryLENGTH] = SCALE(StaminaEstimationEnemy(), -40, 192);
         input[DistanceMemoryLENGTH + 1] = SCALE(Enemy.poise, 0, 120);
@@ -89,9 +98,9 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         if (
             //not in range
-            DistanceMemory[0] > Player.weaponRange ||
+            mostRecentDistance > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab
-            BackstabDetection(&Player, &Enemy, DistanceMemory[0]) == 1)
+            BackstabDetection(&Player, &Enemy, mostRecentDistance) == 1)
         {
             AttackChoice = MoveUpId;
         }
@@ -101,7 +110,7 @@ DWORD WINAPI AttackMindProcess(void* data){
         }
         if (
             //sanity checks
-            DistanceMemory[0] <= Player.weaponRange && //in range
+            mostRecentDistance <= Player.weaponRange && //in range
             (Player.stamina > 20) && //just to ensure we have enough to roll
             //static checks for attack
             ((

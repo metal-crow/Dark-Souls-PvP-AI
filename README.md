@@ -24,7 +24,7 @@ The most recent commit to master should always have been tested and verified to 
 ## Neural Networks
 Defense Network Inputs:  
 
-  * Array of distance between AI and enemy over 5 second period 
+  * Array of distance between AI and enemy over 0.5 second period 
   * The angle the enemy is off from directly in front of the player  
   * The enemy velocity  
   * The rotation difference between the enemy and the player  
@@ -46,10 +46,11 @@ Attack Network Inputs:
 
 ## TODO
 resolution at 1440x810
-better velocity measure
 train neural net by listening to human (me)
 backstab detection neural net not working
 MORE TRAINING 
+
+better velocity measure
 --ignore any case where phantom present
 move away if casting fire surge
 when a weapon can poise break immediatly, doa more cautous back away attack style
