@@ -49,9 +49,8 @@ resolution at 1440x810
 train neural net by listening to human (me)
 backstab detection neural net not working
 MORE TRAINING 
-
-better velocity measure
 --ignore any case where phantom present
+better velocity measure
 move away if casting fire surge
 when a weapon can poise break immediatly, doa more cautous back away attack style
 blood loss

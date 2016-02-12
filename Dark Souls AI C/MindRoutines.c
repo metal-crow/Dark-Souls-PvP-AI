@@ -23,7 +23,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         input[0] = input[0] > 1 ? 1 : input[0];
         input[0] = input[0] < -1 ? -1 : input[0];
         for (int i = 0; i < 4; i++){
-            input[i+1] = SCALE(DistanceMemory[i+1], 0, 10);
+            input[i+1] = SCALE(DistanceMemory[i], 0, 10);
             //cut off above and below
             input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
             input[i+1] = input[i+1] < -1 ? -1 : input[i+1];
@@ -33,8 +33,8 @@ DWORD WINAPI DefenseMindProcess(void* data){
         input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
-        printf("%f\n", *out);
-        if (*out < 1.5 && *out > 0.5
+        //printf("%f\n", *out);
+        if (*out < 10 && *out > 0.5
             && mostRecentDistance < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
@@ -75,7 +75,7 @@ DWORD WINAPI AttackMindProcess(void* data){
         input[0] = input[0] > 1 ? 1 : input[0];
         input[0] = input[0] < -1 ? -1 : input[0];
         for (int i = 0; i < DistanceMemoryLENGTH-1; i++){
-            input[i+1] = SCALE(DistanceMemory[i+1], 0, 10);
+            input[i+1] = SCALE(DistanceMemory[i], 0, 10);
             //cut off above and below
             input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
             input[i+1] = input[i+1] < -1 ? -1 : input[i+1];

@@ -19,8 +19,7 @@
 
 #define RRAND(min,max) (min + rand() % (max - min))
 
-FILE* fpdef;
-FILE* fpatk;
+FILE *fpdef, *fpdef_test, *fpatk, *fpatk_test;
 #define TwoSecStoreLength 40
 Character* TwoSecStore[TwoSecStoreLength];
 static long lastCopyTime = 0;
@@ -64,35 +63,37 @@ void GetTrainingData(){
 
     //have random attacks. if it doesnt get hit, sucess. if it gets hit, fail.
     if (isAttackAnimation(Player.animationType_id) && DistanceMemory[DistanceMemoryLENGTH-1] != 0 && TrainAttackNet){
+        FILE* outFile = rand() < RAND_MAX / 3 ? fpatk_test : fpatk;
+
         unsigned int startingHp = Player.hp;
         unsigned int startingHpEnemy = Enemy.hp;
 
         //output the array of distance values
         for (int i = 0; i < DistanceMemoryLENGTH; i++){
-            fprintf(fpatk, "%f ", DistanceMemory[i]);
+            fprintf(outFile, "%f ", DistanceMemory[i]);
         }
         //output estimated stamina of enemy
-        fprintf(fpatk, "%f ", (float)StaminaEstimationEnemy());
+        fprintf(outFile, "%f ", (float)StaminaEstimationEnemy());
         //output the enemy's current poise
-        fprintf(fpatk, "%f ", Enemy.poise);
+        fprintf(outFile, "%f ", Enemy.poise);
         //output the AI's attack's poise damage (just r1 for now)
-        fprintf(fpatk, "%f ", PoiseDamageForAttack(Player.r_weapon_id, 46));
+        fprintf(outFile, "%f ", PoiseDamageForAttack(Player.r_weapon_id, 46));
         //output the AI's current poise
-        fprintf(fpatk, "%f ", Player.poise);
+        fprintf(outFile, "%f ", Player.poise);
         //base poise damage of enemy's attack (treat r1 as base)
-        fprintf(fpatk, "%f ", PoiseDamageForAttack(Enemy.r_weapon_id, 46));
+        fprintf(outFile, "%f ", PoiseDamageForAttack(Enemy.r_weapon_id, 46));
         //output array of AI's HP over time
         for (int i = 0; i < AIHPMemoryLENGTH; i++){
-            fprintf(fpatk, "%f ", (float)AIHPMemory[i]);
+            fprintf(outFile, "%f ", (float)AIHPMemory[i]);
         }
         //stamina of AI
-        fprintf(fpatk, "%f ", (float)Player.stamina);
+        fprintf(outFile, "%f ", (float)Player.stamina);
         //output array of enemy animation types
         for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
-            fprintf(fpatk, "%f ", (float)last_animation_types_enemy[i]);
+            fprintf(outFile, "%f ", (float)last_animation_types_enemy[i]);
         }
         //current bleed built up
-        fprintf(fpatk, "%f ", (float)Player.bleedStatus);
+        fprintf(outFile, "%f ", (float)Player.bleedStatus);
 
         //2 seconds
         long startTime = clock();
@@ -115,9 +116,9 @@ void GetTrainingData(){
         }
 
         //output result
-        fprintf(fpatk, "\n%f\n", result);
+        fprintf(outFile, "\n%f\n", result);
 
-        printf("Attack result:%f\n", result);
+        printf("Attack result:%f in %s\n", result, (outFile == fpatk_test ? "Test" : "Train"));
 
         unsigned int resethp = 2000;
 
@@ -129,19 +130,21 @@ void GetTrainingData(){
 
     //player in backstab state when animation id 3 is 9000, 9420
     if ((((AnimationId3 == 9000 || AnimationId3 == 9420) && (Timer3 < 0.1 && Timer3 > 0)) || (rand() < 1000 && backstabCheckTime)) && TwoSecStore[TwoSecStoreLength-1] != NULL && TrainBackstabNet){
+        FILE* outFile = rand() < RAND_MAX / 3 ? fpdef_test : fpdef;
+
         //output an array of 5 distance values from 3500 ms ago
         for (int i = TwoSecStoreLength - 5; i < TwoSecStoreLength; i++){
-            fprintf(fpdef, "%f ", DistanceMemory[i]);
+            fprintf(outFile, "%f ", DistanceMemory[i]);
         }
 
-        fprintf(fpdef, "%f %f %f\n%f\n",
+        fprintf(outFile, "%f %f %f\n%f\n",
             angleDeltaFromFront(TwoSecStore[TwoSecStoreLength-6], TwoSecStore[TwoSecStoreLength-7]),
             TwoSecStore[TwoSecStoreLength-7]->velocity,
             rotationDifferenceFromSelf(TwoSecStore[TwoSecStoreLength-6], TwoSecStore[TwoSecStoreLength-7]),
             ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1.0 : -1.0)
             );
 
-        printf("BackStab result:%d\n", ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1 : -1));
+        printf("BackStab result:%d in %s\n", ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1 : -1), (outFile == fpdef_test ? "Test" : "Train"));
         Sleep(100);
     }
 
@@ -151,15 +154,16 @@ void GetTrainingData(){
 }
 
 //use the file to train the network
-void trainFromFile(unsigned int max_neurons,const char* training_file, const char* output_file){
+void trainFromFile(unsigned int max_neurons, const char* training_file, const char* testing_file, const char* output_file){
     struct fann *ann;
-    struct fann_train_data *train_data;
+    struct fann_train_data *train_data, *test_data;
     const float desired_error = (const float)0.05;
     unsigned int neurons_between_reports = 5;
 
     printf("Reading data.\n");
 
     train_data = fann_read_train_from_file(training_file);
+    test_data = fann_read_train_from_file(testing_file);
 
     fann_scale_train_data(train_data, -1, 1);
 
@@ -180,6 +184,24 @@ void trainFromFile(unsigned int max_neurons,const char* training_file, const cha
     fann_cascadetrain_on_data(ann, train_data, max_neurons, neurons_between_reports, desired_error);
     fann_print_connections(ann);
 
+    float mse_train = fann_test_data(ann, train_data);
+    unsigned int bit_fail_train = fann_get_bit_fail(ann);
+    float mse_test = fann_test_data(ann, test_data);
+    unsigned int bit_fail_test = fann_get_bit_fail(ann);
+
+    printf("\nTrain error: %f, Train bit-fail: %d, Test error: %f, Test bit-fail: %d\n\n",
+        mse_train, bit_fail_train, mse_test, bit_fail_test);
+
+    for (unsigned int i = 0; i < train_data->num_data; i++)
+    {
+        fann_type* output = fann_run(ann, train_data->input[i]);
+        if (abs(train_data->output[i][0] - output[0]) > 5 || train_data->output[i][0] >= 0 && output[0] <= 0 || train_data->output[i][0] <= 0 && output[0] >= 0)
+        {
+            printf("ERROR: %f does not match %f\n", train_data->output[i][0], output[0]);
+        }
+    }
+
+
     printf("Saving network.\n");
     fann_save(ann, output_file);
 
@@ -188,49 +210,12 @@ void trainFromFile(unsigned int max_neurons,const char* training_file, const cha
     fann_destroy(ann);
 }
 
-/*
-void testData(void){
-    struct fann* defense_mind = fann_create_from_file("E:/Code Workspace/Dark Souls AI C/Neural Nets/backstab_train.net");
-
-    memset(&Enemy, 0, sizeof(Character));
-
-    HANDLE processHandle = readingSetup();
-
-    while (true){
-        long start = clock();
-
-        CharState* enemy = ReadPlayerFANN(&Enemy, processHandle);
-        CharState* player = ReadPlayerFANN(&Player, processHandle);
-
-        //read inputs and scale to -1 - 1
-        float distance = distanceFANN(player, enemy);
-        distance = 2 * (distance - 0.3) / (5 - 0.3) - 1;
-
-        float angleDelta = angleDeltaFromFrontFANN(player, enemy);
-        angleDelta = 2 * (angleDelta) / (1.6) - 1;
-
-        float velocity = enemy->velocity;
-        velocity = 2 * (velocity - -0.18) / (-0.04 - -0.18) - 1;
-
-        float rotationDelta = rotationDifferenceFromSelfFANN(player, enemy);//rotation with respect to self rotation
-        rotationDelta = 2 * (rotationDelta) / (3.8) - 1;
-
-        float input[4] = { distance, angleDelta, velocity, rotationDelta };
-        fann_type* out = fann_run(defense_mind, input);
-
-        if (*out < 1.5 && *out > 0.5){
-            printf("%f ", *out);
-        }
-
-        printf("%d\n", clock() - start);
-    }
-
-}
-*/
 
 void SetupTraining(){
     fpatk = fopen("Neural Nets/attack_training_data.train", "a");
+    fpatk_test = fopen("Neural Nets/attack_training_data.test", "a");
     fpdef = fopen("Neural Nets/backstab_training_data.train", "a");
+    fpdef_test = fopen("Neural Nets/backstab_training_data.test", "a");
     AnimationId3_Addr = FindPointerAddr(processHandle, player_base_add, Player_AnimationId3_offsets_length, Player_AnimationId3_offsets);
     Timer3_Addr = FindPointerAddr(processHandle, player_base_add, Player_Timer3_offsets_length, Player_Timer3_offsets);
 }
