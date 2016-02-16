@@ -9,6 +9,8 @@ ullong player_base_add = 0x00F7D644;
 
 #define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
+static bool waitingForAnimationTimertoCatchUp = false;
+
 void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //TODO read large block that contains all data, then parse in process
     //read x location
@@ -63,12 +65,11 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     ReadProcessMemory(processHandle, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
 
     //keep track of enemy animations in memory
-    bool newAid = false;
     if (characterId == EnemyId){
-        if (animationid){
-            newAid = AppendLastAnimationIdEnemy(animationid);
+        if (animationid != -1){
+            waitingForAnimationTimertoCatchUp |= AppendLastAnimationIdEnemy(animationid);
         } else {
-            newAid = AppendLastAnimationIdEnemy(animationid2);
+            waitingForAnimationTimertoCatchUp |= AppendLastAnimationIdEnemy(animationid2);
         }
     }
 
@@ -93,7 +94,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //what i want is a countdown till hurtbox is active
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
-    else if (attackAnimationInfo == 2 || attackAnimationInfo == 4){
+    else if (attackAnimationInfo == 2 || attackAnimationInfo == 4 || attackAnimationInfo == 5){
         int curAnimationTimer_address = 0;
         int curAnimationid = 0;
 
@@ -120,22 +121,29 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             ReadProcessMemory(processHandle, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
             //handle the timer not being reset to 0 as soon as a new animation starts
-            if (newAid){
+            //TODO this only works for one tick. It re-desyncs afterwards.
+            //wait for animation timer to go below 0.1(a tell for its been reset, since no animation is short enought to have held it at 0.1), then we can stop manually resetting it
+            if (waitingForAnimationTimertoCatchUp && animationTimer > 0.1){
                 animationTimer = 0.0;
+            } else{
+                waitingForAnimationTimertoCatchUp = false;
             }
 
-            //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it.
-            if (CombineLastAnimation(curAnimationid)){
-                float animationTimer2;
-                ReadProcessMemory(processHandle, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
-                animationTimer += animationTimer2;
+            //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it by treating the two animations as one.
+            AnimationCombineReturn animationToCombine = CombineLastAnimation(curAnimationid);
+            if (animationToCombine.animationId){
+                curAnimationid = animationToCombine.animationId;//combine the two animations and treat as one id 
+                if (animationToCombine.partNumber){
+                    //this uses the fact that animation timers are not reset by the game after use
+                    float animationTimer2;
+                    ReadProcessMemory(processHandle, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
+                    animationTimer += animationTimer2;
+                }
             }
 
             float dodgeTimer = dodgeTimings(curAnimationid);
             float timeDelta = dodgeTimer - animationTimer;
-            c->dodgeTimeRemaining = timeDelta;//TODO this is only ever used with the enemy
-
-            guiPrint("%d,9:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
+            c->dodgeTimeRemaining = timeDelta;
 
             if (timeDelta >= 1.0){
                 c->subanimation = SubanimationNeutral;
@@ -158,6 +166,8 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == PlayerId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
+
+            guiPrint("%d,9:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
         }
     }
     else if (attackAnimationInfo == 1){

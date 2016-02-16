@@ -6,7 +6,13 @@
 i cant seem to find a pattern in the ids, so this is just a big switch statement
 ranged attacks use a different format: they have a specific animation for windup,recover, and hurtbox creation; while others rely on a subanimation id to determine windup, hurtbox, and recovery.
 because of this, have to specify if we need to look at subanimation
-0 is not attack animation, 1 is windup to attack, 2 is attack id but must check subanimation(hurtbox not instantly generated), 3 is hurtbox is created, 4 is same as 2 but override behind enemy safety*/
+0 is not attack animation
+1 is windup to attack
+2 is attack id but must check subanimation(hurtbox not instantly generated)
+3 is hurtbox is created
+4 is same as 2 but override behind enemy safety
+5 is only used with character struct for animation combination
+*/
 unsigned char isAttackAnimation(unsigned short animationType_id){
     switch (animationType_id){
         case RollingAttack_1H:
@@ -65,6 +71,8 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 2;
         case Miricle_AOE_Windup:
             return 4;
+        case Miricle_AOE_Cast:
+            return 5;
         case Miricle_Throw_Cast:
             return 3;
         case Miricle_Ground_Cast:
@@ -77,6 +85,8 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 3;
         case Combustion_Windup:
             return 2;
+        case Combustion_Cast:
+            return 5;
         case FireBall_Windup:
             return 1;
         case FireBall_Cast:
@@ -156,16 +166,50 @@ unsigned char isVulnerableAnimation(int animation_id){
 
 //HAHA! TIME FOR JANK!
 //If the given animation is in this list, add up the two animation timers.
-unsigned char CombineLastAnimation(int animation_id){
+//NOTE:this requires the part 0 animation to be using timer 2, and the part 1 using timer 1
+AnimationCombineReturn CombineLastAnimation(int animation_id){
+    AnimationCombineReturn ret;
     switch (animation_id){
         //l hand combustion cast
+        case 6207:
+            ret.animationId = 6407;
+            ret.partNumber = 0;
+            return ret;
         case 6407:
-            return 1;
-        //r hand conbustion cast
+            ret.animationId = 6407;
+            ret.partNumber = 1;
+            return ret;
+        //r hand combustion cast
+        case 6307:
+            ret.animationId = 6507;
+            ret.partNumber = 0;
+            return ret;
         case 6507:
-            return 1;
+            ret.animationId = 6507;
+            ret.partNumber = 1;
+            return ret;
+        //l hand wog cast
+        case 6222:
+            ret.animationId = 6422;
+            ret.partNumber = 0;
+            return ret;
+        case 6422:
+            ret.animationId = 6422;
+            ret.partNumber = 1;
+            return ret;
+        //r hand wog cast
+        case 6322:
+            ret.animationId = 6522;
+            ret.partNumber = 0;
+            return ret;
+        case 6522:
+            ret.animationId = 6522;
+            ret.partNumber = 1;
+            return ret;
         default:
-            return 0;
+            ret.animationId = 0;
+            ret.partNumber = 0;
+            return ret;
     }
 }
 
@@ -173,11 +217,11 @@ unsigned char CombineLastAnimation(int animation_id){
 float dodgeTimings(int animation_id){
     switch (animation_id){
     case 100: return 0.5;//catch all for all kicks
-    case 6407: return 0.65;//this animation actually never goes past 0.5, but lie to account for .15 of next animation
-    case 6507: return 0.65;//rhand version of above
-    case 6222: return 0.7;//this animation actually never goes past 0.33, but lie to account for .3 of next animation
+    case 6407: return 0.65;//combined version of two combustion animations
+    case 6507: return 0.65;//rhand of above
+    case 6422: return 0.7;//combined version of two wog animations
+    case 6522: return 0.7;//rhand of above
     case 6517: return 1.1;
-    case 6522: return 0.3;
     case 203000: return 0.25;
     case 203001: return 0.229667;
     case 203002: return 0.324;

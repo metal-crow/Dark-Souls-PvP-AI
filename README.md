@@ -45,11 +45,10 @@ Attack Network Inputs:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO 
-wog still ocasionally being iffy
+wog still ocasionally being iffy(STILL)
 sometimes missing due to dead angling
 dragon breath not being dodged
 toggling not working
-healing ocasionally not working
 better velocity measure
 move away if casting fire surge
 when a weapon can poise break immediatly, do a more cautous back away attack style
