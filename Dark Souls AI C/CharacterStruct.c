@@ -121,7 +121,6 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             ReadProcessMemory(processHandle, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
             //handle the timer not being reset to 0 as soon as a new animation starts
-            //TODO this only works for one tick. It re-desyncs afterwards.
             //wait for animation timer to go below 0.1(a tell for its been reset, since no animation is short enought to have held it at 0.1), then we can stop manually resetting it
             if (waitingForAnimationTimertoCatchUp && animationTimer > 0.1){
                 animationTimer = 0.0;

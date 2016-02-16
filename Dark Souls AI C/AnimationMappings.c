@@ -15,6 +15,8 @@ because of this, have to specify if we need to look at subanimation
 */
 unsigned char isAttackAnimation(unsigned short animationType_id){
     switch (animationType_id){
+        case DragonBreathFire:
+            return 2;
         case RollingAttack_1H:
             return 2;
         case ShieldPoke:
@@ -65,7 +67,9 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
             return 2;
         case R2_2H_Combo1:
             return 2;
-        case FireSurge_Cast:
+        case FireSurge_Cast_LH:
+            return 2;
+        case FireSurge_Cast_RH:
             return 2;
         case Miricle_Projectile_Cast:
             return 2;
