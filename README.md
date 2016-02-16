@@ -44,30 +44,25 @@ Attack Network Inputs:
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
-## TODO
-resolution at 1440x810
-train neural net by listening to human (me)
-backstab detection neural net not working
-MORE TRAINING 
---ignore any case where phantom present
+## TODO 
+wog still ocasionally being iffy
+sometimes missing due to dead angling
+dragon breath not being dodged
+toggling not working
+healing ocasionally not working
 better velocity measure
 move away if casting fire surge
-when a weapon can poise break immediatly, doa more cautous back away attack style
+when a weapon can poise break immediatly, do a more cautous back away attack style
 blood loss
 vulnerable to parrying
 crashing when gui disabled
 
   * **TOP Priority**
-    * Neural net work. Ensure that it works.
-    * why is greatsword not being dodged
-    * need to dodge homing soul masses
-    * Not dodging avelin
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix?
     * any attack can be parried. allow ai to parry sometimes.
     * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
     * refine behind enemy safe state to be more behind enemy. Cone like?

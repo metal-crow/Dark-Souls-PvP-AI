@@ -97,7 +97,6 @@ void MainLogicLoop(){
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
             dodge(&Player, &Enemy, &iReport, attackImminent, DefenseChoice);
-            DefenseChoice = 0;//unset neural network desision
 		}
 
         WaitForThread(attack_mind_input);
@@ -109,8 +108,11 @@ void MainLogicLoop(){
         //enter when we either have a Attack neural net action or a attackImminent action
         if (inActiveAttackSubroutine() || attackImminent != ImminentHit || (AttackChoice && DefenseChoice<=0)){
             attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
-            AttackChoice = 0;//unset neural network desision
         }
+
+        //unset neural network desisions
+        DefenseChoice = 0;
+        AttackChoice = 0;
 
         guiPrint(LocationDetection",5:Current Subroutine States ={%d,%d,%d,%d}", subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
 
