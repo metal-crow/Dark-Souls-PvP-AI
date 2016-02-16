@@ -122,7 +122,7 @@ DWORD WINAPI AttackMindProcess(void* data){
         {
             AttackChoice = GhostHitId;
         }
-        if (Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2){
+        if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
             AttackChoice = HealId;
         }
 
