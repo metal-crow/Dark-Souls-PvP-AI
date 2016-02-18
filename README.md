@@ -45,8 +45,10 @@ Attack Network Inputs:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO 
+weapon attack speed analysis for trading avoidance
+more advanced backstab tactics instead of only take available.
 sometimes missing due to dead angling
-toggling not working
+toggling timing off for some weapons. why?
 better velocity measure
 when a weapon can poise break immediatly, do a more cautous back away attack style
 blood loss
@@ -55,7 +57,7 @@ crashing when gui disabled
 
   * **TOP Priority**
     * If behind enemy, dont have to dodge, if their attack wont hit me.
-    * spear game too strong. Dynamic range fix?
+    * spear game too strong. Dynamic range fix? no, i also just dont know how to fight spears.
     * any attack can be parried. allow ai to parry sometimes.
     * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that

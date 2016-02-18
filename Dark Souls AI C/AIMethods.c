@@ -67,8 +67,7 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
     //or we get poise broken out
     if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
         guiPrint(LocationState",0:end dodge roll");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(StandardRollId);
         return;
     }
@@ -133,8 +132,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
         //!isDodgeAnimation(Player->animation_id))
         ){
         guiPrint(LocationState",0:end backstep");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(BackstepId);
     }
 }
@@ -174,8 +172,7 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     //break early if we didnt lock on
     if (curTime > startTimeDefense + inputDelayForStopStrafe + 60 || (!Player->locked_on && curTime > startTimeDefense + 60)){
         guiPrint(LocationState",0:end CounterStrafe");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(CounterStrafeId);
     }
 }
@@ -194,8 +191,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
     if (curTime > startTimeDefense + 30){
         guiPrint(LocationState",0:end L1");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(L1AttackId);
     }
 }
@@ -248,8 +244,7 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         )
     {
         guiPrint(LocationState",0:end ReverseRollBS");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(ReverseRollBSId);
     }
 }
@@ -265,8 +260,7 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
 
     if (curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end Toggle Escape");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(ToggleEscapeId);
     }
 }
@@ -281,8 +275,7 @@ static void PerfectBlock(Character * Player, Character * Phantom, JOYSTICK_POSIT
 
     if (curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end Perfect Block");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(PerfectBlockId);
     }
 }
@@ -297,8 +290,7 @@ static void ParrySubroutine(Character * Player, Character * Phantom, JOYSTICK_PO
 
     if (curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end Parry");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(ParryId);
     }
 }
@@ -336,7 +328,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 subroutine_states[DodgeTypeIndex] = DefenseChoice;
                 break;
         }
-		subroutine_states[DodgeStateIndex] = 1;
+		subroutine_states[DodgeStateIndex] = SubroutineActive;
 		//set time for this subroutine
 		startTimeDefense = clock();
 	}
@@ -361,10 +353,9 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
             case PerfectBlockId:
                 PerfectBlock(Player, Phantom, iReport);
                 break;
-            //should never be reached
+            //dont do anything even though attack detected (staggered)
             default:
-                guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
-                subroutine_states[DodgeStateIndex] = 0;
+                subroutine_states[DodgeStateIndex] = NoSubroutineActive;
                 break;
         }
     }
@@ -416,9 +407,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         (curTime > startTimeAttack + 800) &&
         (Player->subanimation >= AttackSubanimationWindupGhostHit)
     ){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub ghost hit");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(GhostHitId);
 	}
 }
@@ -457,9 +447,8 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
     }
 
     if (curTime > startTimeAttack + 500){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub dead angle");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(GhostHitId);
     }
 }
@@ -489,9 +478,8 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     //exit if we either got the bs, or we incorrectly detected it
     if (curTime > startTimeAttack + 100){
         startTimeHasntBeenReset = true;
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end backstab");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(BackstabId);
     }
 }
@@ -514,9 +502,8 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 
     if (curTime > startTimeAttack + inputDelayForStopMove){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
-        guiPrint(LocationState",0:end sub");
+        guiPrint(LocationState",0:end sub move up");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(MoveUpId);
     }
 }
@@ -530,9 +517,8 @@ static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION *
     }
 
     if (curTime > startTimeAttack + 40){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end two hand");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(TwoHandId);
     }
 }
@@ -552,8 +538,7 @@ static void SwitchWeapon(Character * Player, Character * Phantom, JOYSTICK_POSIT
 
     if (curTime > startTimeAttack + 500){
         guiPrint(LocationState",0:end Switch Weapon");
-        subroutine_states[AttackTypeIndex] = 0;
-        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(SwitchWeaponId);
     }
 }
@@ -569,8 +554,7 @@ static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iR
     //1830 ms to use db
     if (curTime > startTimeAttack + 1830){
         guiPrint(LocationState",0:end Heal");
-        subroutine_states[AttackTypeIndex] = 0;
-        subroutine_states[AttackStateIndex] = 0;
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(HealId);
     }
 }

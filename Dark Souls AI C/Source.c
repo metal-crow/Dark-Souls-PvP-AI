@@ -113,6 +113,8 @@ void MainLogicLoop(){
         //unset neural network desisions
         DefenseChoice = 0;
         AttackChoice = 0;
+        //handle subroutine safe exits
+        SafelyExitSubroutines();
 
         guiPrint(LocationDetection",5:Current Subroutine States ={%d,%d,%d,%d}", subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
 
