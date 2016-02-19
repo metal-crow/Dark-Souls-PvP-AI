@@ -170,8 +170,14 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         iReport->lButtons = 0;
     }
 
+    else{
+        guiPrint(LocationState",0:end CounterStrafe");
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(CounterStrafeId);
+    }
+
     //break early if we didnt lock on
-    if (curTime > startTimeDefense + inputDelayForStopStrafe + 60 || (!Player->locked_on && curTime > startTimeDefense + 60)){
+    if (!Player->locked_on && curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end CounterStrafe");
         subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(CounterStrafeId);
