@@ -140,8 +140,8 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define inputDelayForStopStrafe 800
 
 void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:CounterStrafe");
     long curTime = clock();
+    guiPrint(LocationState",0:CounterStrafe:%d", (curTime - startTimeDefense));
 
     //have to lock on to strafe
     if (curTime < startTimeDefense + 30){
@@ -153,7 +153,8 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         iReport->lButtons = 0;
     }
 
-    else if (curTime < startTimeDefense + inputDelayForStopStrafe){
+    //keep going if we're behind enemy: might get a bs
+    else if (curTime < startTimeDefense + inputDelayForStopStrafe || BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
         //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
         iReport->wAxisY = MIDDLE / 2;//3/4 pushed up
@@ -310,11 +311,15 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 //while staggered, dont enter any subroutines
                 if (Player->subanimation != PoiseBrokenSubanimation){
                     //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                    if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
+                    if (
+                        distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining &&
+                        //if just reverse rolled and next incoming attack and weapon speed < ?, do normal roll
+                        (last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll+0.3 > Phantom->dodgeTimeRemaining)
+                    ){
                         subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
                     }
-                    //if we dont have enough time to roll, and we didnt just toggle, perfect block
-                    else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId){
+                    //if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
+                    else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player->subanimation == SubanimationNeutral){
                         subroutine_states[DodgeTypeIndex] = PerfectBlockId;
                     }
                     //otherwise, normal roll

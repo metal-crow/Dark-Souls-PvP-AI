@@ -45,20 +45,18 @@ Attack Network Inputs:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO 
-weapon attack speed analysis for trading avoidance
-more advanced backstab tactics instead of only take available.
-sometimes missing due to dead angling
-toggling timing off for some weapons. why?
-better velocity measure
-when a weapon can poise break immediatly, do a more cautous back away attack style
-blood loss
-vulnerable to parrying
-crashing when gui disabled
 
   * **TOP Priority**
+    * toggling timing off for some weapons. why?
+    * weapon attack speed analysis for trading avoidance
+    * more advanced backstab tactics instead of only take available.
+    * sometimes missing due to dead angling
+    * better velocity measure
+    * when enemy weapon can poise break immediatly, do a more cautous back away attack style
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix? no, i also just dont know how to fight spears.
     * any attack can be parried. allow ai to parry sometimes.
+    * improve ai's vulnerablity to parrying
     * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
 
@@ -66,7 +64,7 @@ crashing when gui disabled
     * refine behind enemy safe state to be more behind enemy. Cone like?
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
-    * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
+    * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range. this also fixes bows not being dodged.  
     * detect when player in backstab or parry, and when enemy in backstab or parry. know not to do stuff when they are.
     * make this strafe in the same direction as the enemy strafe  
     * Teach poise. Additional inputs for attack neural network: Poise damage of the poise damage of AI's attack and poise of enemy. Their max is sent over wire, but how do i detect hits? Including phantom poise damage.  
