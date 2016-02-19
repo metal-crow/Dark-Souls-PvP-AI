@@ -134,6 +134,10 @@ int main(void){
                     MainLogicLoop();
                 #endif
                 }
+                //last resort error catching
+                else{
+                    RereadPointerEndAddress = true;
+                }
                 //if enemy player far away, black crystal out
                 /*else if (!RereadPointerEndAddress){
                     guiPrint(LocationHandler",2:BlackCrystalOut");
