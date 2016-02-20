@@ -142,6 +142,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
     guiPrint(LocationState",0:CounterStrafe:%d", (curTime - startTimeDefense));
+    float distanceBt = distance(Player, Phantom);
 
     //have to lock on to strafe
     if (curTime < startTimeDefense + 30){
@@ -153,8 +154,8 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         iReport->lButtons = 0;
     }
 
-    //keep going if we're behind enemy: might get a bs
-    else if (curTime < startTimeDefense + inputDelayForStopStrafe || BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
+    //keep going if we're behind enemy or very close to them: might get a bs
+    else if (curTime < startTimeDefense + inputDelayForStopStrafe || BackstabDetection(Player, Phantom, distanceBt) == 1 || distanceBt < 1.3){
         //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
         iReport->wAxisY = MIDDLE / 2;//3/4 pushed up

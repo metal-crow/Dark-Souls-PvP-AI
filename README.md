@@ -45,23 +45,25 @@ Attack Network Inputs:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO 
+rolling in and out of cb wirlwind. ai rolls normally, but someitmes towards and sometimes away
+keep counter strafing for a bs
 
   * **TOP Priority**
-    * toggling timing off for some weapons. why?
-    * weapon attack speed analysis for trading avoidance
     * more advanced backstab tactics instead of only take available.
+    * weapon attack speed analysis for trading avoidance
+    * improve ai's vulnerablity to parrying. See improving trading analysis.
     * sometimes missing due to dead angling
+    * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
+
+  * **HIGH Priority**
+    * toggling timing off for some weapons (gold tracer,). why?
     * better velocity measure
     * when enemy weapon can poise break immediatly, do a more cautous back away attack style
     * If behind enemy, dont have to dodge, if their attack wont hit me.
     * spear game too strong. Dynamic range fix? no, i also just dont know how to fight spears.
-    * any attack can be parried. allow ai to parry sometimes.
-    * improve ai's vulnerablity to parrying
     * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
-    * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-
-  * **HIGH Priority**
     * refine behind enemy safe state to be more behind enemy. Cone like?
+    * any attack can be parried. allow ai to parry sometimes.
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
     * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range. this also fixes bows not being dodged.  
