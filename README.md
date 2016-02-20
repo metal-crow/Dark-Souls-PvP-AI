@@ -45,7 +45,6 @@ Attack Network Inputs:
     * usually tell how they attack by how long it's been since they last attacked
 
 ## TODO 
-rolling in and out of cb wirlwind. ai rolls normally, but someitmes towards and sometimes away
 
   * **TOP Priority**
     * more advanced backstab tactics instead of only take available.

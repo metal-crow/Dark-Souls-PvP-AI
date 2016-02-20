@@ -95,6 +95,10 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
             rollOffset = 0;
         }
+        //if we just rolled but have to roll again, ensure we roll away so we dont get caught in r1 spam
+        else if (last_subroutine_states_self[0] == StandardRollId){
+            rollOffset = 180.0;
+        }
 
         double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - rollOffset;
         angle = angle < 0 ? angle + 360 : angle;//wrap around
