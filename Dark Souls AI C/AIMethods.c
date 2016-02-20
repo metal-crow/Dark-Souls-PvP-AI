@@ -18,7 +18,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             //if in an animation where subanimation is not used for hurtbox
             (AtkID == 3 && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox) ||
             //or animation where it is
-            ((AtkID == 2 || AtkID == 4) && (Phantom->subanimation == AttackSubanimationWindupClosing || Phantom->subanimation == AttackSubanimationActiveDuringHurtbox))
+            ((AtkID == 2 || AtkID == 4) && (Phantom->subanimation >= AttackSubanimationWindupClosing && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox))
 			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
@@ -45,7 +45,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             returnVar = InBSPosition;
         }
         //override saftey notice here if = 4
-        /*else if (AtkID != 4){TEMP DISABLE
+        /*else if (AtkID != 4){TEMP DISABLE b/c some weapon attack go behind enemy
             returnVar = BehindEnemy;
         }*/
     }
@@ -561,6 +561,11 @@ static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iR
 
     if (curTime < startTimeAttack + 30){
         iReport->lButtons = square;
+    }
+
+    //sometimes game doesnt register the heal. retry till it does.
+    if (Player->subanimation != LockInSubanimation && curTime > startTimeAttack + 100){
+        startTimeAttack = curTime;
     }
 
     //1830 ms to use db

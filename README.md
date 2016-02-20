@@ -46,7 +46,6 @@ Attack Network Inputs:
 
 ## TODO 
 rolling in and out of cb wirlwind. ai rolls normally, but someitmes towards and sometimes away
-keep counter strafing for a bs
 
   * **TOP Priority**
     * more advanced backstab tactics instead of only take available.
