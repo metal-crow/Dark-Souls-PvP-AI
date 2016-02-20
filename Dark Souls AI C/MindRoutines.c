@@ -111,7 +111,8 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (
             //sanity checks
             mostRecentDistance <= Player.weaponRange && //in range
-            (Player.stamina > 20) && //just to ensure we have enough to roll
+            Player.stamina > 20 && //just to ensure we have enough to roll
+            Player.bleedStatus > 40 && //more than one attack to proc bleed
             //static checks for attack
             ((
                 (Player.stamina > 90) && //safety buffer for stamina
