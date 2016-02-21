@@ -21,10 +21,10 @@ class GuiPane extends JPanel{
     private int height;
 
     private JPanel MemoryEnemy=new JPanel();
-    private JTextArea[] MemoryEnemy_Params=new JTextArea[16];
+    private JTextArea[] MemoryEnemy_Params=new JTextArea[17];
     
     private JPanel MemoryPlayer=new JPanel();
-    private JTextArea[] MemoryPlayer_Params=new JTextArea[16];
+    private JTextArea[] MemoryPlayer_Params=new JTextArea[17];
 
     private JPanel Detection=new JPanel();
     private JTextArea[] Detection_Params=new JTextArea[6];
@@ -33,6 +33,10 @@ class GuiPane extends JPanel{
 
     private JPanel JoystickInfo=new JPanel();
     private JTextArea[] JoystickInfo_Params=new JTextArea[3];
+    
+    private JPanel HandlerInfo=new JPanel();
+    private JTextArea[] HandlerInfo_Params=new JTextArea[3];
+
     
     public GuiPane(int height, int width){
         this.width=width;
@@ -111,6 +115,20 @@ class GuiPane extends JPanel{
             JoystickInfo_Params[p].setWrapStyleWord(true);
             JoystickInfo.add(JoystickInfo_Params[p]);
         }
+        
+        add(HandlerInfo);
+        HandlerInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        HandlerInfo.setLayout(new BoxLayout(HandlerInfo, BoxLayout.Y_AXIS));
+        JLabel HandlerInfo_title = new JLabel("HANDLER INFO");
+        HandlerInfo_title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        HandlerInfo.add(HandlerInfo_title);
+        for(int p=0;p<HandlerInfo_Params.length;p++){
+            HandlerInfo_Params[p] = new JTextArea(" ");
+            HandlerInfo_Params[p].setEditable(false);
+            HandlerInfo_Params[p].setLineWrap(true);
+            HandlerInfo_Params[p].setWrapStyleWord(true);
+            HandlerInfo.add(HandlerInfo_Params[p]);
+        }
     }
     
     public Dimension getPreferredSize() {
@@ -139,6 +157,9 @@ class GuiPane extends JPanel{
                 break;
             case 4:
                 JoystickInfo_Params[position].setText(data);
+                break;
+            case 5:
+                HandlerInfo_Params[position].setText(data);
                 break;
         }
     }

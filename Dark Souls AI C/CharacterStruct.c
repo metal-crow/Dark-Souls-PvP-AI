@@ -9,6 +9,8 @@ ullong player_base_add = 0x00F7D644;
 
 #define WeaponGhostHitTime 0.21//NOTE: this is curently hardcoded for gold tracer until i find a dynamic way
 
+static bool waitingForAnimationTimertoCatchUp = false;
+
 void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //TODO read large block that contains all data, then parse in process
     //read x location
@@ -33,6 +35,9 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //read hp
     ReadProcessMemory(processHandle, (LPCVOID)(c->hp_address), &(c->hp), 4, 0);
     guiPrint("%d,4:HP:%d", characterId, c->hp);
+    if (characterId == PlayerId){
+        AppendAIHP(Player.hp);
+    }
     //read stamina
     if (c->stamina_address){
         ReadProcessMemory(processHandle, (LPCVOID)(c->stamina_address), &(c->stamina), 4, 0);
@@ -60,12 +65,11 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     ReadProcessMemory(processHandle, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
 
     //keep track of enemy animations in memory
-    bool newAid = false;
     if (characterId == EnemyId){
-        if (animationid){
-            newAid = AppendLastAnimationIdEnemy(animationid);
+        if (animationid != -1){
+            waitingForAnimationTimertoCatchUp |= AppendLastAnimationIdEnemy(animationid);
         } else {
-            newAid = AppendLastAnimationIdEnemy(animationid2);
+            waitingForAnimationTimertoCatchUp |= AppendLastAnimationIdEnemy(animationid2);
         }
     }
 
@@ -76,7 +80,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //---any subanimation that is based purely off animation id should be prioritized in subanimation state setting---
     if (isVulnerableAnimation(animationid))
     {
-        c->subanimation = AttackSubanimationActiveHurtboxOver;
+        c->subanimation = LockInSubanimation;
     }
     else if (animationid >= 2000 && animationid <= 2056){//animation states for poise breaks, knockdowns, launches, staggers
         c->subanimation = PoiseBrokenSubanimation;
@@ -90,7 +94,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //what i want is a countdown till hurtbox is active
     //cant be much higher b/c need spell attack timings
     //also check that this is an attack that involves subanimation
-    else if (attackAnimationInfo == 2 || attackAnimationInfo == 4){
+    else if (attackAnimationInfo == 2 || attackAnimationInfo == 4 || attackAnimationInfo == 5){
         int curAnimationTimer_address = 0;
         int curAnimationid = 0;
 
@@ -117,30 +121,36 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             ReadProcessMemory(processHandle, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
             //handle the timer not being reset to 0 as soon as a new animation starts
-            if (newAid){
+            //wait for animation timer to go below 0.1(a tell for its been reset, since no animation is short enought to have held it at 0.1), then we can stop manually resetting it
+            if (waitingForAnimationTimertoCatchUp && animationTimer > 0.1){
                 animationTimer = 0.0;
+            } else{
+                waitingForAnimationTimertoCatchUp = false;
             }
 
-            //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it.
-            if (CombineLastAnimation(curAnimationid)){
-                float animationTimer2;
-                ReadProcessMemory(processHandle, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
-                animationTimer += animationTimer2;
+            //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it by treating the two animations as one.
+            AnimationCombineReturn animationToCombine = CombineLastAnimation(curAnimationid);
+            if (animationToCombine.animationId){
+                curAnimationid = animationToCombine.animationId;//combine the two animations and treat as one id 
+                if (animationToCombine.partNumber){
+                    //this uses the fact that animation timers are not reset by the game after use
+                    float animationTimer2;
+                    ReadProcessMemory(processHandle, (LPCVOID)(c->animationTimer2_address), &animationTimer2, 4, 0);
+                    animationTimer += animationTimer2;
+                }
             }
 
             float dodgeTimer = dodgeTimings(curAnimationid);
             float timeDelta = dodgeTimer - animationTimer;
-            c->dodgeTimeRemaining = timeDelta;//TODO this is only ever used with the enemy
-
-            guiPrint("%d,9:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
+            c->dodgeTimeRemaining = timeDelta;
 
             if (timeDelta >= 1.0){
                 c->subanimation = SubanimationNeutral;
-            } else if (timeDelta < 1.0 && timeDelta > 0.45){
+            } else if (timeDelta < 1.0 && timeDelta > 0.55){
                 c->subanimation = AttackSubanimationWindup;
             }
-            //between 0.45 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
-            else if (timeDelta <= 0.45 && timeDelta >= 0.15){
+            //between 0.55 and 0.15 sec b4 hurtbox. If we have less that 0.15 we can't dodge.
+            else if (timeDelta <= 0.55 && timeDelta >= 0.15){
                 c->subanimation = AttackSubanimationWindupClosing;
             }
             //just treat this as the hurtbox is activated
@@ -155,6 +165,8 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             if (timeDelta < WeaponGhostHitTime && timeDelta >= -0.3 && characterId == PlayerId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
+
+            guiPrint("%d,9:Animation Timer:%f\nDodge Time:%f", characterId, animationTimer, dodgeTimer);
         }
     }
     else if (attackAnimationInfo == 1){
@@ -164,7 +176,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         c->subanimation = AttackSubanimationActiveDuringHurtbox;
     }
     else{
-    //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1
+        //else if (c->animationType_id == 0){//0 when running, walking, standing. all animation can immediatly transition to new animation. Or animation id = -1
         c->subanimation = SubanimationNeutral;
     }
 
@@ -176,7 +188,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             c->subanimation = SubanimationRecover;
         } /*else{ Not adding this now because it would lock out subanimations every time i move
             c->subanimation = LockInSubanimation;
-        }*/
+            }*/
     }
     guiPrint("%d,10:Subanimation:%d", characterId, c->subanimation);
 
@@ -201,10 +213,13 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
         ReadProcessMemory(processHandle, (LPCVOID)(c->staminaRecoveryRate_address), &(c->staminaRecoveryRate), 4, 0);
         guiPrint("%d,14:Stamina Recovery Rate:%d", characterId, c->staminaRecoveryRate);
     }
-    //read poise of enemy
-    if (c->maxPoise_address){
-        ReadProcessMemory(processHandle, (LPCVOID)(c->maxPoise_address), &(c->maxPoise), 4, 0);
-        guiPrint("%d,15:Max Poise:%f", characterId, c->maxPoise);
+    //read current poise
+    ReadProcessMemory(processHandle, (LPCVOID)(c->poise_address), &(c->poise), 4, 0);
+    guiPrint("%d,15:Poise:%f", characterId, c->poise);
+    //read current bleed status
+    if (c->bleedStatus_address){
+        ReadProcessMemory(processHandle, (LPCVOID)(c->bleedStatus_address), &(c->bleedStatus), 4, 0);
+        guiPrint("%d,16:Bleed Status:%d", characterId, c->bleedStatus);
     }
 }
 
@@ -239,9 +254,9 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
     Enemy.locked_on_address = 0;
     Enemy.twoHanding_address = 0;
-    Enemy.visualStatus_address = 0;
     Enemy.staminaRecoveryRate_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_stamRecovery_offsets_length, Enemy_stamRecovery_offsets);
-    Enemy.maxPoise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_maxPoise_offsets_length, Enemy_maxPoise_offsets);
+    Enemy.poise_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_Poise_offsets_length, Enemy_Poise_offsets);
+    Enemy.bleedStatus_address = 0;
 
     Player.location_x_address = FindPointerAddr(processHandle, player_base_add, Player_loc_x_offsets_length, Player_loc_x_offsets);
     Player.location_y_address = FindPointerAddr(processHandle, player_base_add, Player_loc_y_offsets_length, Player_loc_y_offsets);
@@ -260,7 +275,7 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.velocity_address = 0;
     Player.locked_on_address = FindPointerAddr(processHandle, player_base_add, Player_Lock_on_offsets_length, Player_Lock_on_offsets);
     Player.twoHanding_address = FindPointerAddr(processHandle, player_base_add, Player_twohanding_offsets_length, Player_twohanding_offsets);
-    Player.visualStatus_address = FindPointerAddr(processHandle, player_base_add, Player_visual_offsets_length, Player_visual_offsets);
     Player.staminaRecoveryRate_address = 0;
-    Player.maxPoise_address = 0;
+    Player.poise_address = FindPointerAddr(processHandle, player_base_add, Player_Poise_offsets_length, Player_Poise_offsets);
+    Player.bleedStatus_address = FindPointerAddr(processHandle, player_base_add, Player_BleedStatus_offsets_length, Player_BleedStatus_offsets);
 }

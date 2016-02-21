@@ -74,14 +74,15 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>E:\Code Workspace\.external libraries\FANN-2.2.0-Source\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>E:\Code Workspace\Dark Souls AI C\lib;E:\Code Workspace\.external libraries\FANN-2.2.0-Source\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vJoyInterface.lib;fannfloatd.lib;fanndoubled.lib;fannfixedd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vJoyInterface.lib;fannfloatd.lib;fanndoubled.lib;fannfixedd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -107,12 +108,14 @@
     <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="InitalizeFANN.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MindRoutines.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="HelperUtil.h" />
     <ClInclude Include="MemoryEdits.h" />
     <ClInclude Include="public.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="SubRoutines.h" />
     <ClInclude Include="vjoyhelper.h" />

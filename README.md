@@ -24,7 +24,7 @@ The most recent commit to master should always have been tested and verified to 
 ## Neural Networks
 Defense Network Inputs:  
 
-  * Player Distance from Enemy  
+  * Array of distance between AI and enemy over 0.5 second period 
   * The angle the enemy is off from directly in front of the player  
   * The enemy velocity  
   * The rotation difference between the enemy and the player  
@@ -33,27 +33,38 @@ Attack Network Inputs:
 
   * Array of distance between AI and enemy over 5 second period
   * Estimated stamina of enemy
-  * TODO estimated poise of enemy
-  * TODO poise damage of AI's attack
+  * Poise of enemy 
+  * poise damage of AI's attack
+  * the AI's current poise
+  * base poise damage of enemy's attack
+  * array of AI's HP over time
+  * stamina of AI
+  * array of enemy animation types
+  * current bleed build up
   * NOTES:
     * usually tell how they attack by how long it's been since they last attacked
 
-## TODO
-resolution at 1440x810
+## TODO 
 
   * **TOP Priority**
-    * If behind enemy, dont have to dodge, if their attack wont hit me.
-    * spear game too strong. Dynamic range fix?
-    * any attack can be parried. allow ai to parry sometimes.
-    * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
+    * more advanced backstab tactics instead of only take available.
+    * weapon attack speed analysis for trading avoidance
+    * improve ai's vulnerablity to parrying. See improving trading analysis.
+    * sometimes missing due to dead angling
     * impove bs neural network accuracy. try to bs with neural network on and using strafing, train with that
-    * CE camera lock script causes crashes. Fix under testing.
 
   * **HIGH Priority**
+    * toggling timing off for some weapons (gold tracer,). why?
+    * better velocity measure
+    * when enemy weapon can poise break immediatly, do a more cautous back away attack style
+    * If behind enemy, dont have to dodge, if their attack wont hit me.
+    * spear game too strong. Dynamic range fix? no, i also just dont know how to fight spears.
+    * should attack even when enemy attacking, just determine their direction and attack to their side or behind.
     * refine behind enemy safe state to be more behind enemy. Cone like?
+    * any attack can be parried. allow ai to parry sometimes.
     * more specifications on neural network output. Defense net should return how exactly to avoid bs, not just detect it. Likewise for attack.  
     * use more than 1 attack types, dynamic range for weapon attacks  
-    * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range.  
+    * get dynamic weapon range working, teach range. Should not keep moving forward once in weapon attack range. this also fixes bows not being dodged.  
     * detect when player in backstab or parry, and when enemy in backstab or parry. know not to do stuff when they are.
     * make this strafe in the same direction as the enemy strafe  
     * Teach poise. Additional inputs for attack neural network: Poise damage of the poise damage of AI's attack and poise of enemy. Their max is sent over wire, but how do i detect hits? Including phantom poise damage.  
@@ -64,7 +75,7 @@ resolution at 1440x810
     * true pathfinding. Read ripped maps
     * Get different base addresses for all possible enemies, allow switching of main target.
     * projectile or lingering hurtboxes.
-    * Lock camera(x and y pos) programaticly, rotation x set to PI
+    * Lock camera(x and y pos) programaticly, rotation x set to PI or 0 depending on map
     * Store all info to be printed in buffer and only print/send to gui on tick end, to save socket writes
 
   * **LOW Priority**

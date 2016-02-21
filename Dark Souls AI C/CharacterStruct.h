@@ -63,12 +63,12 @@ typedef struct {
     //stamina recovery rate
     ullong staminaRecoveryRate_address;
     int staminaRecoveryRate;
-    //visual state. used for auto red signing
-    ullong visualStatus_address;
-    int visualStatus;
-    //max poise, not current actual
-    ullong maxPoise_address;
-    float maxPoise;
+    //current poise
+    ullong poise_address;
+    float poise;
+    //current bleed state
+    ullong bleedStatus_address;
+    int bleedStatus;
 } Character;
 
 //initalize the phantom and player
@@ -177,13 +177,15 @@ static const int Player_Lock_on_offsets_length = 5;
 //handed state of player
 static const int Player_twohanding_offsets[] = { 0x28, 0x0, 0x148, 0x4C8, 0x0 };
 static const int Player_twohanding_offsets_length = 5;
-//visual state of player (phantom, host, invader, etc)
-static const int Player_visual_offsets[] = { 0x28, 0x0, 0x30, 0xC, 0x70 };
-static const int Player_visual_offsets_length = 5;
 //stamina recovery rate of enemy
 static const int Enemy_stamRecovery_offsets[] = { 0x4, 0x4, 0x170, 0x34C, 0x408 };
 static const int Enemy_stamRecovery_offsets_length = 5;
-//max poise of enemy (not their actual current)
-static const int Enemy_maxPoise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C4 };
-static const int Enemy_maxPoise_offsets_length = 5;
+//current poise
+static const int Player_Poise_offsets[] = { 0x28, 0x18, 0xE0, 0xC, 0x1C0 };
+static const int Player_Poise_offsets_length = 5;
+static const int Enemy_Poise_offsets[] = { 0x4, 0x4, 0x60, 0x8, 0x1C0 };
+static const int Enemy_Poise_offsets_length = 5;
+//bleed status
+static const int Player_BleedStatus_offsets[] = { 0x3C, 0x308 };
+static const int Player_BleedStatus_offsets_length = 2;
 #endif

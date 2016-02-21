@@ -132,5 +132,11 @@
     <ClInclude Include="vjoyhelper.h">
       <Filter>VJoy</Filter>
     </ClInclude>
+    <ClInclude Include="InitalizeFANN.h">
+      <Filter>AICore\Neural Net\FANN</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

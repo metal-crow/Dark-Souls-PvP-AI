@@ -1,6 +1,9 @@
 #include "MindRoutines.h"
 #pragma warning( disable: 4244 )
 
+#define SCALE(input, minVal, maxVal) (2 * ((float)input - minVal) / (maxVal - minVal) - 1)
+
+
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
     {
@@ -12,31 +15,31 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
 
         //generate inputs and scale from -1 to 1 
-        fann_type input[4];
+        fann_type input[8];
 
-        float distanceInput = distance(&Player, &Enemy);
-        //min:0.3 max:5
-        input[0] = 2 * (distanceInput - 0.3) / (5 - 0.3) - 1;
-
-        float angleDeltaInput = angleDeltaFromFront(&Player, &Enemy);
-        //min:0 max:1.6
-        input[1] = 2 * (angleDeltaInput) / (1.6) - 1;
-
-        //min:-0.18 max:-0.04
-        input[2] = 2 * (Enemy.velocity - -0.18) / (-0.04 - -0.18) - 1;
-
-        float rotationDeltaInput = rotationDifferenceFromSelf(&Player, &Enemy);
-        //min:0 max:3.8
-        input[3] = 2 * (rotationDeltaInput) / (3.8) - 1;
-
+        //copy inputs into input and scale
+        float mostRecentDistance = distance(&Player, &Enemy);
+        input[0] = SCALE(mostRecentDistance, 0, 10);
+        input[0] = input[0] > 1 ? 1 : input[0];
+        input[0] = input[0] < -1 ? -1 : input[0];
+        for (int i = 0; i < 4; i++){
+            input[i+1] = SCALE(DistanceMemory[i], 0, 10);
+            //cut off above and below
+            input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
+            input[i+1] = input[i+1] < -1 ? -1 : input[i+1];
+        }
+        input[5] = SCALE(angleDeltaFromFront(&Player, &Enemy), 0, 1.6);
+        input[6] = SCALE(Enemy.velocity, -0.18, -0.04);
+        input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
-        if (*out < 1.5 && *out > 0.5
-            && distanceInput < 5){//hardcode bs distance
+        //printf("%f\n", *out);
+        if (*out < 10 && *out > 0.5
+            && mostRecentDistance < 5){//hardcode bs distance
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        if (distanceInput < 2 && BackstabDetection(&Enemy, &Player, distanceInput)){
+        if (mostRecentDistance < 2 && BackstabDetection(&Enemy, &Player, mostRecentDistance)){
             AttackChoice = GhostHitId;
         }
         //if we had to toggle escape, they're probably comboing. Get out.
@@ -64,41 +67,64 @@ DWORD WINAPI AttackMindProcess(void* data){
         }
 
         //generate inputs and scale from -1 to 1 
-        fann_type input[DistanceMemoryLENGTH+1];
+        fann_type input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1 + last_animation_types_enemy_LENGTH + 1];
 
-        //copy distances into input and scale
-        for (int i = 0; i < DistanceMemoryLENGTH; i++){
-            //min:0 max:10
-            input[i] = 2 * (DistanceMemory[i] / 10.0) - 1;
+        //copy inputs into input and scale
+        float mostRecentDistance = distance(&Player, &Enemy);
+        input[0] = SCALE(mostRecentDistance, 0, 10);
+        input[0] = input[0] > 1 ? 1 : input[0];
+        input[0] = input[0] < -1 ? -1 : input[0];
+        for (int i = 0; i < DistanceMemoryLENGTH-1; i++){
+            input[i+1] = SCALE(DistanceMemory[i], 0, 10);
             //cut off above and below
-            input[i] = input[i] > 1 ? 1 : input[i];
-            input[i] = input[i] < -1 ? -1 : input[i];
+            input[i+1] = input[i+1] > 1 ? 1 : input[i+1];
+            input[i+1] = input[i+1] < -1 ? -1 : input[i+1];
         }
-        //scale stamina estimate min:-40 max:192
-        input[DistanceMemoryLENGTH] = 2 * (StaminaEstimationEnemy() - -40) / (192 - -40) - 1;
+        input[DistanceMemoryLENGTH] = SCALE(StaminaEstimationEnemy(), -40, 192);
+        input[DistanceMemoryLENGTH + 1] = SCALE(Enemy.poise, 0, 120);
+        input[DistanceMemoryLENGTH + 2] = SCALE(PoiseDamageForAttack(Player.r_weapon_id, 46), 0, 80);
+        input[DistanceMemoryLENGTH + 3] = SCALE(Player.poise, 0, 120);
+        input[DistanceMemoryLENGTH + 4] = SCALE(PoiseDamageForAttack(Enemy.r_weapon_id, 46), 0, 80);
+        for (int i = 0; i < AIHPMemoryLENGTH; i++){
+            input[i + DistanceMemoryLENGTH + 5] = SCALE(AIHPMemory[i], 0, 2000);
+        }
+        input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH] = SCALE(Player.stamina, -40, 192);
+        for (int i = 0; i < last_animation_types_enemy_LENGTH; i++){
+            input[i + DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1] = SCALE(last_animation_types_enemy[i], 0, 255);
+        }
+        input[DistanceMemoryLENGTH + 5 + AIHPMemoryLENGTH + 1 + last_animation_types_enemy_LENGTH] = SCALE(Player.bleedStatus, 0, 255);
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
-        if (!Player.twoHanding){
-            AttackChoice = TwoHandId;
-        }
-        else if (
+        if (
             //not in range
-            DistanceMemory[0] > Player.weaponRange ||
+            mostRecentDistance > Player.weaponRange ||
             //we're behind the enemy and might be able to get a backstab
-            BackstabDetection(&Player, &Enemy, DistanceMemory[0]) == 1)
+            BackstabDetection(&Player, &Enemy, mostRecentDistance) == 1)
         {
             AttackChoice = MoveUpId;
         }
+        //l hand bare handed, not holding shield. safety distance
+        if (Player.l_weapon_id == 900000 && mostRecentDistance > 5){
+            AttackChoice = SwitchWeaponId;
+        }
         if (
-            (Player.stamina > 90) &&  //have enough stamina
-            (Enemy.subanimation >= LockInSubanimation) &&  //enemy in vulnerable state
-            DistanceMemory[0] <= Player.weaponRange &&  //in range
-            //(DistanceMemory[0] > 1) &&  //dont attack when right in enemy face to try and avoid getting parried
-            //(*out > 0) //neural network says so
-            (rand()<RAND_MAX / 5) //random limitor
-           ){
+            //sanity checks
+            mostRecentDistance <= Player.weaponRange && //in range
+            Player.stamina > 20 && //just to ensure we have enough to roll
+            Player.bleedStatus > 40 && //more than one attack to proc bleed
+            //static checks for attack
+            ((
+                (Player.stamina > 90) && //safety buffer for stamina
+                (Enemy.subanimation >= LockInSubanimation && Enemy.subanimation < SubanimationNeutral)  //enemy in vulnerable state, and can't immediatly transition
+            ) ||
+            (*out > 0.5)//neural network says so
+           ))
+        {
             AttackChoice = GhostHitId;
+        }
+        if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
+            AttackChoice = HealId;
         }
 
         //prevent rerun

@@ -1,7 +1,7 @@
 #include "gui.h"
+#include "Settings.h"
 
 #define MAXSTRINGSIZE 500 // max space for string
-#define PORT 4149
 
 SOCKET s;
 char* buffer;
@@ -13,14 +13,14 @@ int guiStart(){
 
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
     {
-        printf("Failed. Error Code : %d", WSAGetLastError());
+        printf("Failed. Error Code : %d\n", WSAGetLastError());
         return 1;
     }
 
     //Create a socket
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
     {
-        printf("Could not create socket : %d", WSAGetLastError());
+        printf("Could not create socket : %d\n", WSAGetLastError());
         return 1;
     }
 
@@ -31,7 +31,7 @@ int guiStart(){
     //Connect to server
     if (connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
-        puts("connect error");
+        printf("connect error\n");
         return 1;
     }
 
@@ -54,12 +54,14 @@ void guiPrint(const char* format, ...){
     vsnprintf(buffer, MAXSTRINGSIZE, format, ap);
     va_end(ap);
 
-    send(s, buffer, MAXSTRINGSIZE, 0);
+    sendto(s, buffer, MAXSTRINGSIZE, 0, 0, 0);
 #endif
 #if ENABLEPRINT
     printf("%s\n",buffer);
 #endif
+#if ENABLEGUI
     memset(buffer, 0, MAXSTRINGSIZE);//reset buffer
+#endif
 }
 
 void guiClose(){

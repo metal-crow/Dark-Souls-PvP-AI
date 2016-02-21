@@ -18,7 +18,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             //if in an animation where subanimation is not used for hurtbox
             (AtkID == 3 && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox) ||
             //or animation where it is
-            ((AtkID == 2 || AtkID == 4) && Phantom->subanimation == AttackSubanimationWindupClosing)
+            ((AtkID == 2 || AtkID == 4) && (Phantom->subanimation >= AttackSubanimationWindupClosing && Phantom->subanimation <= AttackSubanimationActiveDuringHurtbox))
 			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
 			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
 		){
@@ -28,7 +28,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 		}
 		//windup, attack coming
         //TODO should start to plan an attack now and attack while they;re attacking while avoiding the attack
-        else if (AtkID == 1 || (AtkID == 2 && Phantom->subanimation == AttackSubanimationWindup)){
+        else if (AtkID == 1 || ((AtkID == 2 || AtkID == 4) && Phantom->subanimation == AttackSubanimationWindup)){
 			guiPrint(LocationDetection",0:dont attack, enemy windup");
             returnVar = EnemyInWindup;
 		}
@@ -45,7 +45,7 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
             returnVar = InBSPosition;
         }
         //override saftey notice here if = 4
-        /*else if (AtkID != 4){TEMP DISABLE
+        /*else if (AtkID != 4){TEMP DISABLE b/c some weapon attack go behind enemy
             returnVar = BehindEnemy;
         }*/
     }
@@ -58,18 +58,46 @@ char EnemyStateProcessing(Character * Player, Character * Phantom){
 
 /* ------------- DODGE Actions ------------- */
 
-//also, we're recalculating the direction to rotate to from our current direction, which was affected by the last rotation calculation. Minor issue.
 void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
     long curTime = clock();
 
     guiPrint(LocationState",0:dodge roll time:%d", (curTime - startTimeDefense));
 
-    //start to turn, and wait until the turing animation starts in game
-    if (curTime < startTimeDefense + 350){
-        double rollOffset = 40.0;//To avoid taking too long in turning, only turn 40 degrees max
+    //ensure we actually enter dodge roll in game so another subanimation cant override it
+    //or we get poise broken out
+    if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
+        guiPrint(LocationState",0:end dodge roll");
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(StandardRollId);
+        return;
+    }
+
+    //roll
+    //AUUUGH FUCK IT JUST HAMMER THE BUTTON
+    if (curTime < startTimeDefense + 50 || 
+       (curTime > startTimeDefense + 100 && curTime < startTimeDefense + 150) || 
+       (curTime > startTimeDefense + 200 && curTime < startTimeDefense + 250) || 
+       (curTime > startTimeDefense + 300 && curTime < startTimeDefense + 350))
+    {
+        guiPrint(LocationState",1:circle");
+        iReport->lButtons = circle;
+        //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
+        //this will cause this roll to occur in lockon state, but subroutine will exit without lockon. Nothing major
+        if (Player->locked_on){
+            iReport->lButtons += r3;
+        }
+    }
+
+    //turning
+    if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 300){
+        double rollOffset = 100.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
             rollOffset = 0;
+        }
+        //if we just rolled but have to roll again, ensure we roll away so we dont get caught in r1 spam
+        else if (last_subroutine_states_self[0] == StandardRollId){
+            rollOffset = 180.0;
         }
 
         double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - rollOffset;
@@ -87,25 +115,6 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         }
 
         guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
-    }
-    //once we've starting turing in game, queue the roll. It will start as soon as the turning ends in game
-    if (curTime < startTimeDefense + 200 && curTime > startTimeDefense + 125){
-        guiPrint(LocationState",1:circle");
-        iReport->lButtons = circle;
-        //handle this subroutines intitation after a counterstrafe abort (handles being locked on)
-        //this will cause this roll to occur in lockon state, but subroutine will exit without lockon. Nothing major
-        if (Player->locked_on){
-            iReport->lButtons += r3;
-        }
-    }
-
-    //ensure we actually enter dodge roll in game so another subanimation cant override it
-    //or we get poise broken out
-    if (Player->subanimation == LockInSubanimation || Player->subanimation == PoiseBrokenSubanimation || curTime > startTimeDefense + 900){
-        guiPrint(LocationState",0:end dodge roll");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
-        AppendLastSubroutineSelf(StandardRollId);
     }
 }
 
@@ -127,8 +136,7 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
         //!isDodgeAnimation(Player->animation_id))
         ){
         guiPrint(LocationState",0:end backstep");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(BackstepId);
     }
 }
@@ -136,8 +144,9 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 #define inputDelayForStopStrafe 800
 
 void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:CounterStrafe");
     long curTime = clock();
+    guiPrint(LocationState",0:CounterStrafe:%d", (curTime - startTimeDefense));
+    float distanceBt = distance(Player, Phantom);
 
     //have to lock on to strafe
     if (curTime < startTimeDefense + 30){
@@ -149,7 +158,8 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         iReport->lButtons = 0;
     }
 
-    else if (curTime < startTimeDefense + inputDelayForStopStrafe){
+    //keep going if we're behind enemy or very close to them: might get a bs
+    else if (curTime < startTimeDefense + inputDelayForStopStrafe || BackstabDetection(Player, Phantom, distanceBt) == 1 || distanceBt < 1.3){
         //TODO make this strafe in the same direction as the enemy strafe
         iReport->wAxisX = XLEFT;
         iReport->wAxisY = MIDDLE / 2;//3/4 pushed up
@@ -165,11 +175,16 @@ void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
         iReport->lButtons = 0;
     }
 
-    //break early if we didnt lock on
-    if (curTime > startTimeDefense + inputDelayForStopStrafe + 60 || (!Player->locked_on && curTime > startTimeDefense + 60)){
+    else{
         guiPrint(LocationState",0:end CounterStrafe");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(CounterStrafeId);
+    }
+
+    //break early if we didnt lock on
+    if (!Player->locked_on && curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end CounterStrafe");
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(CounterStrafeId);
     }
 }
@@ -188,8 +203,7 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
     if (curTime > startTimeDefense + 30){
         guiPrint(LocationState",0:end L1");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(L1AttackId);
     }
 }
@@ -242,16 +256,15 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         )
     {
         guiPrint(LocationState",0:end ReverseRollBS");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(ReverseRollBSId);
     }
 }
 
 //this is more of a bandaid to the fact that the ai is ever getting hit
 static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
-    guiPrint(LocationState",0:Toggle Escape");
     long curTime = clock();
+    guiPrint(LocationState",0:Toggle Escape:%d", (curTime - startTimeDefense));
 
     if (curTime < startTimeDefense + 30){
         iReport->bHats = dleft;
@@ -259,11 +272,41 @@ static void ToggleEscape(Character * Player, Character * Phantom, JOYSTICK_POSIT
 
     if (curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end Toggle Escape");
-        subroutine_states[DodgeTypeIndex] = 0;
-        subroutine_states[DodgeStateIndex] = 0;
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(ToggleEscapeId);
     }
 }
+
+static void PerfectBlock(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Perfect Block");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + 30){
+        iReport->lButtons = l1;
+    }
+
+    if (curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end Perfect Block");
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(PerfectBlockId);
+    }
+}
+
+static void ParrySubroutine(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Parry");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + 30){
+        iReport->lButtons = l2;
+    }
+
+    if (curTime > startTimeDefense + 60){
+        guiPrint(LocationState",0:end Parry");
+        subroutine_states[DodgeStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(ParryId);
+    }
+}
+
 
 //initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
@@ -273,16 +316,27 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
         switch (attackInfo){
             case ImminentHit:
                 //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
-                if (Player->subanimation == PoiseBrokenSubanimation){
+                if (Player->subanimation == PoiseBrokenSubanimation && (Phantom->dodgeTimeRemaining > 0.2 && Phantom->dodgeTimeRemaining < 0.3)){
                     subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
                 }
-                //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                else if (distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining){
-                    subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
-                }
-                //otherwise, normal roll
-                else{
-                    subroutine_states[DodgeTypeIndex] = StandardRollId;
+                //while staggered, dont enter any subroutines
+                if (Player->subanimation != PoiseBrokenSubanimation){
+                    //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
+                    if (
+                        distance(Player, Phantom) <= 3 && TotalTimeInSectoReverseRoll < Phantom->dodgeTimeRemaining &&
+                        //if just reverse rolled and next incoming attack and weapon speed < ?, do normal roll
+                        (last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll+0.3 > Phantom->dodgeTimeRemaining)
+                    ){
+                        subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+                    }
+                    //if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
+                    else if (Phantom->dodgeTimeRemaining < 0.15 && Phantom->dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player->subanimation == SubanimationNeutral){
+                        subroutine_states[DodgeTypeIndex] = PerfectBlockId;
+                    }
+                    //otherwise, normal roll
+                    else{
+                        subroutine_states[DodgeTypeIndex] = StandardRollId;
+                    }
                 }
                 break;
             //only defines backstab detection handling
@@ -290,7 +344,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 subroutine_states[DodgeTypeIndex] = DefenseChoice;
                 break;
         }
-		subroutine_states[DodgeStateIndex] = 1;
+		subroutine_states[DodgeStateIndex] = SubroutineActive;
 		//set time for this subroutine
 		startTimeDefense = clock();
 	}
@@ -312,10 +366,12 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
             case ToggleEscapeId:
                 ToggleEscape(Player, Phantom, iReport);
                 break;
-            //should never be reached
+            case PerfectBlockId:
+                PerfectBlock(Player, Phantom, iReport);
+                break;
+            //dont do anything even though attack detected (staggered)
             default:
-                guiPrint(LocationState",0:ERROR Unknown dodge action attackInfo=%d\nDodgeNeuralNetChoice=%d\nsubroutine_states[DodgeTypeIndex]=%d", attackInfo, DefenseChoice, subroutine_states[DodgeTypeIndex]);
-                subroutine_states[DodgeStateIndex] = 0;
+                subroutine_states[DodgeStateIndex] = NoSubroutineActive;
                 break;
         }
     }
@@ -367,9 +423,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         (curTime > startTimeAttack + 800) &&
         (Player->subanimation >= AttackSubanimationWindupGhostHit)
     ){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub ghost hit");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(GhostHitId);
 	}
 }
@@ -397,10 +452,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         guiPrint(LocationState",1:r1");
         iReport->lButtons += r1;
     }
-    //point 50 degreees off angle from directly towards enemy
+    //point X degreees off angle from directly towards enemy
     else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
-        angle = 50.0 + angle;
+        angle = -20.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;
         longTuple move = angleToJoystick(angle);
         iReport->wAxisX = move.first;
@@ -408,9 +463,8 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
     }
 
     if (curTime > startTimeAttack + 500){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end sub dead angle");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(GhostHitId);
     }
 }
@@ -440,9 +494,8 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     //exit if we either got the bs, or we incorrectly detected it
     if (curTime > startTimeAttack + 100){
         startTimeHasntBeenReset = true;
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end backstab");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(BackstabId);
     }
 }
@@ -465,9 +518,8 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 
     if (curTime > startTimeAttack + inputDelayForStopMove){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
-        guiPrint(LocationState",0:end sub");
+        guiPrint(LocationState",0:end sub move up");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(MoveUpId);
     }
 }
@@ -481,18 +533,55 @@ static void twoHand(Character * Player, Character * Phantom, JOYSTICK_POSITION *
     }
 
     if (curTime > startTimeAttack + 40){
-        subroutine_states[AttackStateIndex] = 0;
-        subroutine_states[AttackTypeIndex] = 0;
         guiPrint(LocationState",0:end two hand");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
         AppendLastSubroutineSelf(TwoHandId);
     }
 }
 
+//lock on roll back to keep distance: prevent bs's, attacks 
+static void SwitchWeapon(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Switch Weapon");
+    long curTime = clock();
+
+    if (curTime < startTimeAttack + 30){
+        iReport->lButtons = r3;
+    }
+    else if (curTime < startTimeAttack + 300){
+        iReport->wAxisY = YBOTTOM;
+        iReport->bHats = dleft;
+    }
+
+    if (curTime > startTimeAttack + 500){
+        guiPrint(LocationState",0:end Switch Weapon");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(SwitchWeaponId);
+    }
+}
+
+static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+    guiPrint(LocationState",0:Heal");
+    long curTime = clock();
+
+    if (curTime < startTimeAttack + 30){
+        iReport->lButtons = square;
+    }
+
+    //sometimes game doesnt register the heal. retry till it does.
+    if (Player->subanimation != LockInSubanimation && curTime > startTimeAttack + 100){
+        startTimeAttack = curTime;
+    }
+
+    //1830 ms to use db
+    if (curTime > startTimeAttack + 1830){
+        guiPrint(LocationState",0:end Heal");
+        subroutine_states[AttackStateIndex] = SubroutineExiting;
+        AppendLastSubroutineSelf(HealId);
+    }
+}
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
-	//TODO need timing analysis. Opponent can move outside range during windup
-
     //procede with subroutine if we are not in one already
     //special case for asyncronous backstabs.
     if ((!inActiveSubroutine() || attackInfo == InBSPosition) && Player->subanimation >= SubanimationRecover){
@@ -540,6 +629,12 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
             //two hand
             case TwoHandId:
                 twoHand(Player, Phantom, iReport);
+                break;
+            case SwitchWeaponId:
+                SwitchWeapon(Player, Phantom, iReport);
+                break;
+            case HealId:
+                Heal(Player, Phantom, iReport);
                 break;
             default:
                 guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);

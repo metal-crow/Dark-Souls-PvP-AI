@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
+volatile unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
 
 void AppendLastSubroutineSelf(unsigned char subroutineId){
     for (unsigned int i = last_subroutine_states_self_LENGTH - 1; i > 0; i--){
@@ -46,6 +46,7 @@ float DistanceMemory[DistanceMemoryLENGTH];//update every 100 ms.
 
 static long LastDistanceUpdateTime = 0;
 
+//store distance between AI and enemy over time
 void AppendDistance(float distance){
     if (clock() - LastDistanceUpdateTime >= 100){
         for (unsigned int i = DistanceMemoryLENGTH - 1; i > 0; i--){
@@ -54,5 +55,20 @@ void AppendDistance(float distance){
         DistanceMemory[0] = distance;
 
         LastDistanceUpdateTime = clock();
+    }
+}
+
+unsigned int AIHPMemory[AIHPMemoryLENGTH];//update every 500 ms
+
+static long LastAIHPMemoryUpdateTime = 0;
+
+void AppendAIHP(unsigned int hp){
+    if (clock() - LastAIHPMemoryUpdateTime >= 500){
+        for (unsigned int i = AIHPMemoryLENGTH - 1; i > 0; i--){
+            AIHPMemory[i] = AIHPMemory[i - 1];
+        }
+        AIHPMemory[0] = hp;
+
+        LastAIHPMemoryUpdateTime = clock();
     }
 }

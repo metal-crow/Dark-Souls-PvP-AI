@@ -1,7 +1,7 @@
 #include "HelperUtil.h"
 #include <stdio.h>//printf
+#include "Settings.h"
 
-#define OolicelMap 1
 #pragma warning( disable: 4244 )//ignore dataloss conversion from double to long
 
 //store camera settings
@@ -68,7 +68,7 @@ int StaminaEstimationEnemy(){
 
     for (int i = last_animation_types_enemy_LENGTH - 1; i >= 0; i--){
         //backsteps. these have diff stamina drain from other rolls
-        if (last_animation_types_enemy[i] == 38 || last_animation_types_enemy[i] == 100){
+        if (last_animation_types_enemy[i] == Backstep_1H || last_animation_types_enemy[i] == Backstep_2H){
             staminaEstimate -= 19;
         }
         else if (isDodgeAnimation(last_animation_types_enemy[i])){
@@ -79,9 +79,10 @@ int StaminaEstimationEnemy(){
             staminaEstimate -= StaminaDrainForAttack(Enemy.r_weapon_id, Enemy.animationType_id);
         }
         //bug: this includes running, which drains stamina
-        else if (last_animation_types_enemy[i] == 0){
+        else if (last_animation_types_enemy[i] == Nothing || last_animation_types_enemy[i] == Shield_Held_Up || last_animation_types_enemy[i] == Shield_Held_Up_walking){
             staminaEstimate += Enemy.staminaRecoveryRate / 10;
         }
+
         //cap max and min stam
         if (staminaEstimate > 192){
             staminaEstimate = 192;
@@ -91,6 +92,7 @@ int StaminaEstimationEnemy(){
         }
     }
 
+    guiPrint("%d,5:Stamina Est:%d", EnemyId, staminaEstimate);
     return staminaEstimate;
 }
 
@@ -115,7 +117,7 @@ static bool InBackstabRange(float enemy, float player){
 //check if player behind enemy, and if they're in +-60 degree bs window
 #define BackstabRange 1.5
 //the determiner for if behind someone also must include both characters body widths. or it could be a cone, instead of a line. not sure.
-#define RealBehindRange 0.4
+#define RealBehindRange 0.04
 unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* Enemy, float distance){
     float angle = Enemy->rotation;
     float y_dist = Enemy->loc_y - Player->loc_y;

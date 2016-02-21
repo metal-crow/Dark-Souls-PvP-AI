@@ -14,6 +14,7 @@ MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
 HANDLE processHandle;
+ullong memorybase;
 
 int SetupandLoad(){
     //memset to ensure we dont have unusual char attributes at starting
@@ -30,7 +31,7 @@ int SetupandLoad(){
     //open the handle
     processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
     //get the base address of the process and append all other addresses onto it
-    ullong memorybase = GetModuleBase(processId, processName);
+    memorybase = GetModuleBase(processId, processName);
     Enemy_base_add += memorybase;
     player_base_add += memorybase;
 
@@ -96,7 +97,6 @@ void MainLogicLoop(){
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
             dodge(&Player, &Enemy, &iReport, attackImminent, DefenseChoice);
-            DefenseChoice = 0;//unset neural network desision
 		}
 
         WaitForThread(attack_mind_input);
@@ -106,10 +106,15 @@ void MainLogicLoop(){
 #endif
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action
-        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || AttackChoice){
+        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || (AttackChoice && DefenseChoice<=0)){
             attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
-            AttackChoice = 0;//unset neural network desision
         }
+
+        //unset neural network desisions
+        DefenseChoice = 0;
+        AttackChoice = 0;
+        //handle subroutine safe exits
+        SafelyExitSubroutines();
 
         guiPrint(LocationDetection",5:Current Subroutine States ={%d,%d,%d,%d}", subroutine_states[0], subroutine_states[1], subroutine_states[2], subroutine_states[3]);
 

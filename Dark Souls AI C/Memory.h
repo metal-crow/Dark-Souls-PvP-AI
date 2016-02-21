@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define last_subroutine_states_self_LENGTH 20
-extern unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
+extern volatile unsigned char last_subroutine_states_self[last_subroutine_states_self_LENGTH];
 
 void AppendLastSubroutineSelf(unsigned char subroutineId);
 
@@ -23,5 +23,10 @@ void AppendAnimationTypeEnemy(unsigned short animationType_id);
 extern float DistanceMemory[DistanceMemoryLENGTH];
 
 void AppendDistance(float distance);
+
+#define AIHPMemoryLENGTH 20
+extern unsigned int AIHPMemory[AIHPMemoryLENGTH];
+
+void AppendAIHP(unsigned int hp);
 
 #endif

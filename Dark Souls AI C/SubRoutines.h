@@ -25,13 +25,20 @@ extern long startTimeDefense;
 #define L1AttackId 5
 #define ReverseRollBSId 6
 #define ToggleEscapeId 7
+#define PerfectBlockId 8
+#define ParryId 9
 //Attack Ids
 #define MoveUpId 1
 #define GhostHitId 2
 #define BackstabId 3
 #define TwoHandId 4
+#define SwitchWeaponId 5
+#define HealId 6
 
-//find if we are currently in an active subroutine, to prevent simultanious subroutine conflicts
+#define SubroutineActive 1
+#define SubroutineExiting 2
+#define NoSubroutineActive 0
+
 bool inActiveSubroutine();
 
 bool inActiveDodgeSubroutine();
@@ -42,8 +49,8 @@ void OverrideLowPriorityDefenseSubroutines();
 
 void OverrideLowPriorityAttackSubroutines();
 
-//handles aborting low priority subroutines in case of immediate nesiccary change
-//NOTE ensure this isnt called and then the same overridden subroutine isnt retriggered
 void OverrideLowPrioritySubroutines();
+
+void SafelyExitSubroutines();
 
 #endif
