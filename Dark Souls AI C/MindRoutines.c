@@ -104,6 +104,10 @@ DWORD WINAPI AttackMindProcess(void* data){
         {
             AttackChoice = MoveUpId;
         }
+        //if not two handing
+        if (!Player.twoHanding && mostRecentDistance > 5){
+            AttackChoice = TwoHandId;
+        }
         //l hand bare handed, not holding shield. safety distance
         if (Player.l_weapon_id == 900000 && mostRecentDistance > 5){
             AttackChoice = SwitchWeaponId;
