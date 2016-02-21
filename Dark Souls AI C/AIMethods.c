@@ -399,7 +399,6 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
         iReport->lButtons += r1;
     }
 
-
     //start rotate back to enemy
     if (Player->subanimation == AttackSubanimationWindupGhostHit){
         guiPrint(LocationState",1:towards");
@@ -619,7 +618,10 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
                 break;
             //ghost hits for normal attacks
             case GhostHitId:
-                //ghostHit(Player, Phantom, iReport);
+                ghostHit(Player, Phantom, iReport);
+                break;
+            //or dead angle for normal attacks
+            case DeadAngleId:
                 deadAngle(Player, Phantom, iReport);
                 break;
             //backstab

@@ -125,7 +125,14 @@ DWORD WINAPI AttackMindProcess(void* data){
             (*out > 0.5)//neural network says so
            ))
         {
-            AttackChoice = GhostHitId;
+            //randomly choose dead angle or ghost hit
+            //throw off enemy predictions
+            if (rand() > RAND_MAX / 2){
+                AttackChoice = DeadAngleId;
+            }
+            else{
+                AttackChoice = GhostHitId;
+            }
         }
         if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
             AttackChoice = HealId;

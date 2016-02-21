@@ -66,7 +66,8 @@ int SetupandLoad(){
     return EXIT_SUCCESS;
 }
 
-#define DebuggingPacify 0
+#define DebuggingPacifyDef 0
+#define DebuggingPacifyAtk 0
 
 void MainLogicLoop(){
 		//TODO lock the camera
@@ -90,7 +91,7 @@ void MainLogicLoop(){
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d, and Attack %d", DefenseChoice, AttackChoice);
-#if DebuggingPacify
+#if DebuggingPacifyDef
         DefenseChoice = 0;
 #endif
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
@@ -101,7 +102,7 @@ void MainLogicLoop(){
 
         WaitForThread(attack_mind_input);
         guiPrint(LocationDetection",2:Attack Neural Network decided %d", AttackChoice);
-#if DebuggingPacify
+#if DebuggingPacifyAtk
         AttackChoice = 0;
 #endif
 		//attack mind make choice about IF to attack or not, and how to attack
