@@ -35,6 +35,23 @@ void DumpStaminaMem(){
     }
 }
 
+static int lastAid = 0;
+static int curAid = 0;
+
+void ReadWeaponTiming(){
+    ReadPlayer(&Player, processHandle, PlayerId);
+    unsigned char hurtbox = 0;
+    ReadProcessMemory(processHandle, 0x06D70AC7, &hurtbox, 1, 0);
+    ReadProcessMemory(processHandle, Player.animationId_address, &curAid, 4, 0);
+    float timer = 0;
+    ReadProcessMemory(processHandle, 0x0707E17C, &timer, 4, 0);
+
+    if (hurtbox && lastAid != curAid){
+        printf("%d %f\n", curAid, timer);
+        lastAid = curAid;
+    }
+}
+
 int mainTESTING(void)
 {
     fpdef = fopen("E:/Code Workspace/Dark Souls AI C/out.txt", "w");
