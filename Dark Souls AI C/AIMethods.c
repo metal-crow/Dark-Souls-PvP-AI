@@ -90,14 +90,14 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
 
     //turning
     if (curTime > startTimeDefense + 10 && curTime < startTimeDefense + 300){
-        double rollOffset = 100.0;
+        double rollOffset = 90.0;
         //if we're behind enemy, but we have to roll, roll towards their back for potential backstab
         if (BackstabDetection(Player, Phantom, distance(Player, Phantom)) == 1){
             rollOffset = 0;
         }
         //if we just rolled but have to roll again, ensure we roll away so we dont get caught in r1 spam
         else if (last_subroutine_states_self[0] == StandardRollId){
-            rollOffset = 180.0;
+            rollOffset = 120.0;
         }
 
         double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - rollOffset;

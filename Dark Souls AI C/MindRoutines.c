@@ -35,7 +35,9 @@ DWORD WINAPI DefenseMindProcess(void* data){
         fann_type* out = fann_run(defense_mind_input->mind, input);
         //printf("%f\n", *out);
         if (*out < 10 && *out > 0.5
-            && mostRecentDistance < 5){//hardcode bs distance
+            && mostRecentDistance < 5 //hardcode bs distance
+            && Enemy.subanimation == SubanimationNeutral //enemy cant backstab when in animation
+        ){
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
