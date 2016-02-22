@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -35,7 +37,9 @@ class GuiPane extends JPanel{
     private JTextArea[] JoystickInfo_Params=new JTextArea[3];
     
     private JPanel HandlerInfo=new JPanel();
-    private JTextArea[] HandlerInfo_Params=new JTextArea[3];
+    private JTextArea[] HandlerInfo_Params=new JTextArea[4];
+    
+    private static Pattern inputDataPattern;
 
     
     public GuiPane(int height, int width){
@@ -129,6 +133,9 @@ class GuiPane extends JPanel{
             HandlerInfo_Params[p].setWrapStyleWord(true);
             HandlerInfo.add(HandlerInfo_Params[p]);
         }
+        
+        //[gui location],[position in location]:[string literal]:[timestamp]
+        inputDataPattern = Pattern.compile("(\\d+),(\\d+):(.*):(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})");
     }
     
     public Dimension getPreferredSize() {
@@ -136,31 +143,36 @@ class GuiPane extends JPanel{
     }
     
     public void HandleGUIUpdate(String updateData){
-        int locationPosition_Seperator = updateData.indexOf(',');
-        int positionData_Seperator = updateData.indexOf(':');
-        int location = Integer.parseInt(updateData.substring(0,locationPosition_Seperator));
-        int position = Integer.parseInt(updateData.substring(locationPosition_Seperator+1,positionData_Seperator));
-        String data = updateData.substring(positionData_Seperator+1);
-        
-        switch(location){
-            case 0:
-                MemoryEnemy_Params[position].setText(data);
-                break;
-            case 1:
-                MemoryPlayer_Params[position].setText(data);
-                break;
-            case 2:
-                Detection_Params[position].setText(data);
-                break;
-            case 3:
-                AIState_Params[position].setText(data);
-                break;
-            case 4:
-                JoystickInfo_Params[position].setText(data);
-                break;
-            case 5:
-                HandlerInfo_Params[position].setText(data);
-                break;
+        Matcher m = inputDataPattern.matcher(updateData);
+        if (m.find()) {
+            int location = Integer.parseInt(m.group(1));
+            int position = Integer.parseInt(m.group(2));
+            String data = m.group(3);
+            String timestamp = m.group(4);
+            
+            switch(location){
+                case 0:
+                    MemoryEnemy_Params[position].setText(data);
+                    break;
+                case 1:
+                    MemoryPlayer_Params[position].setText(data);
+                    break;
+                case 2:
+                    Detection_Params[position].setText(data);
+                    break;
+                case 3:
+                    AIState_Params[position].setText(data);
+                    break;
+                case 4:
+                    JoystickInfo_Params[position].setText(data);
+                    break;
+                case 5:
+                    HandlerInfo_Params[position].setText(data);
+                    break;
+            }
+            
+            //update latest timestamp
+            HandlerInfo_Params[3].setText(timestamp);
         }
     }
  }

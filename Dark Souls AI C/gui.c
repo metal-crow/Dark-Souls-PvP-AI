@@ -48,16 +48,27 @@ int guiStart(){
 //The string literal must be in the form [gui location],[position in location]:[string literal]
 void guiPrint(const char* format, ...){
 #if ENABLEGUI
+    SYSTEMTIME t;
+    GetSystemTime(&t);
+
     va_list ap;
     //combine format string and args into 1 string
     va_start(ap, format);
     vsnprintf(buffer, MAXSTRINGSIZE, format, ap);
     va_end(ap);
 
-    sendto(s, buffer, MAXSTRINGSIZE, 0, 0, 0);
+    //generate timestamp
+    char timestamp[12];
+    sprintf((char*)&timestamp, ":%02d:%02d:%02d.%03d", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
 #endif
 #if ENABLEPRINT
-    printf("%s\n",buffer);
+    printf("[%s]:%s\n", timestamp, buffer);
+#endif
+#if ENABLEGUI
+    //copy timestamp to end of packet
+    memcpy(&buffer[strlen(buffer)-2], timestamp, 13);
+
+    sendto(s, buffer, MAXSTRINGSIZE, 0, 0, 0);
 #endif
 #if ENABLEGUI
     memset(buffer, 0, MAXSTRINGSIZE);//reset buffer
