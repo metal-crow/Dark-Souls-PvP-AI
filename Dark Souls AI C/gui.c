@@ -58,7 +58,7 @@ void guiPrint(const char* format, ...){
     va_end(ap);
 
     //generate timestamp
-    char timestamp[12];
+    char timestamp[14];
     sprintf((char*)&timestamp, ":%02d:%02d:%02d.%03d", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
 #endif
 #if ENABLEPRINT
@@ -66,7 +66,7 @@ void guiPrint(const char* format, ...){
 #endif
 #if ENABLEGUI
     //copy timestamp to end of packet
-    memcpy(&buffer[strlen(buffer)-2], timestamp, 13);
+    memcpy(&buffer[strlen(buffer)], timestamp, 13);
 
     sendto(s, buffer, MAXSTRINGSIZE, 0, 0, 0);
 #endif
