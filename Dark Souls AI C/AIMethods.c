@@ -419,8 +419,8 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
 
 	//end subanimation on recover animation
     if (
-        (curTime > startTimeAttack + 800) &&
-        (Player->subanimation >= AttackSubanimationWindupGhostHit)
+        (curTime > startTimeAttack + 500) &&
+        (Player->subanimation > AttackSubanimationWindupGhostHit)
     ){
         guiPrint(LocationState",0:end sub ghost hit");
         subroutine_states[AttackStateIndex] = SubroutineExiting;
