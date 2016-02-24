@@ -34,7 +34,7 @@ class GuiPane extends JPanel{
     private JTextArea[] AIState_Params=new JTextArea[6];
 
     private JPanel JoystickInfo=new JPanel();
-    private JTextArea[] JoystickInfo_Params=new JTextArea[3];
+    private JTextArea[] JoystickInfo_Params=new JTextArea[6];
     
     private JPanel HandlerInfo=new JPanel();
     private JTextArea[] HandlerInfo_Params=new JTextArea[4];
