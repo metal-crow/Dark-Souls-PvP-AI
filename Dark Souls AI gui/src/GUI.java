@@ -135,7 +135,7 @@ class GuiPane extends JPanel{
         }
         
         //[gui location],[position in location]:[string literal]:[timestamp]
-        inputDataPattern = Pattern.compile("(\\d+),(\\d+):(.*):(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})");
+        inputDataPattern = Pattern.compile("(\\d+),(\\d+):(.*):(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})",Pattern.DOTALL);
     }
     
     public Dimension getPreferredSize() {
