@@ -16,7 +16,7 @@
 //used in gui
 #define ENABLEGUI 1
 #define ENABLEPRINT 1
-#define REDIRECTTOFILE 1
+#define REDIRECTTOFILE 1 //WARNING: produces 1GB every 2 min
 #define PORT 4149
 
 #endif

@@ -119,7 +119,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             guiPrint(LocationDetection",3:ALERT: Animation type found but not animation ids");
         }
 
-        if (curAnimationid != -1 && curAnimationid != 0){
+        if (curAnimationid){
             float animationTimer;
             ReadProcessMemory(processHandle, (LPCVOID)(curAnimationTimer_address), &animationTimer, 4, 0);
 
