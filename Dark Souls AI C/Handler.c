@@ -9,8 +9,8 @@ static const int Player_visual_offsets_length = 5;
 static ullong visualStatus_address;
 static int visualStatus;
 //current selected item
-#define SelectedItemBaseAddr 0xF783C0
-static const int Player_selectedItem_offsets[] = { 0x6C4, 0x670, 0x110, 0x730, 0x2D4 };
+#define SelectedItemBaseAddr 0xF7F8F4
+static const int Player_selectedItem_offsets[] = { 0x67C, 0xC, 0x18, 0x730, 0x2D4 };
 static const int Player_selectedItem_offsets_length = 5;
 static ullong selectedItem_address;
 static int selectedItem;

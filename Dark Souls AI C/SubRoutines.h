@@ -34,6 +34,7 @@ extern long startTimeDefense;
 #define TwoHandId 4
 #define SwitchWeaponId 5
 #define HealId 6
+#define DeadAngleId 7
 
 #define SubroutineActive 1
 #define SubroutineExiting 2
