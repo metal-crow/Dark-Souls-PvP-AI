@@ -115,7 +115,7 @@ typedef struct{
     unsigned char partNumber;//0 if 1st part of combined animation, 1 if second
 } AnimationCombineReturn;
 
-AnimationCombineReturn CombineLastAnimation(int animation_id);
+void CombineLastAnimation(int animation_id, AnimationCombineReturn* ret);
 
 float dodgeTimings(int animation_id);
 
