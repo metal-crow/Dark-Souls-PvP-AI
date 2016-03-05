@@ -132,7 +132,8 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             }
 
             //sometimes, due to lag, dark souls cuts one animation short and makes the next's hurtbox timing later. handle this for the animations that do it by treating the two animations as one.
-            AnimationCombineReturn animationToCombine = CombineLastAnimation(curAnimationid);
+			AnimationCombineReturn animationToCombine;
+			CombineLastAnimation(curAnimationid, &animationToCombine);
             if (animationToCombine.animationId){
                 curAnimationid = animationToCombine.animationId;//combine the two animations and treat as one id 
                 if (animationToCombine.partNumber){

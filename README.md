@@ -47,6 +47,7 @@ Attack Network Inputs:
 ## TODO 
 
   * **TOP Priority**
+    * detect dragon roar
     * 1 hand kumo toggling not working?
     * more advanced backstab tactics instead of only take available.
     * weapon attack speed analysis for trading avoidance

@@ -173,49 +173,48 @@ unsigned char isVulnerableAnimation(int animation_id){
 //HAHA! TIME FOR JANK!
 //If the given animation is in this list, add up the two animation timers.
 //NOTE:this requires the part 0 animation to be using timer 2, and the part 1 using timer 1
-AnimationCombineReturn CombineLastAnimation(int animation_id){
-    AnimationCombineReturn ret;
+void CombineLastAnimation(int animation_id, AnimationCombineReturn* ret){
     switch (animation_id){
         //l hand combustion cast
         case 6207:
-            ret.animationId = 6407;
-            ret.partNumber = 0;
-            return ret;
+            ret->animationId = 6407;
+            ret->partNumber = 0;
+            break;
         case 6407:
-            ret.animationId = 6407;
-            ret.partNumber = 1;
-            return ret;
+            ret->animationId = 6407;
+            ret->partNumber = 1;
+            break;
         //r hand combustion cast
         case 6307:
-            ret.animationId = 6507;
-            ret.partNumber = 0;
-            return ret;
+            ret->animationId = 6507;
+            ret->partNumber = 0;
+            break;
         case 6507:
-            ret.animationId = 6507;
-            ret.partNumber = 1;
-            return ret;
+            ret->animationId = 6507;
+            ret->partNumber = 1;
+            break;
         //l hand wog cast
         case 6222:
-            ret.animationId = 6422;
-            ret.partNumber = 0;
-            return ret;
+            ret->animationId = 6422;
+            ret->partNumber = 0;
+            break;
         case 6422:
-            ret.animationId = 6422;
-            ret.partNumber = 1;
-            return ret;
+            ret->animationId = 6422;
+            ret->partNumber = 1;
+            break;
         //r hand wog cast
         case 6322:
-            ret.animationId = 6522;
-            ret.partNumber = 0;
-            return ret;
+            ret->animationId = 6522;
+            ret->partNumber = 0;
+            break;
         case 6522:
-            ret.animationId = 6522;
-            ret.partNumber = 1;
-            return ret;
+            ret->animationId = 6522;
+            ret->partNumber = 1;
+            break;
         default:
-            ret.animationId = 0;
-            ret.partNumber = 0;
-            return ret;
+            ret->animationId = 0;
+            ret->partNumber = 0;
+            break;
     }
 }
 
