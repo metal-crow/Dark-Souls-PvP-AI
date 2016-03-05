@@ -15,6 +15,7 @@ enum AnimationTypesE{
     DragonBreathStart = 26,
     DragonBreathFire = 27,
     DragonBreathEnd = 28,
+	DragonRoar = 29,
     Roll_1H = 32,
     RollBackwards_1H = 33,
     RollRight_1H = 34,

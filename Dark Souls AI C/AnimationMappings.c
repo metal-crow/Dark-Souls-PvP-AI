@@ -17,6 +17,8 @@ unsigned char isAttackAnimation(unsigned short animationType_id){
     switch (animationType_id){
         case DragonBreathFire:
             return 2;
+		case DragonRoar:
+			return 2;
         case RollingAttack_1H:
             return 2;
         case ShieldPoke:
