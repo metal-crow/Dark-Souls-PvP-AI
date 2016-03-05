@@ -179,42 +179,42 @@ void CombineLastAnimation(int animation_id, AnimationCombineReturn* ret){
         case 6207:
             ret->animationId = 6407;
             ret->partNumber = 0;
-            return ret;
+            break;
         case 6407:
             ret->animationId = 6407;
             ret->partNumber = 1;
-            return ret;
+            break;
         //r hand combustion cast
         case 6307:
             ret->animationId = 6507;
             ret->partNumber = 0;
-            return ret;
+            break;
         case 6507:
             ret->animationId = 6507;
             ret->partNumber = 1;
-            return ret;
+            break;
         //l hand wog cast
         case 6222:
             ret->animationId = 6422;
             ret->partNumber = 0;
-            return ret;
+            break;
         case 6422:
             ret->animationId = 6422;
             ret->partNumber = 1;
-            return ret;
+            break;
         //r hand wog cast
         case 6322:
             ret->animationId = 6522;
             ret->partNumber = 0;
-            return ret;
+            break;
         case 6522:
             ret->animationId = 6522;
             ret->partNumber = 1;
-            return ret;
+            break;
         default:
             ret->animationId = 0;
             ret->partNumber = 0;
-            return ret;
+            break;
     }
 }
 
