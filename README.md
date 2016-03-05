@@ -53,7 +53,6 @@ Attack Network Inputs:
      * Roll (done automaticly, may need better repositioning code)
      * omnistep behind enemy when they're rolling
      * toggle escape kick
-    * detect dragon roar
     * 1 hand kumo toggling not working?
     * more advanced backstab tactics instead of only take available.
     * weapon attack speed analysis for trading avoidance
