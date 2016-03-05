@@ -13,6 +13,8 @@
 //used in helper utils (for camera)
 #define OolicelMap 1
 
+#define BackstabMetaOnly 1
+
 //used in gui
 #define ENABLEGUI 1
 #define ENABLEPRINT 0

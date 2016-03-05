@@ -41,7 +41,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
             DefenseChoice = CounterStrafeId;
         } 
         //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        if (mostRecentDistance < 2 && BackstabDetection(&Enemy, &Player, mostRecentDistance)){
+		if (mostRecentDistance < 2 && BackstabDetection(&Enemy, &Player, mostRecentDistance) && !BackstabMetaOnly){
             AttackChoice = GhostHitId;
         }
         //if we had to toggle escape, they're probably comboing. Get out.
@@ -114,7 +114,9 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (Player.l_weapon_id == 900000 && mostRecentDistance > 5){
             AttackChoice = SwitchWeaponId;
         }
+		//desicion about going for a backstab
         if (
+			!BackstabMetaOnly &&
             //sanity checks
             mostRecentDistance <= Player.weaponRange && //in range
             Player.stamina > 20 && //just to ensure we have enough to roll
