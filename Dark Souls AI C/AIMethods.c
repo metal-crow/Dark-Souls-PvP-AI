@@ -104,14 +104,15 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         angle = angle < 0 ? angle + 360 : angle;//wrap around
 
         //angle joystick
-        longTuple move = angleToJoystick(angle);
+		longTuple move;
+		angleToJoystick(angle, &move);
         //Stupid bug with dark souls. Can only roll when one of these is very close to middle. Select whatever one is furthest
-        int diffX = abs(move.first - MIDDLE);
-        int diffY = abs(move.second - MIDDLE);
+		int diffX = abs(move.x_axis - MIDDLE);
+		int diffY = abs(move.y_axis - MIDDLE);
         if (diffX > diffY){
-            iReport->wAxisX = move.first;
+			iReport->wAxisX = move.x_axis;
         } else{
-            iReport->wAxisY = move.second;
+			iReport->wAxisY = move.y_axis;
         }
 
         guiPrint(LocationState",1:offset angle %f angle roll %f", rollOffset, angle);
@@ -195,9 +196,10 @@ void L1Attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
 
     if (curTime < startTimeDefense + 30){
         double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angle, &move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
         iReport->lButtons = l1;
     }
 
@@ -243,9 +245,10 @@ static void ReverseRollBS(Character * Player, Character * Phantom, JOYSTICK_POSI
         } else{
             angle += fmod((angle - Phantom->rotation), 90);
         }*/
-        longTuple joystickAngles = angleToJoystick(angle);
-        iReport->wAxisX = joystickAngles.first;
-        iReport->wAxisY = joystickAngles.second;
+		longTuple joystickAngles;
+		angleToJoystick(angle, &joystickAngles);
+		iReport->wAxisX = joystickAngles.x_axis;
+		iReport->wAxisY = joystickAngles.y_axis;
         guiPrint(LocationState",1:moving to bs");
     }
 
@@ -402,9 +405,10 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     //start rotate back to enemy
     if (Player->subanimation == AttackSubanimationWindupGhostHit){
         guiPrint(LocationState",1:towards");
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angle,&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
     }
 
 	//cant angle joystick immediatly, at first couple frames this will register as kick
@@ -412,9 +416,10 @@ static void ghostHit(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:away");
         angle = fmod((180.0 + angle), 360.0);
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angle,&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
 	}
 
 	//end subanimation on recover animation
@@ -441,9 +446,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
 
     //if we enter from a roll, move to enter neutral animation so we don't kick
     if (isDodgeAnimation(Player->animationType_id)){
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angle,&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
         startTimeAttack = curTime;//reset start time when we exit dodge, so we know how long to hold buttons for
     }
     //hold attack button for a bit
@@ -456,9 +462,10 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
         angle = -20.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;
-        longTuple move = angleToJoystick(angle);
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angle,&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
     }
 
     if (curTime > startTimeAttack + 500){
@@ -476,9 +483,10 @@ static void backStab(Character * Player, Character * Phantom, JOYSTICK_POSITION 
     //backstabs cannot be triggerd from queued action
     //move character towards enemy back to switch to neutral animation as soon as in ready state
     double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
-    longTuple move = angleToJoystick(angle);
-    iReport->wAxisX = move.first;
-    iReport->wAxisY = move.second;
+	longTuple move;
+	angleToJoystick(angle,&move);
+	iReport->wAxisX = move.x_axis;
+	iReport->wAxisY = move.y_axis;
 
     //once backstab is possible (neutral), press r1
     if (Player->subanimation == SubanimationNeutral){
@@ -511,9 +519,10 @@ static void MoveUp(Character * Player, Character * Phantom, JOYSTICK_POSITION * 
     }
 
     if (curTime < startTimeAttack + inputDelayForStopMove){
-        longTuple move = angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y));
-        iReport->wAxisX = move.first;
-        iReport->wAxisY = move.second;
+		longTuple move;
+		angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y),&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
     }
 
     if (curTime > startTimeAttack + inputDelayForStopMove){
@@ -579,6 +588,50 @@ static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iR
     }
 }
 
+static double StartingPivotAngle = 0;
+static void PivotBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+	long curTime = clock();
+	guiPrint(LocationState",0:Pivot BS Time:%d", (curTime - startTimeAttack));
+
+	float dist = distance(Player, Phantom);
+	unsigned char bsState = BackstabDetection(Player, Phantom, dist);
+
+	//de lock on if locked on
+	if (Player->locked_on && curTime < startTimeAttack + 40){
+		iReport->lButtons = r3;
+	}
+
+	//sprint up while in front of enemy
+	if (bsState == 0){
+		iReport->lButtons += circle;
+
+		//save the starting angle so we dont constantly reangle
+		//if (StartingPivotAngle == 0)
+		{
+			StartingPivotAngle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 0;//run to their right
+			StartingPivotAngle = StartingPivotAngle < 0 ? StartingPivotAngle + 360 : StartingPivotAngle;//wrap around
+			guiPrint(LocationState",1:%f", StartingPivotAngle);
+
+		}
+
+		longTuple move;
+		angleToJoystick(StartingPivotAngle,&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
+	}
+
+	//when behind enemy, reposition to face their back
+	if (bsState == 1){
+		longTuple move;
+		angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y),&move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
+	}
+
+	//end
+	//reset saved angle
+}
+
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
 void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
     //procede with subroutine if we are not in one already
@@ -638,6 +691,9 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
             case HealId:
                 Heal(Player, Phantom, iReport);
                 break;
+			case PivotBSId:
+				PivotBS(Player, Phantom, iReport);
+				break;
             default:
                 guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);
                 break;

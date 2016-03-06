@@ -47,12 +47,14 @@ Attack Network Inputs:
 ## TODO 
 
   * **TOP Priority**
+    * FIX BUG WITH SLIGHT ANGLE OFF WITH angleToJoystick
     * types of backstab methods
      * Pivot
-     * Counter strafe
+     * Counter strafe (triggered off bs detection, imrpove counter strafe subroutine to circle right way)
      * Roll (done automaticly, may need better repositioning code)
-     * omnistep behind enemy when they're rolling
+     * omnistep behind enemy
      * toggle escape kick
+    * allow backstab subroutine to be circle strafed out of with higehr thresholding setting per method(for each's danger level)
     * 1 hand kumo toggling not working?
     * more advanced backstab tactics instead of only take available.
     * weapon attack speed analysis for trading avoidance

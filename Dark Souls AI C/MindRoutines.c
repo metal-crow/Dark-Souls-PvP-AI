@@ -114,7 +114,10 @@ DWORD WINAPI AttackMindProcess(void* data){
         if (Player.l_weapon_id == 900000 && mostRecentDistance > 5){
             AttackChoice = SwitchWeaponId;
         }
-		//desicion about going for a backstab
+		//desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
+		if (true){
+			AttackChoice = PivotBSId;
+		}
         if (
 			!BackstabMetaOnly &&
             //sanity checks

@@ -35,6 +35,7 @@ extern long startTimeDefense;
 #define SwitchWeaponId 5
 #define HealId 6
 #define DeadAngleId 7
+#define PivotBSId 8
 
 #define SubroutineActive 1
 #define SubroutineExiting 2

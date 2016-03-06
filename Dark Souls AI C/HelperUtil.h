@@ -42,8 +42,8 @@ int loadvJoy(UINT iInterface);
 #define dcenter 0x4
 
 typedef struct{
-	long first;
-	long second;
+	long x_axis;
+	long y_axis;
 } longTuple;
 
 float distance(Character * Player, Character * Phantom);
@@ -60,7 +60,7 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
 
 float rotationDifferenceFromSelf(Character * Player, Character * Phantom);
 
-longTuple angleToJoystick(double angle);
+void angleToJoystick(double angle, longTuple * tuple);
 
 void readCamera(HANDLE * processHandle, ullong memorybase);
 
