@@ -1,12 +1,12 @@
 # Project King, The Dark Souls PvP AI
-AI for playing (and winning) in dark souls pvp  
+AI for playing (and winning) in Dark Souls PVP. Shown in a fully automated 24/7 stream: http://www.hitbox.tv/metal-crow
   
-People who if you like this you should also follow:  
+If you like this project, you should also follow:  
 https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!  
 https://github.com/OrdinaryMagician. Various projects in dark souls 2, and assembly master.   
 https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he found the Dark Souls 2 bullet params a week after it came out.  
   
-The most recent commit to master should always have been tested and verified to perform well. Any work that may be breaking or may not function well should be done in a branch.  
+The most recent commit to master should always be tested and verified to perform well. Any work that may break or may not function well should be done in a branch.  
   
 ##Setup
 * Install [Vjoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install).
