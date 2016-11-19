@@ -588,7 +588,8 @@ static void Heal(Character * Player, Character * Phantom, JOYSTICK_POSITION * iR
     }
 }
 
-static double StartingPivotAngle = 0;
+static double StartingPivotAngle = -1;
+static long BehindStartTime = -1;
 static void PivotBS(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
 	long curTime = clock();
 	guiPrint(LocationState",0:Pivot BS Time:%d", (curTime - startTimeAttack));
@@ -606,12 +607,10 @@ static void PivotBS(Character * Player, Character * Phantom, JOYSTICK_POSITION *
 		iReport->lButtons += circle;
 
 		//save the starting angle so we dont constantly reangle
-		//if (StartingPivotAngle == 0)
-		{
-			StartingPivotAngle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 0;//run to their right
+		if (StartingPivotAngle == -1){
+			StartingPivotAngle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - 10;//run to their right
 			StartingPivotAngle = StartingPivotAngle < 0 ? StartingPivotAngle + 360 : StartingPivotAngle;//wrap around
 			guiPrint(LocationState",1:%f", StartingPivotAngle);
-
 		}
 
 		longTuple move;
@@ -620,16 +619,23 @@ static void PivotBS(Character * Player, Character * Phantom, JOYSTICK_POSITION *
 		iReport->wAxisY = move.y_axis;
 	}
 
-	//when behind enemy, reposition to face their back
-	if (bsState == 1){
+	//when behind enemy (with enough space), reposition to face their back
+	if (bsState == 1 && dist > 1){
+		if (BehindStartTime == -1){
+			BehindStartTime = curTime;
+		}
 		longTuple move;
-		angleToJoystick(angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y),&move);
+		//to prevent skid from sudden angle change when we get behind enemy
+		//decrement angle we're pointing at over time(degrees per ms) to smooth out transition
+		double smoothingAngle = StartingPivotAngle + (curTime - BehindStartTime);
+		smoothingAngle = smoothingAngle < 0 ? smoothingAngle + 360 : smoothingAngle;
+		angleToJoystick(smoothingAngle, &move);
 		iReport->wAxisX = move.x_axis;
 		iReport->wAxisY = move.y_axis;
 	}
 
-	//end
-	//reset saved angle
+	//end when we got a backstab or backstab avoidance is triggered(set threshold) or ???
+	//reset BehindStartTime and StartingPivotAngle
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.

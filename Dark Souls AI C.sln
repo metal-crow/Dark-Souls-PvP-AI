@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dark Souls AI C", "Dark Sou
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AFF31B8-C2EE-4ABF-BE36-212D56C3E7D5}"
 	ProjectSection(SolutionItems) = preProject
+		DARKSOULS_AI_Help.CT = DARKSOULS_AI_Help.CT
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 		WRITEUP.md = WRITEUP.md
