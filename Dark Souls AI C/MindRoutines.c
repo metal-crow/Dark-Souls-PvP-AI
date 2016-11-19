@@ -115,9 +115,9 @@ DWORD WINAPI AttackMindProcess(void* data){
             AttackChoice = SwitchWeaponId;
         }
 		//desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
-		if (true){
+		/*if (true){
 			AttackChoice = PivotBSId;
-		}
+		}*/
         if (
 			!BackstabMetaOnly &&
             //sanity checks

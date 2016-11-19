@@ -16,7 +16,7 @@
 #define BackstabMetaOnly 0
 
 //used in gui
-#define ENABLEGUI 1
+#define ENABLEGUI 0
 #define ENABLEPRINT 0
 #define REDIRECTTOFILE 0 //WARNING: produces 1GB every 2 min
 #define PORT 4149
