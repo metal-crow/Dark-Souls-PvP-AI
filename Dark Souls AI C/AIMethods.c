@@ -460,7 +460,7 @@ static void deadAngle(Character * Player, Character * Phantom, JOYSTICK_POSITION
     //point X degreees off angle from directly towards enemy
     else if (curTime > startTimeAttack + inputDelayForKick){
         guiPrint(LocationState",1:angle towards enemy: %f", angle);
-        angle = -20.0 + angle;
+        angle = -60.0 + angle;
         angle = angle > 360 ? angle - 360 : angle;
 		longTuple move;
 		angleToJoystick(angle,&move);
