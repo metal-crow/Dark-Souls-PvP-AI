@@ -260,6 +260,10 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
 
+#if !OolicelMap
+	angle -= 90.0;
+#endif
+
     return angle;
 }
 
