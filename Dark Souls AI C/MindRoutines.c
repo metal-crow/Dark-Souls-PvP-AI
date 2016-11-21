@@ -160,7 +160,7 @@ DWORD WINAPI AttackMindProcess(void* data){
 int ReadyThreads(){
     //Defense Thread
     defense_mind_input = malloc(sizeof(MindInput));
-    struct fann* defense_mind = fann_create_from_file("Neural Nets/Defense_dark_souls_ai.net");
+	struct fann* defense_mind = fann_create_from_file(NeuralNetFolderLocation"/Defense_dark_souls_ai.net");
     if (defense_mind == NULL){
         printf("Defense_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;
@@ -175,7 +175,7 @@ int ReadyThreads(){
 
     //Attack Thread
     attack_mind_input = malloc(sizeof(MindInput));
-    struct fann* attack_mind = fann_create_from_file("Neural Nets/Attack_dark_souls_ai.net");
+	struct fann* attack_mind = fann_create_from_file(NeuralNetFolderLocation"/Attack_dark_souls_ai.net");
     if (attack_mind == NULL){
         printf("Attack_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;

@@ -82,8 +82,8 @@ static long LastRedSignTime = 0;
 
 int main(void){
     #if FeedNeuralNet
-    trainFromFile(70, "Neural Nets/attack_training_data.train", "Neural Nets/attack_training_data.test", "Neural Nets/Attack_dark_souls_ai.net");
-    trainFromFile(30, "Neural Nets/backstab_training_data.train", "Neural Nets/backstab_training_data.test", "Neural Nets/Defense_dark_souls_ai.net");
+	trainFromFile(70, NeuralNetFolderLocation"/attack_training_data.train",				 NeuralNetFolderLocation"/attack_training_data.test",   NeuralNetFolderLocation"/Attack_dark_souls_ai.net");
+	trainFromFile(30, NeuralNetFolderLocation"Neural Nets/backstab_training_data.train", NeuralNetFolderLocation"/backstab_training_data.test", NeuralNetFolderLocation"/Defense_dark_souls_ai.net");
     Sleep(7000);
     #endif
     int Setuperror = SetupandLoad();

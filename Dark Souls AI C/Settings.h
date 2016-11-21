@@ -9,6 +9,7 @@
     #define TrainAttackNet 0
     #define TrainBackstabNet 1
 #define FeedNeuralNet 0
+#define NeuralNetFolderLocation "Neural Nets"
 
 //used in helper utils (for camera)
 #define OolicelMap 1
