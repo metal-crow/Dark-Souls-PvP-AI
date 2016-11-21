@@ -9,8 +9,7 @@ ullong player_base_add = 0x00F7D644;
 
 //NOTE: this is curently hardcoded until i find a dynamic way
 //How To Find: Increase this value until the attack ends with the AI turned away from the enemy. Decrease till it doesnt.
-#define WeaponGhostHitTime_Kumo 0.65
-#define WeaponGhostHitTime_ChaosBlade 0.255
+#define WeaponGhostHitTime_QFS 0.22
 
 static bool waitingForAnimationTimertoCatchUp = false;
 
@@ -166,7 +165,7 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
             }
 
             // time before the windup ends where we can still alter rotation (only for player)
-            if (animationTimer > WeaponGhostHitTime_ChaosBlade && timeDelta >= -0.3 && characterId == PlayerId){
+			if (animationTimer > WeaponGhostHitTime_QFS && timeDelta >= -0.3 && characterId == PlayerId){
                 c->subanimation = AttackSubanimationWindupGhostHit;
             }
 
