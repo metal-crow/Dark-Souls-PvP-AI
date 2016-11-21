@@ -3,6 +3,7 @@
 
 #define SCALE(input, minVal, maxVal) (2 * ((float)input - minVal) / (maxVal - minVal) - 1)
 
+//NOTE: These can't just be moved into the AIMethods functions because they influence both attack and defense choices
 
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
@@ -46,7 +47,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
         //if we had to toggle escape, they're probably comboing. Get out.
         if (last_subroutine_states_self[0] == ToggleEscapeId){
-            DefenseChoice = StandardRollId;
+			DefenseChoice = RollAwayId;
         }
 
         //prevent rerun

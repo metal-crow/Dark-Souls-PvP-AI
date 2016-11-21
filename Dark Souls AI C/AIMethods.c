@@ -315,7 +315,7 @@ static void ParrySubroutine(Character * Player, Character * Phantom, JOYSTICK_PO
 void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
     if (!inActiveSubroutine() && Player->subanimation >= LockInSubanimation){
 		//indicate we are in dodge subroutine
-        //special mappings to decide between neural net desicion and logic
+        //special mappings to decide between neural net desicion and logic. Can't be moved into MindRoutines because they require more info about the player statuses
         switch (attackInfo){
             case ImminentHit:
                 //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
@@ -347,6 +347,7 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 subroutine_states[DodgeTypeIndex] = DefenseChoice;
                 break;
         }
+
 		subroutine_states[DodgeStateIndex] = SubroutineActive;
 		//set time for this subroutine
 		startTimeDefense = clock();
@@ -643,7 +644,7 @@ void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport
     //procede with subroutine if we are not in one already
     //special case for asyncronous backstabs.
     if ((!inActiveSubroutine() || attackInfo == InBSPosition) && Player->subanimation >= SubanimationRecover){
-        //special mappings to decide between neural net desicion and logic, determine if we want to enter attack subroutine
+        //special mappings to decide between neural net desicion and logic, determine if we want to enter attack subroutine.  Can't be moved into MindRoutines because they require more info about the player statuses
         switch (attackInfo){
             //we are in a position to bs
             case InBSPosition:

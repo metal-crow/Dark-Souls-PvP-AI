@@ -19,23 +19,28 @@ extern long startTimeAttack;
 extern long startTimeDefense;
 
 //Dodge Ids
-#define StandardRollId 1
-#define BackstepId 2
-#define CounterStrafeId 3
-#define L1AttackId 5
-#define ReverseRollBSId 6
-#define ToggleEscapeId 7
-#define PerfectBlockId 8
-#define ParryId 9
+enum DefenseId {
+	StandardRollId,
+	RollAwayId,
+	BackstepId,
+	CounterStrafeId,
+	L1AttackId,
+	ReverseRollBSId,
+	ToggleEscapeId,
+	PerfectBlockId,
+	ParryId
+};
 //Attack Ids
-#define MoveUpId 1
-#define GhostHitId 2
-#define BackstabId 3
-#define TwoHandId 4
-#define SwitchWeaponId 5
-#define HealId 6
-#define DeadAngleId 7
-#define PivotBSId 8
+enum AttackIds {
+	MoveUpId,
+	GhostHitId,
+	BackstabId,
+	TwoHandId,
+	SwitchWeaponId,
+	HealId,
+	DeadAngleId,
+	PivotBSId
+};
 
 #define SubroutineActive 1
 #define SubroutineExiting 2
