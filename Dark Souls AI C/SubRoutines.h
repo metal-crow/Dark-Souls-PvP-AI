@@ -21,7 +21,6 @@ extern long startTimeDefense;
 //Dodge Ids
 enum DefenseId {
 	StandardRollId,
-	RollAwayId,
 	BackstepId,
 	CounterStrafeId,
 	L1AttackId,

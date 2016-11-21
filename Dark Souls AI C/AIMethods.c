@@ -99,6 +99,10 @@ void StandardRoll(Character * Player, Character * Phantom, JOYSTICK_POSITION * i
         else if (last_subroutine_states_self[0] == StandardRollId){
             rollOffset = 120.0;
         }
+		//if we had to toggle escape, they're probably comboing. Roll away
+		else if (last_subroutine_states_self[0] == ToggleEscapeId){
+			rollOffset = 120.0;
+		}
 
         double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y) - rollOffset;
         angle = angle < 0 ? angle + 360 : angle;//wrap around

@@ -47,7 +47,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         }
         //if we had to toggle escape, they're probably comboing. Get out.
         if (last_subroutine_states_self[0] == ToggleEscapeId){
-			DefenseChoice = RollAwayId;
+			DefenseChoice = StandardRollId;
         }
 
         //prevent rerun
