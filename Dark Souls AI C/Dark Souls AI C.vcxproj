@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIDecisions.c" />
     <ClCompile Include="AIMethods.c" />
     <ClCompile Include="AnimationMappings.c" />
     <ClCompile Include="CharacterStruct.c" />
@@ -104,6 +105,7 @@
     <ClCompile Include="WeaponData.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIDecisions.h" />
     <ClInclude Include="AIMethods.h" />
     <ClInclude Include="AnimationMappings.h" />
     <ClInclude Include="CharacterStruct.h" />

@@ -87,7 +87,7 @@ void MainLogicLoop(){
         ResetVJoyController();
 
 		//begin reading enemy state, and handle w logic and subroutines
-        char attackImminent = EnemyStateProcessing(&Player, &Enemy);
+        char attackImminent = EnemyStateProcessing();
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d, and Attack %d", DefenseChoice, AttackChoice);
@@ -97,7 +97,7 @@ void MainLogicLoop(){
 		//defense mind makes choice to defend or not(ex backstab metagame decisions).
 		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
         if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
-            dodge(&Player, &Enemy, &iReport, attackImminent, DefenseChoice);
+            dodge(&iReport, attackImminent, DefenseChoice);
 		}
 
         WaitForThread(attack_mind_input);
@@ -108,7 +108,7 @@ void MainLogicLoop(){
 		//attack mind make choice about IF to attack or not, and how to attack
         //enter when we either have a Attack neural net action or a attackImminent action
         if (inActiveAttackSubroutine() || attackImminent != ImminentHit || (AttackChoice && DefenseChoice<=0)){
-            attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
+            attack(&iReport, attackImminent, AttackChoice);
         }
 
         //unset neural network desisions

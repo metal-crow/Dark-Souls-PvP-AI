@@ -7,27 +7,18 @@
 #include "CharacterStruct.h"
 #include "HelperUtil.h"
 #include <math.h>
-#include <stdbool.h>
 #include "SubRoutines.h"
 #include <time.h>
 #include "AnimationMappings.h"
 #include "Memory.h"
+#include "AIDecisions.h"
 
-//return 2 if i am about to be hit by an attack by the enemy
-//1 if an attack if coming soon and i should wait to dodge it
-//0 if no danger
-//-1 if should override attack neural net and perform bs
-#define ImminentHit 2
-#define EnemyInWindup 1
-#define EnemyNeutral 0
-#define BehindEnemy -1
-#define InBSPosition -2
-char EnemyStateProcessing(Character * Player, Character * Phantom);
+//enter or continue a dodge subroutine
+//this reconciles the MindRoutine and AiDecision choices
+void dodge(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
 
-//initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice);
-
-//initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
+//enter or continue a attack subroutine
+//this reconciles the MindRoutine and AiDecision choices
+void attack(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
 
 #endif
