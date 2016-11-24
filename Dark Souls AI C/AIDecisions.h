@@ -6,21 +6,16 @@
 #include "SubRoutines.h"
 #include "HelperUtil.h"
 
+typedef enum PriorityDecision_E{
+	EnemyNeutral,//doesn't override anything
 
-#define ImminentHit 2
-#define EnemyInWindup 1
-#define EnemyNeutral 0
-#define BehindEnemy -1
-#define InBSPosition -2
-//this handles actions that override any MindRoutine decisions
-char EnemyStateProcessing();
-
-/*typedef enum PriorityDecision_E{
-	EnemyNeutral,
+	DelayActions,
 	EnterDodgeSubroutine,
-	WaitToEnterSubroutine,
-	BackstabSubroutine
+	EnterAttackSubroutine,
 } PriorityDecision;
-PriorityDecision PriorityDecisionMaking(Character * Player, Character * Phantom);*/
+//this handles actions that override any MindRoutine decisions
+//makes decisions about what general types of actions the ai should take using standard discrete logic (i.e should dodge, but not what type of dodge)
+//composes the INSTINCT of the ai mind. Basic interations/actions/reactions that are high accuracy, very fast, but not very complex.
+PriorityDecision PriorityDecisionMaking();
 
 #endif

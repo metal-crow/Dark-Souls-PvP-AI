@@ -38,6 +38,7 @@ DWORD WINAPI DefenseMindProcess(void* data){
         if (*out < 10 && *out > 0.5
             && mostRecentDistance < 5 //hardcode bs distance
             && Enemy.subanimation == SubanimationNeutral //enemy cant backstab when in animation
+			//&& BackstabDetection(&Enemy, &Player, mostRecentDistance) == 0 //can't be backstabed when behind enemy
         ){
             DefenseChoice = CounterStrafeId;
         } 

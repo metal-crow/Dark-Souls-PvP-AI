@@ -190,12 +190,12 @@ static void L1Attack(JOYSTICK_POSITION * iReport){
 #define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
 //reverse roll through enemy attack and roll behind their back
-static void ReverseRollBS(JOYSTICK_POSITION * iReport, char attackInfo){
+static void ReverseRollBS(JOYSTICK_POSITION * iReport){
     long curTime = clock();
     guiPrint(LocationState",0:Reverse Roll BS time:%d", (curTime - startTimeDefense));
 
     //have to lock on to reverse roll (also handle for being locked on already)
-    if (curTime > startTimeDefense && curTime < startTimeDefense + TimeForR3ToTrigger && !Player.locked_on){
+    if (curTime < startTimeDefense + TimeForR3ToTrigger && !Player.locked_on){
         iReport->lButtons = r3;
         guiPrint(LocationState",1:lockon rrbs");
     }
@@ -208,29 +208,7 @@ static void ReverseRollBS(JOYSTICK_POSITION * iReport, char attackInfo){
         guiPrint(LocationState",1:reverse roll");
     }
 
-    //move towards enemy's back.
-    if ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction)
-        //ensure we got behind the enemy, as we could have rolled into them
-        && attackInfo == BehindEnemy)
-    {
-        float angle = angleFromCoordinates(Player.loc_x, Enemy.loc_x, Player.loc_y, Enemy.loc_y);
-        /*if (Phantom->rotation < angle){
-            angle += fmod((Phantom->rotation - angle),90);
-        } else{
-            angle += fmod((angle - Phantom->rotation), 90);
-        }*/
-		longTuple joystickAngles;
-		angleToJoystick(angle, &joystickAngles);
-		iReport->wAxisX = joystickAngles.x_axis;
-		iReport->wAxisY = joystickAngles.y_axis;
-        guiPrint(LocationState",1:moving to bs");
-    }
-
-    if (
-        (curTime > startTimeDefense + 600) ||
-        //early emergency abort in case enemy attack while we try to go for bs after roll or we dont get behind them after roll
-        ((curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 80) && ((attackInfo == ImminentHit) || (attackInfo != BehindEnemy)))
-        )
+    if (curTime > startTimeDefense + TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction)
     {
         guiPrint(LocationState",0:end ReverseRollBS");
         subroutine_states[DodgeStateIndex] = SubroutineExiting;
@@ -285,40 +263,42 @@ static void ParrySubroutine(JOYSTICK_POSITION * iReport){
 }
 
 
-void dodge(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
-    if (!inActiveSubroutine() && Player.subanimation >= LockInSubanimation){
-		//indicate we are in dodge subroutine
-        //special mappings to decide between neural net desicion and logic. Can't be moved into MindRoutines because they require more info about the player statuses
-        switch (attackInfo){
-            case ImminentHit:
-                //if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
-                if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3)){
-                    subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
-                }
-                //while staggered, dont enter any subroutines
-                if (Player.subanimation != PoiseBrokenSubanimation){
-                    //if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
-                    if (
-                        distance(&Player, &Enemy) <= 3 && TotalTimeInSectoReverseRoll < Enemy.dodgeTimeRemaining &&
-                        //if just reverse rolled and next incoming attack and weapon speed < ?, do normal roll
-                        (last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll+0.3 > Enemy.dodgeTimeRemaining)
-                    ){
-                        subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
-                    }
-                    //if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
-                    else if (Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player.subanimation == SubanimationNeutral){
-                        subroutine_states[DodgeTypeIndex] = PerfectBlockId;
-                    }
-                    //otherwise, normal roll
-                    else{
-                        subroutine_states[DodgeTypeIndex] = StandardRollId;
-                    }
-                }
-                break;
-            //only defines backstab detection handling
-            default:
-                subroutine_states[DodgeTypeIndex] = DefenseChoice;
-                break;
+void dodge(JOYSTICK_POSITION * iReport, PriorityDecision priority_decision, unsigned char DefenseChoice){
+	//if we're not in active subroutine and we can enter one
+    if (!inActiveSubroutine() && Player.subanimation >= LockInSubanimation)
+	{
+		//instinct overides AiMethods, have to do immediate dodge
+		if (priority_decision == EnterDodgeSubroutine)
+		{
+			//if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
+			if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3)){
+				subroutine_states[DodgeTypeIndex] = ToggleEscapeId;
+			}
+			//while staggered, dont enter any subroutines
+			if (Player.subanimation != PoiseBrokenSubanimation){
+				//if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
+				if (
+					distance(&Player, &Enemy) <= 3 && TotalTimeInSectoReverseRoll < Enemy.dodgeTimeRemaining &&
+					//if just reverse rolled and next incoming attack and weapon speed < ?, do normal roll
+					(last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll + 0.3 > Enemy.dodgeTimeRemaining)
+					)
+				{
+					subroutine_states[DodgeTypeIndex] = ReverseRollBSId;
+				}
+				//if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
+				else if (Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player.subanimation == SubanimationNeutral){
+					subroutine_states[DodgeTypeIndex] = PerfectBlockId;
+				}
+				//otherwise, normal roll
+				else{
+					subroutine_states[DodgeTypeIndex] = StandardRollId;
+				}
+			}
+		}
+		//AiMethod defines less immediate dodges
+		else
+		{
+			subroutine_states[DodgeTypeIndex] = DefenseChoice;
         }
 
 		subroutine_states[DodgeStateIndex] = SubroutineActive;
@@ -341,7 +321,7 @@ void dodge(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseCh
                 CounterStrafe(iReport);
                 break;
             case ReverseRollBSId:
-                ReverseRollBS(iReport, attackInfo);
+                ReverseRollBS(iReport);
                 break;
             case ToggleEscapeId:
                 ToggleEscape(iReport);
@@ -616,27 +596,33 @@ static void PivotBS(JOYSTICK_POSITION * iReport){
 }
 
 //initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice){
-    //procede with subroutine if we are not in one already
-    //special case for asyncronous backstabs.
-    if ((!inActiveSubroutine() || attackInfo == InBSPosition) && Player.subanimation >= SubanimationRecover){
-        //special mappings to decide between neural net desicion and logic, determine if we want to enter attack subroutine.  Can't be moved into MindRoutines because they require more info about the player statuses
-        switch (attackInfo){
-            //we are in a position to bs
-            case InBSPosition:
-                subroutine_states[AttackTypeIndex] = BackstabId;
-                break;
-            //dont attack if enemy in windup
-            case EnemyInWindup:
-                //do allow move up though
-                if (AttackNeuralNetChoice == MoveUpId){
-                    subroutine_states[AttackTypeIndex] = MoveUpId;
-                }
-                break;
-            default:
-                subroutine_states[AttackTypeIndex] = AttackNeuralNetChoice;
-                break;
-        }
+void attack(JOYSTICK_POSITION * iReport, PriorityDecision priority_decision, unsigned char AttackNeuralNetChoice){
+	unsigned char BackStabStateDetected = BackstabDetection(&Player, &Enemy, distance(&Player, &Enemy));
+
+	//procede with subroutine if we are not in one already
+	//special case for asyncronous backstabs.
+	if ((!inActiveSubroutine() || BackStabStateDetected == 2) && Player.subanimation >= SubanimationRecover)
+	{
+		//we are in a position to bs
+		if (BackStabStateDetected == 2){
+			subroutine_states[AttackTypeIndex] = BackstabId;
+		}
+		//we're behind the enemy, should move up to try and get a BS
+		else if (BackStabStateDetected == 1){
+			subroutine_states[AttackTypeIndex] = MoveUpId;
+		}
+		//dont attack if enemy in windup
+		else if (priority_decision == DelayActions){
+			//TODO should allow some longer term actions as long as they arn't attack here
+			//do allow move up though
+			if (AttackNeuralNetChoice == MoveUpId){
+				subroutine_states[AttackTypeIndex] = MoveUpId;
+			}
+		}
+		else{
+			subroutine_states[AttackTypeIndex] = AttackNeuralNetChoice;
+		}
+
         if (subroutine_states[AttackTypeIndex]){
             subroutine_states[AttackStateIndex] = 1;
             //set time for this subroutine

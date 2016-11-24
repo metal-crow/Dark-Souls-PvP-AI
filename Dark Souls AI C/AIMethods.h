@@ -1,8 +1,6 @@
 #ifndef AIMethods_H
 #define AIMethods_H
 
-//this composes the INSTINCT of the ai mind. Basic interations/actions/reactions that are high accuracy, very fast, but not very complex.
-
 #include "gui.h"
 #include "CharacterStruct.h"
 #include "HelperUtil.h"
@@ -15,10 +13,12 @@
 
 //enter or continue a dodge subroutine
 //this reconciles the MindRoutine and AiDecision choices
+//makes deeper decision about what action to take (type of dodge)
 void dodge(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
 
 //enter or continue a attack subroutine
 //this reconciles the MindRoutine and AiDecision choices
+//makes deeper decision about what action to take (type of attack)
 void attack(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
 
 #endif
