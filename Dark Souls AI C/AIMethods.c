@@ -146,6 +146,30 @@ void Backstep(Character * Player, Character * Phantom, JOYSTICK_POSITION * iRepo
     }
 }
 
+#define inputDelayForStopOmnistepJoystickDirection 40
+
+void Omnistep_Backwards(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
+	guiPrint(LocationState",0:Omnistep Backwards");
+    long curTime = clock();
+
+    if (curTime < startTimeDefense + inputDelayForStopCircle){
+		iReport->lButtons = circle;
+	}
+	else if (curTime < startTimeDefense + inputDelayForStopCircle + inputDelayForStopOmnistepJoystickDirection){
+		double angle = angleFromCoordinates(Player->loc_x, Phantom->loc_x, Player->loc_y, Phantom->loc_y);
+		//angle joystick
+		longTuple move;
+		angleToJoystick(angle, &move);
+		iReport->wAxisX = move.x_axis;
+		iReport->wAxisY = move.y_axis;
+	}
+	else{
+		guiPrint(LocationState",0:end Omnistep Backwards");
+		subroutine_states[DodgeStateIndex] = SubroutineExiting;
+		AppendLastSubroutineSelf(OmnistepBackwardsId);
+	}
+}
+
 #define inputDelayForStopStrafe 800
 
 void CounterStrafe(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport){
@@ -364,7 +388,10 @@ void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport,
                 break;
             case BackstepId:
                 Backstep(Player, Phantom, iReport);
-                break;
+				break;
+			case OmnistepBackwardsId:
+				Omnistep_Backwards(Player, Phantom, iReport);
+				break;
             case CounterStrafeId:
                 CounterStrafe(Player, Phantom, iReport);
                 break;

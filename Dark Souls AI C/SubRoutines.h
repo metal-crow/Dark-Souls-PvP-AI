@@ -22,6 +22,7 @@ extern long startTimeDefense;
 enum DefenseId {
 	StandardRollId,
 	BackstepId,
+	OmnistepBackwardsId,
 	CounterStrafeId,
 	L1AttackId,
 	ReverseRollBSId,
