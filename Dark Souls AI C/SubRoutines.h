@@ -19,7 +19,8 @@ extern long startTimeAttack;
 extern long startTimeDefense;
 
 //Dodge Ids
-enum DefenseId {
+typedef enum DefenseId_E {
+	None,
 	StandardRollId,
 	BackstepId,
 	OmnistepBackwardsId,
@@ -29,9 +30,10 @@ enum DefenseId {
 	ToggleEscapeId,
 	PerfectBlockId,
 	ParryId
-};
+} DefenseId;
 //Attack Ids
-enum AttackIds {
+typedef enum AttackId_E {
+	None,
 	MoveUpId,
 	GhostHitId,
 	BackstabId,
@@ -40,7 +42,7 @@ enum AttackIds {
 	HealId,
 	DeadAngleId,
 	PivotBSId
-};
+} AttackId;
 
 #define SubroutineActive 1
 #define SubroutineExiting 2

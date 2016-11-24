@@ -13,6 +13,8 @@ volatile char DefenseChoice = 0;
 MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
+InstinctDecision instinct_decision;
+
 HANDLE processHandle;
 ullong memorybase;
 
@@ -86,7 +88,10 @@ void MainLogicLoop(){
 
         ResetVJoyController();
 
-		PriorityDecision priority_decision = PriorityDecisionMaking();
+		//generate instinct decision
+		instinct_decision.attackid = None;
+		instinct_decision.defenseid = None;
+		InstinctDecisionMaking(&instinct_decision);
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d, and Attack %d", DefenseChoice, AttackChoice);
@@ -94,7 +99,7 @@ void MainLogicLoop(){
         DefenseChoice = 0;
 #endif
 		if (priority_decision == EnterDodgeSubroutine || inActiveDodgeSubroutine() || (DefenseChoice>0)){
-			dodge(&iReport, priority_decision, DefenseChoice);
+			dodge(&iReport, instinct_decision, DefenseChoice);
 		}
 
         WaitForThread(attack_mind_input);
@@ -103,7 +108,7 @@ void MainLogicLoop(){
         AttackChoice = 0;
 #endif
 		if (inActiveAttackSubroutine() || (AttackChoice && DefenseChoice <= 0)){
-			attack(&iReport, priority_decision, AttackChoice);
+			attack(&iReport, instinct_decision, AttackChoice);
         }
 
         //unset neural network desisions

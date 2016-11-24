@@ -14,11 +14,11 @@
 //enter or continue a dodge subroutine
 //this reconciles the MindRoutine and AiDecision choices
 //makes deeper decision about what action to take (type of dodge)
-void dodge(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice){
+void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, unsigned char DefenseChoice);
 
 //enter or continue a attack subroutine
 //this reconciles the MindRoutine and AiDecision choices
 //makes deeper decision about what action to take (type of attack)
-void attack(JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
+void attack(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, unsigned char AttackNeuralNetChoice);
 
 #endif
