@@ -269,7 +269,7 @@ void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, uns
 	{
 		//instinct overides AiMethods, have to do immediate dodge
 		if (instinct_decision->priority_decision == EnterDodgeSubroutine){
-			subroutine_states[DodgeTypeIndex] = instinct_decision->defenseid;
+			subroutine_states[DodgeTypeIndex] = instinct_decision->subroutine_id.defenseid;
 		}
 		//AiMethod defines less immediate dodges
 		else{
@@ -295,6 +295,9 @@ void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, uns
             case CounterStrafeId:
                 CounterStrafe(iReport);
                 break;
+			case L1AttackId:
+				L1Attack(iReport);
+				break;
             case ReverseRollBSId:
                 ReverseRollBS(iReport);
                 break;
@@ -304,7 +307,10 @@ void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, uns
             case PerfectBlockId:
                 PerfectBlock(iReport);
                 break;
-            //dont do anything even though attack detected (staggered)
+			case ParryId:
+				ParrySubroutine(iReport);
+				break;
+            //may not do anything even though attack detected (ex we're staggered)
             default:
                 subroutine_states[DodgeStateIndex] = NoSubroutineActive;
                 break;
@@ -573,10 +579,10 @@ static void PivotBS(JOYSTICK_POSITION * iReport){
 void attack(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, unsigned char AttackNeuralNetChoice){
 	//procede with subroutine if we are not in one already
 	//special case for asyncronous backstabs.
-	if ((!inActiveSubroutine() || instinct_decision->attackid == BackstabId) && Player.subanimation >= SubanimationRecover)
+	if ((!inActiveSubroutine() || instinct_decision->subroutine_id.attackid == BackstabId) && Player.subanimation >= SubanimationRecover)
 	{
 		if (instinct_decision->priority_decision == EnterAttackSubroutine){
-			subroutine_states[AttackTypeIndex] = instinct_decision->attackid;
+			subroutine_states[AttackTypeIndex] = instinct_decision->subroutine_id.attackid;
 		}
 		//dont attack if enemy in windup
 		else if (instinct_decision->priority_decision == DelayActions){

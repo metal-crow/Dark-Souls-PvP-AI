@@ -98,8 +98,8 @@ void MainLogicLoop(){
 #if DebuggingPacifyDef
         DefenseChoice = 0;
 #endif
-		if (priority_decision == EnterDodgeSubroutine || inActiveDodgeSubroutine() || (DefenseChoice>0)){
-			dodge(&iReport, instinct_decision, DefenseChoice);
+		if (instinct_decision.priority_decision == EnterDodgeSubroutine || inActiveDodgeSubroutine() || (DefenseChoice>0)){
+			dodge(&iReport, &instinct_decision, DefenseChoice);
 		}
 
         WaitForThread(attack_mind_input);
@@ -108,7 +108,7 @@ void MainLogicLoop(){
         AttackChoice = 0;
 #endif
 		if (inActiveAttackSubroutine() || (AttackChoice && DefenseChoice <= 0)){
-			attack(&iReport, instinct_decision, AttackChoice);
+			attack(&iReport, &instinct_decision, AttackChoice);
         }
 
         //unset neural network desisions

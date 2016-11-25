@@ -14,17 +14,17 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 	//if not two handing
 	if (!Player.twoHanding && distanceByLine > 5){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
-		instinct_decision->attackid = TwoHandId;
+		instinct_decision->subroutine_id.attackid = TwoHandId;
 	}
 	//l hand bare handed, not holding shield. safety distance
 	if (Player.l_weapon_id == 900000 && distanceByLine > 5){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
-		instinct_decision->attackid = SwitchWeaponId;
+		instinct_decision->subroutine_id.attackid = SwitchWeaponId;
 	}
 	//heal if enemy heals
 	if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
-		instinct_decision->attackid = HealId;
+		instinct_decision->subroutine_id.attackid = HealId;
 	}
 
 	//if enemy in range and we're not in invulnerable position (bs knockdown)
@@ -47,7 +47,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 
 			//if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
 			if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3)){
-				instinct_decision->defenseid = ToggleEscapeId;
+				instinct_decision->subroutine_id.defenseid = ToggleEscapeId;
 			}
 			//while staggered, dont enter any subroutines
 			if (Player.subanimation != PoiseBrokenSubanimation){
@@ -58,20 +58,20 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 					(last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll + 0.3 > Enemy.dodgeTimeRemaining)
 					)
 				{
-					instinct_decision->defenseid = ReverseRollBSId;
+					instinct_decision->subroutine_id.defenseid = ReverseRollBSId;
 				}
 				//if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
 				else if (Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player.subanimation == SubanimationNeutral){
-					instinct_decision->defenseid = PerfectBlockId;
+					instinct_decision->subroutine_id.defenseid = PerfectBlockId;
 				}
 				//otherwise, normal roll
 				else{
-					instinct_decision->defenseid = StandardRollId;
+					instinct_decision->subroutine_id.defenseid = StandardRollId;
 				}
 			}
 			//if we had to toggle escape, they're probably comboing. Get out.
 			if (last_subroutine_states_self[0] == ToggleEscapeId){
-				instinct_decision->defenseid = StandardRollId;
+				instinct_decision->subroutine_id.defenseid = StandardRollId;
 			}
 		}
 		//windup, attack coming
@@ -84,7 +84,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 	//if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
 	if (distanceByLine < 2 && BackstabDetection(&Enemy, &Player, distanceByLine) && !BackstabMetaOnly){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
-		instinct_decision->attackid = GhostHitId;
+		instinct_decision->subroutine_id.attackid = GhostHitId;
 	}
 
 	//backstab checks. If AI can BS, always take it
@@ -96,12 +96,12 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 		//in position to bs
 		if (BackStabStateDetected == 2){
 			instinct_decision->priority_decision = EnterAttackSubroutine;
-			instinct_decision->attackid = GhostHitId;
+			instinct_decision->subroutine_id.attackid = GhostHitId;
 		}
 		//try and move up for bs
 		else if (BackStabStateDetected == 1){
 			instinct_decision->priority_decision = EnterAttackSubroutine;
-			instinct_decision->attackid = MoveUpId;
+			instinct_decision->subroutine_id.attackid = MoveUpId;
 		}
 	}
 

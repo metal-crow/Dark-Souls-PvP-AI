@@ -3,8 +3,6 @@
 
 #define SCALE(input, minVal, maxVal) (2 * ((float)input - minVal) / (maxVal - minVal) - 1)
 
-//NOTE: These can't just be moved into the AIMethods functions because they influence both attack and defense choices
-
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
     {
@@ -34,7 +32,9 @@ DWORD WINAPI DefenseMindProcess(void* data){
         input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
+
         //printf("%f\n", *out);
+		//TODO implement more types of backstab avoidance actions
         if (*out < 10 && *out > 0.5
             && mostRecentDistance < 5 //hardcode bs distance
             && Enemy.subanimation == SubanimationNeutral //enemy cant backstab when in animation
@@ -92,7 +92,7 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
-		//desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
+		//TODO desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
 		/*if (true){
 			AttackChoice = PivotBSId;
 		}*/
