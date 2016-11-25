@@ -4,8 +4,7 @@
 #include <stdbool.h>
 
 //subroutine states, routines that are ongoing over a period of frames.
-//0 is not active, >0 is active, 255 is need to confirm exit
-//also store what type of subroutines this is(i.e dodge, backstep, etc)
+//store what subroutine is active (defence/attack and the subroutine id), and what state it is in 
 
 #define DodgeStateIndex 0
 #define DodgeTypeIndex 1
@@ -14,13 +13,13 @@
 
 extern unsigned char subroutine_states[4];
 
-//for timing certain operations(delay op by 1 sec)
+//for timing subroutine operations
 extern long startTimeAttack;
 extern long startTimeDefense;
 
 //Dodge Ids
 typedef enum DefenseId_E {
-	None,
+	DefNoneId,//should only be used for initalizing. Should never reach AiMethod code
 	StandardRollId,
 	BackstepId,
 	OmnistepBackwardsId,
@@ -29,19 +28,19 @@ typedef enum DefenseId_E {
 	ReverseRollBSId,
 	ToggleEscapeId,
 	PerfectBlockId,
-	ParryId
+	ParryId,
 } DefenseId;
 //Attack Ids
 typedef enum AttackId_E {
-	None,
+	AtkNoneId,//should only be used for initalizing. Should never reach AiMethod code
 	MoveUpId,
 	GhostHitId,
+	DeadAngleId,
 	BackstabId,
 	TwoHandId,
 	SwitchWeaponId,
 	HealId,
-	DeadAngleId,
-	PivotBSId
+	PivotBSId,
 } AttackId;
 
 #define SubroutineActive 1

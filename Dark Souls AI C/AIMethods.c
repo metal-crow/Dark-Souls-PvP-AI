@@ -605,25 +605,19 @@ void attack(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, un
 
     //may not actually enter subroutine
     if (inActiveAttackSubroutine()){
-        //Differentiate different attack subroutines based on neural net decision
         switch (subroutine_states[AttackTypeIndex]){
-            //to move towards the opponent
             case MoveUpId:
                 MoveUp(iReport);
                 break;
-            //ghost hits for normal attacks
             case GhostHitId:
                 ghostHit(iReport);
                 break;
-            //or dead angle for normal attacks
             case DeadAngleId:
                 deadAngle(iReport);
                 break;
-            //backstab
             case BackstabId:
                 backStab(iReport);
                 break;
-            //two hand
             case TwoHandId:
                 twoHand(iReport);
                 break;
@@ -637,7 +631,11 @@ void attack(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, un
 				PivotBS(iReport);
 				break;
             default:
-                guiPrint(LocationState",0:ERROR Unknown attack action attackInfo=%d\nAttackNeuralNetChoice=%d\nsubroutine_states[AttackTypeIndex]=%d", attackInfo, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);
+                guiPrint(LocationState",0:ERROR Unknown attack action"
+										"priority_decision=%d\n"
+										"AttackNeuralNetChoice=%d\n"
+										"subroutine_states[AttackTypeIndex]=%d", 
+										instinct_decision->priority_decision, AttackNeuralNetChoice, subroutine_states[AttackTypeIndex]);
                 break;
         }
     }

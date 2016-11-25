@@ -89,8 +89,8 @@ void MainLogicLoop(){
         ResetVJoyController();
 
 		//generate instinct decision
-		instinct_decision.attackid = None;
-		instinct_decision.defenseid = None;
+		instinct_decision.subroutine_id.attackid = AtkNoneId;
+		instinct_decision.subroutine_id.defenseid = DefNoneId;
 		InstinctDecisionMaking(&instinct_decision);
 
         WaitForThread(defense_mind_input);
