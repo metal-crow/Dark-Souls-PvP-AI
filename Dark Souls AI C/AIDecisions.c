@@ -28,7 +28,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 	}
 
 	//if enemy in range and we/enemy is not in invulnerable position (bs knockdown)
-	if (distanceByLine <= Enemy.weaponRange && /*TODO enemy or player is invulnerable/knockdown*/){
+	if (distanceByLine <= Enemy.weaponRange && /*TODO !enemy or player is invulnerable/knockdown*/){
 		if (
 			//if in an animation where subanimation is not used for hurtbox
 			(AtkID == 3 && Enemy.subanimation <= AttackSubanimationActiveDuringHurtbox) ||
@@ -84,12 +84,6 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 			guiPrint(LocationDetection",0:dont attack, enemy windup");
 			instinct_decision->priority_decision = DelayActions;
 		}
-	}
-
-	//if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-	if (distanceByLine < 2 && BackstabDetection(&Enemy, &Player, distanceByLine) && !BackstabMetaOnly){
-		instinct_decision->priority_decision = EnterAttackSubroutine;
-		instinct_decision->subroutine_id.attackid = GhostHitId;
 	}
 
 	//backstab checks. If AI can BS, always take it

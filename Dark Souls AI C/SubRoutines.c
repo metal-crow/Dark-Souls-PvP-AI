@@ -26,7 +26,7 @@ void OverrideLowPriorityAttackSubroutines(){
 }
 
 void OverrideLowPriorityDefenseSubroutines(){
-    if (subroutine_states[DodgeTypeIndex] == CounterStrafeId){
+	if (subroutine_states[DodgeTypeIndex] == CounterStrafeLeftId || subroutine_states[DodgeTypeIndex] == CounterStrafeRightId){
         subroutine_states[DodgeTypeIndex] = NoSubroutineActive;
         subroutine_states[DodgeStateIndex] = NoSubroutineActive;
     }

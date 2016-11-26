@@ -118,7 +118,7 @@ static void Omnistep_Backwards(JOYSTICK_POSITION * iReport){
 
 #define inputDelayForStopStrafe 800
 
-static void CounterStrafe(JOYSTICK_POSITION * iReport){
+static void CounterStrafe(JOYSTICK_POSITION * iReport, bool left_strafe){
     long curTime = clock();
     guiPrint(LocationState",0:CounterStrafe:%d", (curTime - startTimeDefense));
     float distanceBt = distance(&Player, &Enemy);
@@ -135,8 +135,11 @@ static void CounterStrafe(JOYSTICK_POSITION * iReport){
 
     //keep going if we're behind enemy or very close to them: might get a bs
     else if (curTime < startTimeDefense + inputDelayForStopStrafe || BackstabDetection(&Player, &Enemy, distanceBt) == 1 || distanceBt < 1.3){
-        //TODO make this strafe in the same direction as the enemy strafe
-        iReport->wAxisX = XLEFT;
+		if (left_strafe){
+			iReport->wAxisX = XLEFT;
+		}else{
+			iReport->wAxisX = XRIGHT;
+		}
         iReport->wAxisY = MIDDLE / 2;//3/4 pushed up
         guiPrint(LocationState",1:strafe");
     }
@@ -153,15 +156,23 @@ static void CounterStrafe(JOYSTICK_POSITION * iReport){
     else{
         guiPrint(LocationState",0:end CounterStrafe");
         subroutine_states[DodgeStateIndex] = SubroutineExiting;
-        AppendLastSubroutineSelf(CounterStrafeId);
+		if (left_strafe){
+			AppendLastSubroutineSelf(CounterStrafeLeftId);
+		}else{
+			AppendLastSubroutineSelf(CounterStrafeRightId);
+		}
     }
 
     //break early if we didnt lock on
     if (!Player.locked_on && curTime > startTimeDefense + 60){
         guiPrint(LocationState",0:end CounterStrafe");
         subroutine_states[DodgeStateIndex] = SubroutineExiting;
-        AppendLastSubroutineSelf(CounterStrafeId);
-    }
+		if (left_strafe){
+			AppendLastSubroutineSelf(CounterStrafeLeftId);
+		}else{
+			AppendLastSubroutineSelf(CounterStrafeRightId);
+		}
+	}
 }
 
 static void L1Attack(JOYSTICK_POSITION * iReport){
@@ -287,9 +298,12 @@ void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, uns
 			case OmnistepBackwardsId:
 				Omnistep_Backwards(iReport);
 				break;
-            case CounterStrafeId:
-                CounterStrafe(iReport);
+            case CounterStrafeLeftId:
+                CounterStrafe(iReport, true);
                 break;
+			case CounterStrafeRightId:
+				CounterStrafe(iReport, false);
+				break;
 			case L1AttackId:
 				L1Attack(iReport);
 				break;

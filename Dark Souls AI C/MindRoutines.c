@@ -32,16 +32,35 @@ DWORD WINAPI DefenseMindProcess(void* data){
         input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
+		//printf("%f\n", *out);
 
-        //printf("%f\n", *out);
+		//backstab attempt detection and avoidace
 		//TODO implement more types of backstab avoidance actions
         if (*out < 10 && *out > 0.5
             && mostRecentDistance < 5 //hardcode bs distance
             && Enemy.subanimation == SubanimationNeutral //enemy cant backstab when in animation
 			//&& BackstabDetection(&Enemy, &Player, mostRecentDistance) == 0 //can't be backstabed when behind enemy
         ){
-            DefenseChoice = CounterStrafeId;
+			//TODO make this strafe in the same direction as the enemy strafe
+            DefenseChoice = CounterStrafeLeftId;
         } 
+
+		//if we're waking up from a bs (or slightly after wakeup), try to avoid chain
+		if (/*TODO player is invulnerable/knockdown*/){
+			if (rand() > RAND_MAX / 2){
+				//randomly choose between chain escapes to through off predictions
+				DefenseChoice = OmnistepBackwardsId;
+			}
+			else{
+				DefenseChoice = ;
+			}
+
+		}
+
+		//if the enemy is close behind us, and there's no possibilty of chain(which a bs cancel can't prevent) try to damage cancel their bs.
+		if (BackstabDetection(&Enemy, &Player, mostRecentDistance) && /*TODO !enemy or player is invulnerable/knockdown*/){
+			AttackChoice = GhostHitId;
+		}
 
         //prevent rerun
         defense_mind_input->runNetwork = false;
@@ -92,10 +111,17 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
+		//potentally move up if not in range
+		if (mostRecentDistance > Player.weaponRange){
+			AttackChoice = MoveUpId;
+		}
+
 		//TODO desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
 		/*if (true){
 			AttackChoice = PivotBSId;
 		}*/
+
+		//Decision about standard attack
         if (
 			!BackstabMetaOnly &&
             //sanity checks
