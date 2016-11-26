@@ -63,7 +63,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 					//if we dont have enough time to roll
 					Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && 
 					//we have a shield equipped/are two handing
-					(Player.twoHanding || Player.l_weapon_id==) && 
+					(Player.twoHanding || IsWeaponShield(Player.l_weapon_id)) &&
 					//we're in a neutral state
 					Player.subanimation == SubanimationNeutral)
 				{
