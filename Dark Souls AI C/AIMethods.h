@@ -11,6 +11,11 @@
 #include "Memory.h"
 #include "AIDecisions.h"
 
+#define TimeForR3ToTrigger 50
+#define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
+#define TimeDeltaForGameRegisterAction 120
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
+
 //enter or continue a dodge subroutine
 //this reconciles the MindRoutine and AiDecision choices
 //makes deeper decision about what action to take (type of dodge)

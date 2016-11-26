@@ -6,6 +6,7 @@
 #include "SubRoutines.h"
 #include "HelperUtil.h"
 #include "Settings.h"
+#include "AIMethods.h"
 
 typedef enum PriorityDecision_E{
 	EnemyNeutral,//doesn't override anything, and doesnt define an attack or defense id
