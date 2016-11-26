@@ -27,16 +27,13 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 		instinct_decision->subroutine_id.attackid = HealId;
 	}
 
-	//if enemy in range and we're not in invulnerable position (bs knockdown)
-	if (distanceByLine <= Enemy.weaponRange && Player.animationType_id != KnockdownId){
+	//if enemy in range and we/enemy is not in invulnerable position (bs knockdown)
+	if (distanceByLine <= Enemy.weaponRange && /*TODO enemy or player is invulnerable/knockdown*/){
 		if (
 			//if in an animation where subanimation is not used for hurtbox
 			(AtkID == 3 && Enemy.subanimation <= AttackSubanimationActiveDuringHurtbox) ||
 			//or animation where it is
 			((AtkID == 2 || AtkID == 4) && (Enemy.subanimation >= AttackSubanimationWindupClosing && Enemy.subanimation <= AttackSubanimationActiveDuringHurtbox))
-			//TODO and their attack will hit me(their rotation is correct and their weapon hitbox width is greater than their rotation delta)
-			//&& (Phantom->rotation)>((Player->rotation) - 3.1) && (Phantom->rotation)<((Player->rotation) + 3.1)
-			//TODO if enemy not in bs knockdown
 			)
 		{
 			OverrideLowPrioritySubroutines();
@@ -46,13 +43,15 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 			//Decide on dodge action
 
 			//if we got hit already, and are in a state we can't dodge from, toggle escape the next hit
-			if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3)){
+			if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3))
+			{
 				instinct_decision->subroutine_id.defenseid = ToggleEscapeId;
 			}
 			//while staggered, dont enter any subroutines
-			if (Player.subanimation != PoiseBrokenSubanimation){
-				//if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
+			if (Player.subanimation != PoiseBrokenSubanimation)
+			{
 				if (
+					//if the reverse roll is close enough to put us behind the enemy and we have enough windup time to reverse roll
 					distance(&Player, &Enemy) <= 3 && TotalTimeInSectoReverseRoll < Enemy.dodgeTimeRemaining &&
 					//if just reverse rolled and next incoming attack and weapon speed < ?, do normal roll
 					(last_subroutine_states_self[0] != ReverseRollBSId || TotalTimeInSectoReverseRoll + 0.3 > Enemy.dodgeTimeRemaining)
@@ -60,8 +59,14 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 				{
 					instinct_decision->subroutine_id.defenseid = ReverseRollBSId;
 				}
-				//if we dont have enough time to roll, and we didnt just toggle, and we're in a neutral state; perfect block
-				else if (Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && last_subroutine_states_self[0] != ToggleEscapeId && Player.subanimation == SubanimationNeutral){
+				else if (
+					//if we dont have enough time to roll
+					Enemy.dodgeTimeRemaining < 0.15 && Enemy.dodgeTimeRemaining > 0 && 
+					//we have a shield equipped/are two handing
+					(Player.twoHanding || Player.l_weapon_id==) && 
+					//we're in a neutral state
+					Player.subanimation == SubanimationNeutral)
+				{
 					instinct_decision->subroutine_id.defenseid = PerfectBlockId;
 				}
 				//otherwise, normal roll
