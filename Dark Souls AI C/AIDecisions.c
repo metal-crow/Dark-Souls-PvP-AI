@@ -28,7 +28,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 	}
 
 	//if enemy in range and we/enemy is not in invulnerable position (bs knockdown)
-	if (distanceByLine <= Enemy.weaponRange && /*TODO !enemy or player is invulnerable/knockdown*/){
+	if (distanceByLine <= Enemy.weaponRange && !Player.in_backstab && !Enemy.in_backstab){
 		if (
 			//if in an animation where subanimation is not used for hurtbox
 			(AtkID == 3 && Enemy.subanimation <= AttackSubanimationActiveDuringHurtbox) ||

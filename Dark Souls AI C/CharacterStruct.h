@@ -41,6 +41,9 @@ typedef struct {
     ullong animationId_address;
     //secondary animation id. Used rarely
     ullong animationId2_address;
+	//tertiary animation id. Only used for backstabs?
+	ullong animationId3_address;
+	unsigned char in_backstab;
 	//animation timer.
     ullong animationTimer_address;
     //secondary animation timer. Used rarely
@@ -162,6 +165,11 @@ static const int Enemy_animationID2_offsets[] = { 0x4, 0x4, 0x28, 0x18, 0x3A8 };
 static const int Enemy_animationID2_offsets_length = 5;
 static const int Player_animationID2_offsets[] = { 0x3C, 0x28, 0x18, 0x8C, 0x1D4 };
 static const int Player_animationID2_offsets_length = 5;
+//teriary animation id
+static const int Enemy_animationID3_offsets[] = { 0x4, 0x4, 0x65C, 0x268, 0x770 };
+static const int Enemy_animationID3_offsets_length = 5;
+static const int Player_animationID3_offsets[] = { 0x3C, 0x10C };
+static const int Player_animationID3_offsets_length = 2;
 //if in a ready/animation switchable state
 static const int Player_readyState_offsets[] = { 0x3C, 0x30, 0xC, 0x20C, 0x7D2 };
 static const int Player_readyState_offsets_length = 5;

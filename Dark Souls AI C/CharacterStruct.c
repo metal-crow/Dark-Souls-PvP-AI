@@ -65,6 +65,14 @@ void ReadPlayer(Character * c, HANDLE processHandle, int characterId){
     //need a second one b/c the game has a second one. the game has a second one b/c two animations can overlap.
     int animationid2;
     ReadProcessMemory(processHandle, (LPCVOID)(c->animationId2_address), &animationid2, 4, 0);
+	//haven't discovered what the 3rd animation address is for besides backstabs
+	int animationid3;
+	ReadProcessMemory(processHandle, (LPCVOID)(c->animationId3_address), &animationid3, 4, 0);
+	if (animationid3 > 0){
+		c->in_backstab = 1;
+	} else{
+		c->in_backstab = 0;
+	}
 
     //keep track of enemy animations in memory
     if (characterId == EnemyId){
@@ -252,6 +260,7 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Enemy.animationTimer2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationTimer2_offsets_length, Enemy_animationTimer2_offsets);
     Enemy.animationId_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID_offsets_length, Enemy_animationID_offsets);
     Enemy.animationId2_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID2_offsets_length, Enemy_animationID2_offsets);
+	Enemy.animationId3_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_animationID3_offsets_length, Enemy_animationID3_offsets);
     Enemy.hurtboxActive_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_hurtboxActive_offsets_length, Enemy_hurtboxActive_offsets);
     Enemy.readyState_address = 0;
     Enemy.velocity_address = FindPointerAddr(processHandle, Enemy_base_add, Enemy_velocity_offsets_length, Enemy_velocity_offsets);
@@ -273,6 +282,7 @@ void ReadPointerEndAddresses(HANDLE processHandle){
     Player.animationTimer2_address = FindPointerAddr(processHandle, player_base_add, Player_animationTimer2_offsets_length, Player_animationTimer2_offsets);
     Player.animationId_address = FindPointerAddr(processHandle, player_base_add, Player_animationID_offsets_length, Player_animationID_offsets);
     Player.animationId2_address = FindPointerAddr(processHandle, player_base_add, Player_animationID2_offsets_length, Player_animationID2_offsets);
+	Player.animationId3_address = FindPointerAddr(processHandle, player_base_add, Player_animationID3_offsets_length, Player_animationID3_offsets);
     Player.hurtboxActive_address = 0;
     Player.readyState_address = FindPointerAddr(processHandle, player_base_add, Player_readyState_offsets_length, Player_readyState_offsets);
     Player.velocity_address = 0;

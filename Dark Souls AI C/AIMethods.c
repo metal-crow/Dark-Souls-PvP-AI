@@ -269,7 +269,7 @@ static void ParrySubroutine(JOYSTICK_POSITION * iReport){
 }
 
 
-void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, unsigned char DefenseChoice){
+void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, unsigned char DefenseNeuralNetChoice){
 	//if we're not in active subroutine and we can enter one
     if (!inActiveSubroutine() && Player.subanimation >= LockInSubanimation)
 	{
@@ -279,7 +279,7 @@ void dodge(JOYSTICK_POSITION * iReport, InstinctDecision* instinct_decision, uns
 		}
 		//AiMethod defines less immediate dodges
 		else{
-			subroutine_states[DodgeTypeIndex] = DefenseChoice;
+			subroutine_states[DodgeTypeIndex] = DefenseNeuralNetChoice;
         }
 
 		subroutine_states[DodgeStateIndex] = SubroutineActive;
