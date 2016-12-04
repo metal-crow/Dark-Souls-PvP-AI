@@ -3213,3 +3213,11 @@ static float WeaponAndAttackTypeToPoiseDamage(unsigned int Weapon_AnimationType_
         default: return 0;
     }
 }
+
+unsigned char IsWeaponShield(unsigned int weapon_id){
+	//Can't make any destinction between Great/Medium/Small shields based only on upper part of weaponid
+	if (weapon_id / 100000 == 14 || weapon_id / 100000 == 15 || weapon_id / 100000 == 90){
+		return 1;
+	}
+	return 0;
+}

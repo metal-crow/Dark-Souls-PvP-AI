@@ -6,6 +6,7 @@
 #include "CharacterStruct.h"
 #include "HelperUtil.h"
 #include "AIMethods.h"
+#include "AIDecisions.h"
 #include "SubRoutines.h"
 #include "MindRoutines.h"
 #include "vjoyhelper.h"

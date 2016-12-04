@@ -13,6 +13,8 @@ volatile char DefenseChoice = 0;
 MindInput* attack_mind_input;
 volatile unsigned char AttackChoice = 0;
 
+InstinctDecision instinct_decision;
+
 HANDLE processHandle;
 ullong memorybase;
 
@@ -86,18 +88,18 @@ void MainLogicLoop(){
 
         ResetVJoyController();
 
-		//begin reading enemy state, and handle w logic and subroutines
-        char attackImminent = EnemyStateProcessing(&Player, &Enemy);
+		//generate instinct decision
+		instinct_decision.subroutine_id.attackid = AtkNoneId;
+		instinct_decision.subroutine_id.defenseid = DefNoneId;
+		InstinctDecisionMaking(&instinct_decision);
 
         WaitForThread(defense_mind_input);
         guiPrint(LocationDetection",1:Defense Neural Network detected %d, and Attack %d", DefenseChoice, AttackChoice);
 #if DebuggingPacifyDef
         DefenseChoice = 0;
 #endif
-		//defense mind makes choice to defend or not(ex backstab metagame decisions).
-		//handles actually backstab checks, plus looks at info from obveous direct attacks from aboutToBeHit
-        if (attackImminent == ImminentHit || inActiveDodgeSubroutine() || (DefenseChoice>0)){
-            dodge(&Player, &Enemy, &iReport, attackImminent, DefenseChoice);
+		if (instinct_decision.priority_decision == EnterDodgeSubroutine || inActiveDodgeSubroutine() || (DefenseChoice>0)){
+			dodge(&iReport, &instinct_decision, DefenseChoice);
 		}
 
         WaitForThread(attack_mind_input);
@@ -105,10 +107,8 @@ void MainLogicLoop(){
 #if DebuggingPacifyAtk
         AttackChoice = 0;
 #endif
-		//attack mind make choice about IF to attack or not, and how to attack
-        //enter when we either have a Attack neural net action or a attackImminent action
-        if (inActiveAttackSubroutine() || attackImminent != ImminentHit || (AttackChoice && DefenseChoice<=0)){
-            attack(&Player, &Enemy, &iReport, attackImminent, AttackChoice);
+		if (inActiveAttackSubroutine() || (AttackChoice && DefenseChoice <= 0)){
+			attack(&iReport, &instinct_decision, AttackChoice);
         }
 
         //unset neural network desisions
