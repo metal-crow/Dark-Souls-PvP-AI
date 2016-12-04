@@ -117,7 +117,7 @@ void GetTrainingData(){
 
         //output result
         fprintf(outFile, "\n%f\n", result);
-
+		fflush(outFile);
         printf("Attack result:%f in %s\n", result, (outFile == fpatk_test ? "Test" : "Train"));
 
         unsigned int resethp = 2000;
@@ -143,7 +143,7 @@ void GetTrainingData(){
             rotationDifferenceFromSelf(TwoSecStore[TwoSecStoreLength-6], TwoSecStore[TwoSecStoreLength-7]),
             ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1.0 : -1.0)
             );
-
+		fflush(outFile);
         printf("BackStab result:%d in %s\n", ((AnimationId3 == 9000 || AnimationId3 == 9420) ? 1 : -1), (outFile == fpdef_test ? "Test" : "Train"));
         Sleep(100);
     }
@@ -212,10 +212,10 @@ void trainFromFile(unsigned int max_neurons, const char* training_file, const ch
 
 
 void SetupTraining(){
-    fpatk = fopen("Neural Nets/attack_training_data.train", "a");
-    fpatk_test = fopen("Neural Nets/attack_training_data.test", "a");
-    fpdef = fopen("Neural Nets/backstab_training_data.train", "a");
-    fpdef_test = fopen("Neural Nets/backstab_training_data.test", "a");
+	fpatk = fopen(NeuralNetFolderLocation"/attack_training_data.train", "a");
+	fpatk_test = fopen(NeuralNetFolderLocation"/attack_training_data.test", "a");
+	fpdef = fopen(NeuralNetFolderLocation"/backstab_training_data.train", "a");
+	fpdef_test = fopen(NeuralNetFolderLocation"/backstab_training_data.test", "a");
     AnimationId3_Addr = FindPointerAddr(processHandle, player_base_add, Player_AnimationId3_offsets_length, Player_AnimationId3_offsets);
     Timer3_Addr = FindPointerAddr(processHandle, player_base_add, Player_Timer3_offsets_length, Player_Timer3_offsets);
 }

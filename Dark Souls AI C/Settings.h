@@ -9,12 +9,15 @@
     #define TrainAttackNet 0
     #define TrainBackstabNet 1
 #define FeedNeuralNet 0
+#define NeuralNetFolderLocation "E:/Code Workspace/Dark Souls AI C/Neural Nets"
 
 //used in helper utils (for camera)
 #define OolicelMap 1
 
+#define BackstabMetaOnly 0
+
 //used in gui
-#define ENABLEGUI 1
+#define ENABLEGUI 0
 #define ENABLEPRINT 0
 #define REDIRECTTOFILE 0 //WARNING: produces 1GB every 2 min
 #define PORT 4149

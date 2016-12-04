@@ -3,7 +3,6 @@
 
 #define SCALE(input, minVal, maxVal) (2 * ((float)input - minVal) / (maxVal - minVal) - 1)
 
-
 DWORD WINAPI DefenseMindProcess(void* data){
     while (!defense_mind_input->exit)
     {
@@ -33,21 +32,35 @@ DWORD WINAPI DefenseMindProcess(void* data){
         input[7] = SCALE(rotationDifferenceFromSelf(&Player, &Enemy), 0, 3.8);
 
         fann_type* out = fann_run(defense_mind_input->mind, input);
-        //printf("%f\n", *out);
+		//printf("%f\n", *out);
+
+		//backstab attempt detection and avoidace
+		//TODO implement more types of backstab avoidance actions
         if (*out < 10 && *out > 0.5
             && mostRecentDistance < 5 //hardcode bs distance
             && Enemy.subanimation == SubanimationNeutral //enemy cant backstab when in animation
+			//&& BackstabDetection(&Enemy, &Player, mostRecentDistance) == 0 //can't be backstabed when behind enemy
         ){
-            DefenseChoice = CounterStrafeId;
+			//TODO make this strafe in the same direction as the enemy strafe
+            DefenseChoice = CounterStrafeLeftId;
         } 
-        //hardcoded check if the enemy is close behind us, try to damage cancel their bs. TEMP: this is a bandaid and should not be permenant
-        if (mostRecentDistance < 2 && BackstabDetection(&Enemy, &Player, mostRecentDistance)){
-            AttackChoice = GhostHitId;
-        }
-        //if we had to toggle escape, they're probably comboing. Get out.
-        if (last_subroutine_states_self[0] == ToggleEscapeId){
-            DefenseChoice = StandardRollId;
-        }
+
+		//if we're waking up from a bs, try to avoid chain
+		if (Player.in_backstab){
+			if (rand() > RAND_MAX / 2){
+				//randomly choose between chain escapes to through off predictions
+				DefenseChoice = OmnistepBackwardsId;
+			}
+			else{
+				DefenseChoice = ReverseRollBSId;
+			}
+
+		}
+
+		//if the enemy is close behind us, and there's no possibilty of chain(which a bs cancel can't prevent) try to damage cancel their bs.
+		if (BackstabDetection(&Enemy, &Player, mostRecentDistance) && !Player.in_backstab && !Enemy.in_backstab){
+			AttackChoice = GhostHitId;
+		}
 
         //prevent rerun
         defense_mind_input->runNetwork = false;
@@ -98,23 +111,19 @@ DWORD WINAPI AttackMindProcess(void* data){
 
         fann_type* out = fann_run(attack_mind_input->mind, input);
 
+		//potentally move up if not in range
+		if (mostRecentDistance > Player.weaponRange){
+			AttackChoice = MoveUpId;
+		}
+
+		//TODO desicion about going for a backstab. Note that these subroutines will attempt, not garuntee
+		//AttackChoice = PivotBSId;
+
+		//TODO chain bs's. if enemy in bs, try chain
+
+		//Decision about standard attack
         if (
-            //not in range
-            mostRecentDistance > Player.weaponRange ||
-            //we're behind the enemy and might be able to get a backstab
-            BackstabDetection(&Player, &Enemy, mostRecentDistance) == 1)
-        {
-            AttackChoice = MoveUpId;
-        }
-        //if not two handing
-        if (!Player.twoHanding && mostRecentDistance > 5){
-            AttackChoice = TwoHandId;
-        }
-        //l hand bare handed, not holding shield. safety distance
-        if (Player.l_weapon_id == 900000 && mostRecentDistance > 5){
-            AttackChoice = SwitchWeaponId;
-        }
-        if (
+			!BackstabMetaOnly &&
             //sanity checks
             mostRecentDistance <= Player.weaponRange && //in range
             Player.stamina > 20 && //just to ensure we have enough to roll
@@ -136,9 +145,6 @@ DWORD WINAPI AttackMindProcess(void* data){
                 AttackChoice = GhostHitId;
             }
         }
-        if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
-            AttackChoice = HealId;
-        }
 
         //prevent rerun
         attack_mind_input->runNetwork = false;
@@ -154,7 +160,7 @@ DWORD WINAPI AttackMindProcess(void* data){
 int ReadyThreads(){
     //Defense Thread
     defense_mind_input = malloc(sizeof(MindInput));
-    struct fann* defense_mind = fann_create_from_file("Neural Nets/Defense_dark_souls_ai.net");
+	struct fann* defense_mind = fann_create_from_file(NeuralNetFolderLocation"/Defense_dark_souls_ai.net");
     if (defense_mind == NULL){
         printf("Defense_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;
@@ -169,7 +175,7 @@ int ReadyThreads(){
 
     //Attack Thread
     attack_mind_input = malloc(sizeof(MindInput));
-    struct fann* attack_mind = fann_create_from_file("Neural Nets/Attack_dark_souls_ai.net");
+	struct fann* attack_mind = fann_create_from_file(NeuralNetFolderLocation"/Attack_dark_souls_ai.net");
     if (attack_mind == NULL){
         printf("Attack_dark_souls_ai.net neural network file not found");
         return EXIT_FAILURE;

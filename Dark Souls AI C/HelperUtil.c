@@ -164,6 +164,7 @@ unsigned char BackstabDetection_CounterClockwise(Character* Player, Character* E
     
 //this tests if safe FROM backstabs and able TO backstab
 //determines the state of a backstab from the perspecitve's view with respect to the target
+//0 is no backstab, 1 is behind target, 2 is backstab
 unsigned char BackstabDetection(Character* Perspective, Character* Target, float distance){
     return BackstabDetection_CounterClockwise(Perspective, Target, distance);
 }
@@ -259,114 +260,38 @@ double angleFromCoordinates(float player_x, float phantom_x, float player_y, flo
 	//convert this to 360 degrees
 	double angle = (atan2(delta_x, delta_y) + PI) * (180.0 / PI);
 
+#if !OolicelMap
+	angle -= 90.0;
+#endif
+
     return angle;
 }
 
-longTuple angleToJoystick_Clockwise(double angle){
-    longTuple tuple;
-
-    //top right quadrant
-    if (angle <= 90 && angle >= 0){
-        if (angle <= 45){
-            tuple.first = MIDDLE + ((angle * MIDDLE) / 45);
-            tuple.second = YTOP;
-        } else{
-            tuple.second = YTOP + (((angle - 45.0) * MIDDLE) / 45);
-            tuple.first = XRIGHT;
-        }
-    }
-    //bottom right quadrant
-    else if (angle <= 180 && angle >= 90){
-        double anglediff = fabs(angle - 90.0);
-        if (anglediff <= 45){
-            tuple.first = XRIGHT;
-            tuple.second = MIDDLE + ((anglediff * MIDDLE) / 45);
-        } else{
-            tuple.second = YBOTTOM;
-            tuple.first = XRIGHT - (((anglediff - 45.0) * MIDDLE) / 45);
-        }
-    }
-    //bottom left quadrant
-    else if (angle <= 270 && angle >= 180){
-        double anglediff = fabs(angle - 180.0);
-        if (anglediff <= 45){
-            tuple.first = MIDDLE - ((anglediff * MIDDLE) / 45);
-            tuple.second = YBOTTOM;
-        } else{
-            tuple.second = YBOTTOM - (((anglediff - 45.0) * MIDDLE) / 45);
-            tuple.first = XLEFT;
-        }
-        //top left quadrant
-    } else{
-        double anglediff = fabs(angle - 270.0);
-        if (anglediff <= 45){
-            tuple.first = XLEFT;
-            tuple.second = MIDDLE - ((anglediff * MIDDLE) / 45);
-        } else{
-            tuple.second = YTOP;
-            tuple.first = XLEFT + (((anglediff - 45.0) * MIDDLE) / 45);
-        }
-    }
-
-    return tuple;
+static void angleToJoystick_Clockwise(double angle, longTuple* tuple){
+	tuple->x_axis = (XRIGHT*(cos(angle*(PI / 180.0)) + 1)) / 2.0;
+	tuple->y_axis = (YBOTTOM*(sin(angle*(PI / 180.0)) + 1)) / 2.0;
 }
 
-longTuple angleToJoystick_CounterClockwise(double angle){
-	longTuple tuple;
-
-    if (angle <= 360 && angle >= 270){
-        double anglediff = fabs(angle - 270.0);
-        if (anglediff >= 45){
-            tuple.first = MIDDLE + (((angle - 45.0) * MIDDLE) / 45);
-			tuple.second = YTOP;
-		} else{
-			tuple.second = YTOP + ((angle * MIDDLE) / 45);
-			tuple.first = XRIGHT;
-		}
-	}
-    else if (angle <= 270 && angle >= 180){
-		double anglediff = fabs(angle - 180.0);
-		if (anglediff >= 45){
-			tuple.first = XRIGHT;
-            tuple.second = MIDDLE + (((anglediff - 45.0) * MIDDLE) / 45);
-		} else{
-			tuple.second = YBOTTOM;
-			tuple.first = XRIGHT - ((anglediff * MIDDLE) / 45);
-		}
-	}
-    else if (angle <= 180 && angle >= 90){
-		double anglediff = fabs(angle - 90.0);
-		if (anglediff >= 45){
-            tuple.first = MIDDLE - (((anglediff - 45.0) * MIDDLE) / 45);
-			tuple.second = YBOTTOM;
-		} else{
-			tuple.second = YBOTTOM - ((anglediff * MIDDLE) / 45);
-			tuple.first = XLEFT;
-		}
-	} else{
-        if (angle >= 45){
-			tuple.first = XLEFT;
-            tuple.second = MIDDLE - (((angle - 45.0) * MIDDLE) / 45);
-		} else{
-			tuple.second = YTOP;
-            tuple.first = XLEFT + ((angle * MIDDLE) / 45);
-		}
-	}
-
-	return tuple;
+static void angleToJoystick_CounterClockwise(double angle, longTuple* tuple){
+	tuple->x_axis = (XRIGHT  * (cos(angle*(PI/180.0)+(PI/2.0)) + 1) ) / 2.0;
+	tuple->y_axis = (YBOTTOM * (sin(angle*(PI/180.0)-(PI/2.0)) + 1) ) / 2.0;
 }
 
-/*this will return a tuple of 2 values each in the range 0x1-0x8000(32768).
+/*
+Basic Polar to Cartesian conversion
+
+this will return a tuple of 2 values each in the range 0x1-0x8000(32768).
 The first is the x direction, which has 1 as leftmost and 32768 as rightmost
 second is y, which has 1 as topmost and 32768 as bottommost
 
 MUST LOCK CAMERA for movement to work. it rotates with your movement direction, which messes with it.
-aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us*/
-longTuple angleToJoystick(double angle){
+aligning camera with 0 on rotation x points us along y axis, facing positive, and enemy moves clockwise around us
+*/
+void angleToJoystick(double angle, longTuple* tuple){
 #if OolicelMap
-    return angleToJoystick_CounterClockwise(angle);
+    angleToJoystick_CounterClockwise(angle, tuple);
 #else
-    return angleToJoystick_Clockwise(angle);
+	angleToJoystick_Clockwise(angle, tuple);
 #endif
 }
 //get current camera details to lock

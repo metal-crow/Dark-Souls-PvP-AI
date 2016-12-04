@@ -1,33 +1,29 @@
 #ifndef AIMethods_H
 #define AIMethods_H
 
-//this composes the INSTINCT of the ai mind. Basic interations/actions/reactions that are high accuracy, very fast, but not very complex.
-
 #include "gui.h"
 #include "CharacterStruct.h"
 #include "HelperUtil.h"
 #include <math.h>
-#include <stdbool.h>
 #include "SubRoutines.h"
 #include <time.h>
 #include "AnimationMappings.h"
 #include "Memory.h"
+#include "AIDecisions.h"
 
-//return 2 if i am about to be hit by an attack by the enemy
-//1 if an attack if coming soon and i should wait to dodge it
-//0 if no danger
-//-1 if should override attack neural net and perform bs
-#define ImminentHit 2
-#define EnemyInWindup 1
-#define EnemyNeutral 0
-#define BehindEnemy -1
-#define InBSPosition -2
-char EnemyStateProcessing(Character * Player, Character * Phantom);
+#define TimeForR3ToTrigger 50
+#define TimeForCameraToRotateAfterLockon 180//how much time we give to allow the camera to rotate.
+#define TimeDeltaForGameRegisterAction 120
+#define TotalTimeInSectoReverseRoll ((TimeForR3ToTrigger + TimeForCameraToRotateAfterLockon + TimeDeltaForGameRegisterAction + 50) / (float)CLOCKS_PER_SEC)//convert above CLOCKS_PER_SEC ticks to seconds
 
-//initiate the dodge command logic. This can be either toggle escaping, rolling, or parrying.
-void dodge(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char DefenseChoice);
+//enter or continue a dodge subroutine
+//this reconciles the MindRoutine and AiDecision choices
+//makes deeper decision about what action to take (type of dodge)
+void dodge(JOYSTICK_POSITION * iReport, struct InstinctDecision_S* instinct_decision, unsigned char DefenseNeuralNetChoice);
 
-//initiate the attack command logic. This can be a standard(physical) attack or a backstab.
-void attack(Character * Player, Character * Phantom, JOYSTICK_POSITION * iReport, char attackInfo, unsigned char AttackNeuralNetChoice);
+//enter or continue a attack subroutine
+//this reconciles the MindRoutine and AiDecision choices
+//makes deeper decision about what action to take (type of attack)
+void attack(JOYSTICK_POSITION * iReport, struct InstinctDecision_S* instinct_decision, unsigned char AttackNeuralNetChoice);
 
 #endif

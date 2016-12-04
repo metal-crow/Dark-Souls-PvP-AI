@@ -85,6 +85,9 @@
     <ClCompile Include="vjoyhelper.c">
       <Filter>VJoy</Filter>
     </ClCompile>
+    <ClCompile Include="AIDecisions.c">
+      <Filter>AICore\Instinct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MemoryEdits.h">
@@ -137,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDecisions.h">
+      <Filter>AICore\Instinct</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

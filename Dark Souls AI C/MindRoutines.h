@@ -14,6 +14,7 @@
 #include "SubRoutines.h"
 #include "HelperUtil.h"
 #include "Memory.h"
+#include "Settings.h"
 
 typedef struct{
     struct fann* mind;

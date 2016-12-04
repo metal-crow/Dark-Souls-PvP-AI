@@ -52,7 +52,14 @@ static bool RedSignDown = false;
 
 void PutDownRedSign(){
     ResetVJoyController();
+	//press x (in case we have a message appearing), down to goto next item, and check if we selected RSS
     while (selectedItem != RedSoapstone){
+		iReport.bHats = cross;
+		UpdateVJD(iInterface, (PVOID)&iReport);
+		Sleep(100);
+		iReport.bHats = 0x0;
+		UpdateVJD(iInterface, (PVOID)&iReport);
+		Sleep(100);
         iReport.bHats = ddown;
         UpdateVJD(iInterface, (PVOID)&iReport);
         Sleep(100);
@@ -63,6 +70,7 @@ void PutDownRedSign(){
         ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
         guiPrint(LocationHandler",2:Selected Item:%d", selectedItem);
     }
+	//use RSS
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
@@ -74,6 +82,7 @@ void PutDownRedSign(){
     Sleep(100);
     iReport.bHats = dcenter;
     UpdateVJD(iInterface, (PVOID)&iReport);
+
     RedSignDown = true;
 }
 
@@ -82,8 +91,8 @@ static long LastRedSignTime = 0;
 
 int main(void){
     #if FeedNeuralNet
-    trainFromFile(70, "Neural Nets/attack_training_data.train", "Neural Nets/attack_training_data.test", "Neural Nets/Attack_dark_souls_ai.net");
-    trainFromFile(30, "Neural Nets/backstab_training_data.train", "Neural Nets/backstab_training_data.test", "Neural Nets/Defense_dark_souls_ai.net");
+	trainFromFile(70, NeuralNetFolderLocation"/attack_training_data.train",				 NeuralNetFolderLocation"/attack_training_data.test",   NeuralNetFolderLocation"/Attack_dark_souls_ai.net");
+	trainFromFile(30, NeuralNetFolderLocation"Neural Nets/backstab_training_data.train", NeuralNetFolderLocation"/backstab_training_data.test", NeuralNetFolderLocation"/Defense_dark_souls_ai.net");
     Sleep(7000);
     #endif
     int Setuperror = SetupandLoad();
