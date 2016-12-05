@@ -47,6 +47,7 @@ Attack Network Inputs:
 ## TODO 
 
   * **TOP Priority**
+    * fix the mash r1 statagy from working
     * Fix backstab detection being wrong for value 2 rarly
     * types of backstab methods
      * Pivot

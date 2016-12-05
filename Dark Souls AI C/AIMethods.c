@@ -102,6 +102,7 @@ static void Omnistep_Backwards(JOYSTICK_POSITION * iReport){
     if (curTime < startTimeDefense + inputDelayForStopCircle){
 		iReport->lButtons = circle;
 	}
+	//TODO kind of not working
 	else if (curTime > startTimeDefense + inputDelayForStopCircle + inputDelayForOmnistepWait && curTime < startTimeDefense + inputDelayForStopCircle + inputDelayForOmnistepWait + inputDelayForStopOmnistepJoystickDirection){
 		double angle = angleFromCoordinates(Player.loc_x, Enemy.loc_x, Player.loc_y, Enemy.loc_y);
 		//angle joystick

@@ -12,12 +12,12 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 	//TODO should formalize this in an actual order somehow
 
 	//if not two handing
-	if (!Player.twoHanding && distanceByLine > 5){
+	if (!Player.twoHanding && distanceByLine > Enemy.weaponRange*1.75){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
 		instinct_decision->subroutine_id.attackid = TwoHandId;
 	}
 	//l hand bare handed, not holding shield. safety distance
-	if (Player.l_weapon_id == 900000 && distanceByLine > 5){
+	if (Player.l_weapon_id == 900000 && distanceByLine > Enemy.weaponRange*1.75){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
 		instinct_decision->subroutine_id.attackid = SwitchWeaponId;
 	}
