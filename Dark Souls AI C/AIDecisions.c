@@ -46,6 +46,7 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 			if (Player.subanimation == PoiseBrokenSubanimation && (Enemy.dodgeTimeRemaining > 0.2 && Enemy.dodgeTimeRemaining < 0.3))
 			{
 				instinct_decision->subroutine_id.defenseid = ToggleEscapeId;
+				return;
 			}
 			//while staggered, dont enter any subroutines
 			if (Player.subanimation != PoiseBrokenSubanimation)
