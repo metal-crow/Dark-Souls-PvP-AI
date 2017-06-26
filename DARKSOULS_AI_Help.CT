@@ -1,54 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="19">
+<CheatTable CheatEngineTableVersion="24">
   <CheatEntries>
     <CheatEntry>
-      <ID>66</ID>
+      <ID>342</ID>
       <Description>"lock camera rotation"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
-aobscan(CamRotAOB,F3 0F 11 83 44 01 00 00 80 BB 63 02 00 00 00)
-alloc(mycode,2048)
-registersymbol(CamRotAOB)
-label(returnhere)
-CamRotAOB:
-jmp mycode
-nop
-nop
-nop
-returnhere:
+alloc(camx_rot_1, 36)
+label(camx_rot_1returnhere)
 
-mycode:
+camx_rot_1:
+mov [ebx+00000144], 40490fd8 //3.141592
+jmp camx_rot_1returnhere
 
-jmp returnhere
+"DARKSOULS.exe"+B06C46:
+jmp camx_rot_1
+nop
+nop
+nop
+camx_rot_1returnhere:
+
+//
+alloc(camx_rot_2, 36)
+label(camx_rot_2returnhere)
+
+camx_rot_2:
+mov [ebx+00000144], 40490fd8 //3.141592
+jmp camx_rot_2returnhere
+
+"DARKSOULS.exe"+B0795B:
+jmp camx_rot_2
+nop
+nop
+nop
+camx_rot_2returnhere:
+
+//
+alloc(camx_rot_3, 36)
+label(camx_rot_3returnhere)
+
+camx_rot_3:
+mov [ebx+00000144], 40490fd8 //3.141592
+jmp camx_rot_3returnhere
+
+"DARKSOULS.exe"+B070A9:
+jmp camx_rot_3
+nop
+nop
+nop
+camx_rot_3returnhere:
+
+//
+alloc(camx_rot_4, 36)
+label(camx_rot_4returnhere)
+
+camx_rot_4:
+mov [ebx+00000144], 40490fd8 //3.141592
+jmp camx_rot_4returnhere
+
+"DARKSOULS.exe"+B0752D:
+jmp camx_rot_4
+nop
+nop
+nop
+camx_rot_4returnhere:
 
 [DISABLE]
-dealloc(mycode)
-CamRotAOB:
+dealloc(camx_rot_1)
+"DARKSOULS.exe"+B06C46:
 movss [ebx+00000144],xmm0
-unregistersymbol(CamRotAOB)
+
+dealloc(camx_rot_2)
+"DARKSOULS.exe"+B0795B:
+movss [ebx+00000144],xmm1
+
+dealloc(camx_rot_3)
+"DARKSOULS.exe"+B070A9:
+movss [ebx+00000144],xmm0
+
+dealloc(camx_rot_4)
+"DARKSOULS.exe"+B0752D:
+movss [ebx+00000144],xmm0
 </AssemblerScript>
-      <CheatEntries>
-        <CheatEntry>
-          <ID>72</ID>
-          <Description>"cam x"</Description>
-          <LastState Value="-0.2617575228" Activated="1" RealAddress="08FAE804"/>
-          <VariableType>Float</VariableType>
-          <Address>"DARKSOULS.exe"+00F78564</Address>
-          <Offsets>
-            <Offset>144</Offset>
-            <Offset>60</Offset>
-            <Offset>40</Offset>
-            <Offset>18</Offset>
-            <Offset>3A8</Offset>
-          </Offsets>
-        </CheatEntry>
-      </CheatEntries>
     </CheatEntry>
     <CheatEntry>
       <ID>324</ID>
       <Description>"Max Humanity"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat\
@@ -89,7 +128,7 @@ unregistersymbol(MaxHumAOB)
       <ID>340</ID>
       <Description>"Infinite Item Usage"</Description>
       <Options moHideChildren="1"/>
-      <LastState Activated="1"/>
+      <LastState/>
       <Color>000080</Color>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -159,7 +198,7 @@ unregistersymbol(InfItemAOB)
         <CheatEntry>
           <ID>69</ID>
           <Description>"All Items Switch (1 = All, 0 = Equiped Only)"</Description>
-          <LastState Value="1" RealAddress="237F0000"/>
+          <LastState Value="256" RealAddress="237F0000"/>
           <Color>008000</Color>
           <VariableType>4 Bytes</VariableType>
           <Address>allItemSwitch</Address>
@@ -167,7 +206,7 @@ unregistersymbol(InfItemAOB)
         <CheatEntry>
           <ID>70</ID>
           <Description>"Minimum Item Quantity"</Description>
-          <LastState Value="99" RealAddress="237F0010"/>
+          <LastState Value="1919357952" RealAddress="237F0010"/>
           <Color>008000</Color>
           <VariableType>4 Bytes</VariableType>
           <Address>minItem</Address>
@@ -177,7 +216,7 @@ unregistersymbol(InfItemAOB)
     <CheatEntry>
       <ID>333</ID>
       <Description>"Infinite Durability"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 aobscan(InfDur1AOB,89 50 14 B0 01 C2 04 00 CC)
@@ -250,286 +289,293 @@ unregistersymbol(InfDur2AOB)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>28</ID>
-      <Description>"x location self"</Description>
-      <LastState Value="1041.640625" RealAddress="078063F0"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7d644</Address>
-      <Offsets>
-        <Offset>3C0</Offset>
-        <Offset>20C</Offset>
-        <Offset>4</Offset>
-        <Offset>330</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>29</ID>
-      <Description>"y location self"</Description>
-      <LastState Value="872.7458496" RealAddress="078063F8"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7d644</Address>
-      <Offsets>
-        <Offset>3C8</Offset>
-        <Offset>20C</Offset>
-        <Offset>4</Offset>
-        <Offset>330</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>27</ID>
-      <Description>"rotation self"</Description>
-      <LastState Value="2.879793167" RealAddress="07806CF4"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7d644</Address>
-      <Offsets>
-        <Offset>4</Offset>
-        <Offset>18</Offset>
-        <Offset>4</Offset>
-        <Offset>C0</Offset>
-        <Offset>288</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>32</ID>
-      <Description>"hp self"</Description>
-      <LastState Value="2040" RealAddress="07805A74"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>2D4</Offset>
-        <Offset>4</Offset>
-        <Offset>330</Offset>
-        <Offset>C</Offset>
-        <Offset>288</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>37</ID>
-      <Description>"stamina"</Description>
-      <LastState Value="192" RealAddress="07805A84"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>2E4</Offset>
-        <Offset>4</Offset>
-        <Offset>330</Offset>
-        <Offset>C</Offset>
-        <Offset>288</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>329</ID>
-      <Description>"bleed status"</Description>
-      <LastState Value="181" RealAddress="07805AA8"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>308</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>33</ID>
-      <Description>"r weapon self"</Description>
-      <LastState Value="406005" RealAddress="07817B48"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>1F8</Offset>
-        <Offset>654</Offset>
-        <Offset>C</Offset>
-        <Offset>30</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>34</ID>
-      <Description>"l weapon self"</Description>
-      <LastState Value="1453015" RealAddress="07817B04"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>1B4</Offset>
-        <Offset>654</Offset>
-        <Offset>C</Offset>
-        <Offset>30</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>40</ID>
-      <Description>"locked on"</Description>
-      <LastState Value="0" RealAddress="078058C8"/>
-      <VariableType>Byte</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>128</Offset>
-        <Offset>390</Offset>
-        <Offset>2C</Offset>
-        <Offset>170</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>77</ID>
-      <Description>"two hand"</Description>
-      <LastState Value="160" RealAddress="07F19260"/>
-      <VariableType>Byte</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>0</Offset>
-        <Offset>4C8</Offset>
-        <Offset>148</Offset>
-        <Offset>0</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>71</ID>
-      <Description>"timer"</Description>
-      <LastState Value="0" RealAddress="07F1973C"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>4DC</Offset>
-        <Offset>4C8</Offset>
-        <Offset>148</Offset>
-        <Offset>0</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>76</ID>
-      <Description>"timer 2"</Description>
-      <LastState Value="0" RealAddress="07F196A0"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>440</Offset>
-        <Offset>4C8</Offset>
-        <Offset>148</Offset>
-        <Offset>0</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>332</ID>
-      <Description>"timer 3"</Description>
-      <LastState Value="0" RealAddress="07F1A408"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>98</Offset>
-        <Offset>7DC</Offset>
-        <Offset>18</Offset>
-        <Offset>28</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>74</ID>
-      <Description>"ready"</Description>
-      <LastState Value="1" RealAddress="07806802"/>
-      <VariableType>Byte</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>7D2</Offset>
-        <Offset>20C</Offset>
-        <Offset>C</Offset>
-        <Offset>30</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>31</ID>
-      <Description>"animation type id"</Description>
-      <LastState Value="0" RealAddress="078063FC"/>
-      <VariableType>2 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>41C</Offset>
-        <Offset>10</Offset>
-        <Offset>C</Offset>
-        <Offset>C</Offset>
-        <Offset>288</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>53</ID>
-      <Description>"animation id"</Description>
-      <LastState Value="-1" RealAddress="07806790"/>
-      <ShowAsSigned>1</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00EE29E8</Address>
-      <Offsets>
-        <Offset>7B0</Offset>
-        <Offset>318</Offset>
-        <Offset>18</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>75</ID>
-      <Description>"animation id 2"</Description>
-      <LastState Value="-1" RealAddress="07F19CBC"/>
-      <ShowAsSigned>1</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>1D4</Offset>
-        <Offset>8C</Offset>
-        <Offset>18</Offset>
-        <Offset>28</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>331</ID>
-      <Description>"animation id 3"</Description>
-      <LastState Value="-1" RealAddress="078058AC"/>
-      <ShowAsSigned>1</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>10C</Offset>
-        <Offset>3C</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>54</ID>
-      <Description>"hurtbox"</Description>
-      <LastState Value="0" RealAddress="078067B7"/>
-      <VariableType>Byte</VariableType>
-      <Address>"DARKSOULS.exe"+00EE29E8</Address>
-      <Offsets>
-        <Offset>7D7</Offset>
-        <Offset>318</Offset>
-        <Offset>1C</Offset>
-        <Offset>28</Offset>
-        <Offset>0</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>79</ID>
-      <Description>"poise"</Description>
-      <LastState Value="42" RealAddress="07805960"/>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>1C0</Offset>
-        <Offset>C</Offset>
-        <Offset>E0</Offset>
-        <Offset>18</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>57</ID>
-      <Description>"lock cam x 2"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+      <ID>341</ID>
+      <Description>"DEBUG STUFF"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>28</ID>
+          <Description>"x location self"</Description>
+          <LastState Value="1041.709229" RealAddress="06B90DB0"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7d644</Address>
+          <Offsets>
+            <Offset>3C0</Offset>
+            <Offset>20C</Offset>
+            <Offset>4</Offset>
+            <Offset>330</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>29</ID>
+          <Description>"y location self"</Description>
+          <LastState Value="872.8808594" RealAddress="06B90DB8"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7d644</Address>
+          <Offsets>
+            <Offset>3C8</Offset>
+            <Offset>20C</Offset>
+            <Offset>4</Offset>
+            <Offset>330</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>27</ID>
+          <Description>"rotation self"</Description>
+          <LastState Value="1.570796371" RealAddress="06B916B4"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7d644</Address>
+          <Offsets>
+            <Offset>4</Offset>
+            <Offset>18</Offset>
+            <Offset>4</Offset>
+            <Offset>C0</Offset>
+            <Offset>288</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>32</ID>
+          <Description>"hp self"</Description>
+          <LastState Value="2038" RealAddress="06B90434"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>2D4</Offset>
+            <Offset>4</Offset>
+            <Offset>330</Offset>
+            <Offset>C</Offset>
+            <Offset>288</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>37</ID>
+          <Description>"stamina"</Description>
+          <LastState Value="192" RealAddress="06B90444"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>2E4</Offset>
+            <Offset>4</Offset>
+            <Offset>330</Offset>
+            <Offset>C</Offset>
+            <Offset>288</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>329</ID>
+          <Description>"bleed status"</Description>
+          <LastState Value="193" RealAddress="06B90468"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>308</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>33</ID>
+          <Description>"r weapon self"</Description>
+          <LastState Value="900000" RealAddress="06BA2508"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>1F8</Offset>
+            <Offset>654</Offset>
+            <Offset>C</Offset>
+            <Offset>30</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>34</ID>
+          <Description>"l weapon self"</Description>
+          <LastState Value="1332500" RealAddress="06BA24C4"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>1B4</Offset>
+            <Offset>654</Offset>
+            <Offset>C</Offset>
+            <Offset>30</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>40</ID>
+          <Description>"locked on"</Description>
+          <LastState Value="0" RealAddress="06B90288"/>
+          <VariableType>Byte</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>128</Offset>
+            <Offset>390</Offset>
+            <Offset>2C</Offset>
+            <Offset>170</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>77</ID>
+          <Description>"two hand"</Description>
+          <LastState Value="0" RealAddress="0AE6AB40"/>
+          <VariableType>Byte</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>0</Offset>
+            <Offset>4C8</Offset>
+            <Offset>148</Offset>
+            <Offset>0</Offset>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>71</ID>
+          <Description>"timer"</Description>
+          <LastState Value="1.200000167" RealAddress="0AE6B01C"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>4DC</Offset>
+            <Offset>4C8</Offset>
+            <Offset>148</Offset>
+            <Offset>0</Offset>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>76</ID>
+          <Description>"timer 2"</Description>
+          <LastState Value="0" RealAddress="0AE6AF80"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>440</Offset>
+            <Offset>4C8</Offset>
+            <Offset>148</Offset>
+            <Offset>0</Offset>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>332</ID>
+          <Description>"timer 3"</Description>
+          <LastState Value="0" RealAddress="0AE6BCE8"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>98</Offset>
+            <Offset>7DC</Offset>
+            <Offset>18</Offset>
+            <Offset>28</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>74</ID>
+          <Description>"ready"</Description>
+          <LastState Value="1" RealAddress="06B911C2"/>
+          <VariableType>Byte</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>7D2</Offset>
+            <Offset>20C</Offset>
+            <Offset>C</Offset>
+            <Offset>30</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>31</ID>
+          <Description>"animation type id"</Description>
+          <LastState Value="0" RealAddress="06B90DBC"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>41C</Offset>
+            <Offset>10</Offset>
+            <Offset>C</Offset>
+            <Offset>C</Offset>
+            <Offset>288</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>53</ID>
+          <Description>"animation id"</Description>
+          <LastState Value="-1" RealAddress="06B91150"/>
+          <ShowAsSigned>1</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00EE29E8</Address>
+          <Offsets>
+            <Offset>7B0</Offset>
+            <Offset>318</Offset>
+            <Offset>18</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>75</ID>
+          <Description>"animation id 2"</Description>
+          <LastState Value="-1" RealAddress="0AE6B59C"/>
+          <ShowAsSigned>1</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>1D4</Offset>
+            <Offset>8C</Offset>
+            <Offset>18</Offset>
+            <Offset>28</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>331</ID>
+          <Description>"animation id 3"</Description>
+          <LastState Value="-1" RealAddress="06B9026C"/>
+          <ShowAsSigned>1</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>10C</Offset>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>54</ID>
+          <Description>"hurtbox"</Description>
+          <LastState Value="0" RealAddress="06B91177"/>
+          <VariableType>Byte</VariableType>
+          <Address>"DARKSOULS.exe"+00EE29E8</Address>
+          <Offsets>
+            <Offset>7D7</Offset>
+            <Offset>318</Offset>
+            <Offset>1C</Offset>
+            <Offset>28</Offset>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>79</ID>
+          <Description>"poise"</Description>
+          <LastState Value="41" RealAddress="06B90320"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>1C0</Offset>
+            <Offset>C</Offset>
+            <Offset>E0</Offset>
+            <Offset>18</Offset>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>57</ID>
+          <Description>"lock cam x 2"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -597,13 +643,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B07999: 75 5B                       -  jne DARKSOULS.exe+B079F6
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>58</ID>
-      <Description>"lock cam x 3"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>58</ID>
+          <Description>"lock cam x 3"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -671,13 +717,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B070D4: F3 0F 10 54 24 10           -  movss xmm2,[esp+10]
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>59</ID>
-      <Description>"lock cam x 4"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>59</ID>
+          <Description>"lock cam x 4"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -745,13 +791,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B07564: E8 E7 34 66 FF              -  call DARKSOULS.exe+16AA50
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>60</ID>
-      <Description>"lock cam x 5"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>60</ID>
+          <Description>"lock cam x 5"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -817,13 +863,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B0689D: F2 0F 5A CA                 -  cvtsd2ss xmm1,xmm2
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>61</ID>
-      <Description>"lock cam x 6"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>61</ID>
+          <Description>"lock cam x 6"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -889,13 +935,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B06A9A: D9 9B 50 01 00 00           -  fstp dword ptr [ebx+00000150]
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>62</ID>
-      <Description>"lock cam x 7"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>62</ID>
+          <Description>"lock cam x 7"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-08
   Author : Manganese
@@ -963,13 +1009,13 @@ dealloc(newmem)
 "DARKSOULS.exe"+B06924: D9 9C 24 9C 00 00 00        -  fstp dword ptr [esp+0000009C]
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>64</ID>
-      <Description>"lock cam y"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>{ Game   : DARKSOULS.exe
+        </CheatEntry>
+        <CheatEntry>
+          <ID>64</ID>
+          <Description>"lock cam y"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : DARKSOULS.exe
   Version: 
   Date   : 2015-11-10
   Author : Manganese
@@ -1035,59 +1081,60 @@ dealloc(newmem)
 "DARKSOULS.exe"+B079B4: F3 0F 11 44 24 3C           -  movss [esp+3C],xmm0
 }
 </AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>20</ID>
-      <Description>"speedhack"</Description>
-      <VariableType>Float</VariableType>
-      <Address>"DARKSOULS.exe"+00F7855C</Address>
-      <Offsets>
-        <Offset>104</Offset>
-        <Offset>6C</Offset>
-        <Offset>354</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>80</ID>
-      <Description>"network stack"</Description>
-      <LastState Value="0" RealAddress="0F6794B0"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F62DCC</Address>
-      <Offsets>
-        <Offset>11C</Offset>
-        <Offset>4</Offset>
-        <Offset>14</Offset>
-        <Offset>8</Offset>
-        <Offset>4</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>81</ID>
-      <Description>"visual state"</Description>
-      <LastState Value="8" RealAddress="07805810"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7D644</Address>
-      <Offsets>
-        <Offset>70</Offset>
-        <Offset>C</Offset>
-        <Offset>30</Offset>
-        <Offset>0</Offset>
-        <Offset>28</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>339</ID>
-      <Description>"selected item"</Description>
-      <LastState Value="501" RealAddress="0F14B004"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"DARKSOULS.exe"+00F7F8F4</Address>
-      <Offsets>
-        <Offset>2D4</Offset>
-        <Offset>730</Offset>
-        <Offset>18</Offset>
-        <Offset>C</Offset>
-        <Offset>67C</Offset>
-      </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>20</ID>
+          <Description>"speedhack"</Description>
+          <LastState Value="1" RealAddress="0538C728"/>
+          <VariableType>Float</VariableType>
+          <Address>"DARKSOULS.exe"+00F7855C</Address>
+          <Offsets>
+            <Offset>104</Offset>
+            <Offset>6C</Offset>
+            <Offset>354</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>80</ID>
+          <Description>"network stack"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F62DCC</Address>
+          <Offsets>
+            <Offset>11C</Offset>
+            <Offset>4</Offset>
+            <Offset>14</Offset>
+            <Offset>8</Offset>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>81</ID>
+          <Description>"visual state"</Description>
+          <LastState Value="0" RealAddress="06B901D0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7D644</Address>
+          <Offsets>
+            <Offset>70</Offset>
+            <Offset>C</Offset>
+            <Offset>30</Offset>
+            <Offset>0</Offset>
+            <Offset>28</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>339</ID>
+          <Description>"selected item"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"DARKSOULS.exe"+00F7F8F4</Address>
+          <Offsets>
+            <Offset>2D4</Offset>
+            <Offset>730</Offset>
+            <Offset>18</Offset>
+            <Offset>C</Offset>
+            <Offset>67C</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
@@ -1825,20 +1872,16 @@ dealloc(newmem)
       <Address>00D7847E</Address>
     </SymbolEntry>
     <SymbolEntry>
-      <Name>CamRotAOB</Name>
-      <Address> 00F06C46</Address>
-    </SymbolEntry>
-    <SymbolEntry>
       <Name>MaxHumAOB</Name>
-      <Address> 00EA4B2A</Address>
+      <Address>00EA4B2A</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>InfDur1AOB</Name>
-      <Address> 00C08C4A</Address>
+      <Address>00C08C4A</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>InfDur2AOB</Name>
-      <Address> 00C08B8D</Address>
+      <Address>00C08B8D</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>allItemSwitch</Name>
@@ -1850,7 +1893,7 @@ dealloc(newmem)
     </SymbolEntry>
     <SymbolEntry>
       <Name>InfItemAOB</Name>
-      <Address> 00C09766</Address>
+      <Address>00C09766</Address>
     </SymbolEntry>
   </UserdefinedSymbols>
   <Structures StructVersion="2">
