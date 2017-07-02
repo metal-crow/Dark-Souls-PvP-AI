@@ -8,7 +8,7 @@ https://www.youtube.com/user/Birdulon. Master reverse engineerer, seriously he f
   
 The most recent commit to master should always be tested and verified to perform well. Any work that may break or may not function well should be done in a branch.  
   
-##Setup
+## Setup
 * Install [Vjoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install).
 * Create Vjoy controller with the config: x,y,z,rx,ry,20 buttons,1 discrete pov
 * Install [Cheat Engine](http://www.cheatengine.org/)
