@@ -1,5 +1,5 @@
 # Project King, The Dark Souls PvP AI
-AI for playing (and winning) in Dark Souls PVP. Shown in a fully automated 24/7 stream: http://www.hitbox.tv/metal-crow
+AI for playing (and winning) in Dark Souls PVP. Shown in a fully automated 24/7 stream: https://www.smashcast.tv/metal-crow
   
 If you like this project, you should also follow:  
 https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!  
@@ -11,11 +11,11 @@ The most recent commit to master should always be tested and verified to perform
 ## Setup
 * Install [Vjoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install).
 * Create Vjoy controller with the config: x,y,z,rx,ry,20 buttons,1 discrete pov
-* Install [Cheat Engine](http://www.cheatengine.org/)
+* Install [Cheat Engine](http://www.cheatengine.org)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
  * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. My method for doing this is a script that AOB scans `F3 0F 11 83 44 01 00 00 80 BB 63 02 00 00 00`, noops, then lock camera x via CE freeze.
  * The helper table I used (modified from Technojacker's) is [here](https://github.com/metal-crow/Dark-Souls-PvP-AI/blob/master/DARKSOULS_AI_Help.CT)
-* Download the source code and compile with [FANN](http://leenissen.dk/). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
+* Download the source code and compile with [FANN](http://leenissen.dk). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network (see the methods in InitalizeFANN, use the main method in there with them) and put the .net file in a folder in the .exe's location called "Neural Nets"
  * Or use the already trained nets in the latest release
 * (If you want the gui) Import the folder for the GUI into eclipse and run that. Or run the included .jar file.
@@ -96,5 +96,5 @@ Attack Network Inputs:
     * Have a build flag which determines if the program uses my handwritten neural network or a library's neural network    
 
 ## Using:   
-http://vjoystick.sourceforge.net/ (VJOY)  
-http://leenissen.dk/ (FANN)  
+http://vjoystick.sourceforge.net (VJOY)  
+http://leenissen.dk (FANN)  
