@@ -9,8 +9,9 @@
     #define TrainAttackNet 0
     #define TrainBackstabNet 1
 #define FeedNeuralNet 0
-#define NeuralNetFolderLocation "E:/Code Workspace/Dark Souls AI C/Neural Nets"
 
+//*****NOTE****: if this is longer than ~120 characters FANN will crash when trying to open the .net file. Try not to do that????? Sorry
+#define NeuralNetFolderLocation "E:/Code Workspace/Dark Souls AI C/Neural Nets" 
 //used in helper utils (for camera)
 #define OolicelMap 1
 
