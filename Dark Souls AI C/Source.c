@@ -30,6 +30,10 @@ int SetupandLoad(){
     char * processName = "DARKSOULS.exe";
     //get the process id from the name
     int processId = GetProcessIdFromName(processName);
+	if (processId == -1) {
+		printf("Unable to find DarkSouls.exe\n");
+		return EXIT_FAILURE;
+	}
     //open the handle
     processHandle = OpenProcess(PROCESS_ALL_ACCESS, 0, processId);
     //get the base address of the process and append all other addresses onto it

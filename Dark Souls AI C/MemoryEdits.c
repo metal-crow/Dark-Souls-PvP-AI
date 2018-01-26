@@ -3,6 +3,7 @@
 int GetProcessIdFromName(const char* ProcName) {
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
+	int processid = -1;
 	//get all running processes
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
@@ -14,6 +15,7 @@ int GetProcessIdFromName(const char* ProcName) {
 			wcstombs_s(&charsConverted, processname, 20, entry.szExeFile, 19);
 			//compare the process name and desired process name
 			if (_stricmp(processname, ProcName) == 0){
+				processid = entry.th32ProcessID;
 				break;
 			}
 		} while (Process32Next(hSnapshot, &entry));
@@ -23,7 +25,7 @@ int GetProcessIdFromName(const char* ProcName) {
 		CloseHandle(hSnapshot);
 	}
 
-	return entry.th32ProcessID;
+	return processid;
 }
 
 ullong GetModuleBase(const int ProcessID, const char * ModuleName){
