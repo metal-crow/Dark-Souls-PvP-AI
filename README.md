@@ -14,6 +14,11 @@ The most recent commit to master should always be tested and verified to perform
 * Install [Cheat Engine](http://www.cheatengine.org)
 * Download [Technojacker's DARKSOULS.CT table](https://drive.google.com/folderview?id=0B_f11g1DlLhDV1RfV0VSdnBfOVE&usp=sharing)  
  * Cheat Engine and the table are only used to lock the camera's x rotation to 3.141592. My method for doing this is a script that AOB scans `F3 0F 11 83 44 01 00 00 80 BB 63 02 00 00 00`, noops, then lock camera x via CE freeze.
+    * Note: This is map dependent
+      * For Oolacile township, set the rotation to 3.141592 and enable the OolicelMap setting.
+      * For Sunlight alter, set the rotation to 3.141592 and disable the OolicelMap setting.
+      * For Undead burg, set the rotation to 0.0 and enable the OolicelMap setting.
+
  * The helper table I used (modified from Technojacker's) is [here](https://github.com/metal-crow/Dark-Souls-PvP-AI/blob/master/DARKSOULS_AI_Help.CT)
 * Download the source code and compile with [FANN](http://leenissen.dk). Add the FANN dlls and the vJoyInterface dll to the exe's folder.
 * Train the defense neural network (see the methods in InitalizeFANN, use the main method in there with them) and put the .net file in a folder in the .exe's location called "Neural Nets"
