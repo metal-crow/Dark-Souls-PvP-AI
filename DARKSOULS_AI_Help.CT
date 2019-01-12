@@ -331,10 +331,9 @@ unregistersymbol(InfDur2AOB)
           <Address>"DARKSOULS.exe"+00F7d644</Address>
           <Offsets>
             <Offset>4</Offset>
-            <Offset>18</Offset>
-            <Offset>4</Offset>
-            <Offset>C0</Offset>
-            <Offset>288</Offset>
+            <Offset>1C</Offset>
+            <Offset>28</Offset>
+            <Offset>3C</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
