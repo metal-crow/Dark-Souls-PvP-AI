@@ -106,9 +106,9 @@ static const int Enemy_loc_y_offsets_length = 5;
 static const int Player_loc_y_offsets_length = 5;
 //offsets and length for rotation.
 static const int Enemy_rotation_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x34 };
-static const int Player_rotation_offsets[] = { 0x288, 0xC0, 0x4, 0x18, 0x4 };
+static const int Player_rotation_offsets[] = { 0x3C, 0x28, 0x1C, 0x4 };
 static const int Enemy_rotation_offsets_length = 5;
-static const int Player_rotation_offsets_length = 5;
+static const int Player_rotation_offsets_length = 4;
 //offsets and length for animation type id
 static const int Enemy_animationType_offsets[] = { 0x4, 0x4, 0x28, 0x54, 0x1EC };
 static const int Player_animationType_offsets[] = { 0x288, 0xC, 0xC, 0x10, 0x41C };
