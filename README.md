@@ -1,5 +1,5 @@
 # Project King, The Dark Souls PvP AI
-AI for playing (and winning) in Dark Souls PVP. Shown in a fully automated 24/7 stream: https://www.smashcast.tv/metal-crow
+AI for playing (and winning) in Dark Souls PVP. Shown in a fully automated 24/7 stream: https://www.twitch.tv/darksoulsai
   
 If you like this project, you should also follow:  
 https://github.com/eur0pa. Creator of dark souls pvp watchdog. Thanks man!  
