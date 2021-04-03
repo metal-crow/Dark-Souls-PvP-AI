@@ -53,11 +53,18 @@ static bool RedSignDown = false;
 void PutDownRedSign(){
     ResetVJoyController();
 	//press x (in case we have a message appearing), down to goto next item, and check if we selected RSS
-    while (selectedItem != RedSoapstone){
+	for (int i = 0; i < 5; i++)
+	{
 		iReport.bHats = cross;
 		UpdateVJD(iInterface, (PVOID)&iReport);
 		Sleep(100);
-		iReport.bHats = 0x0;
+		ResetVJoyController();
+	}
+
+#if 0
+    while (selectedItem != RedSoapstone)
+	{
+		ResetVJoyController();
 		UpdateVJD(iInterface, (PVOID)&iReport);
 		Sleep(100);
         iReport.bHats = ddown;
@@ -70,18 +77,23 @@ void PutDownRedSign(){
         ReadProcessMemory(processHandle, (LPCVOID)(selectedItem_address), &(selectedItem), 4, 0);
         guiPrint(LocationHandler",2:Selected Item:%d", selectedItem);
     }
+#endif
 	//use RSS
     iReport.lButtons = square;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
-    iReport.lButtons = 0x0;
-    UpdateVJD(iInterface, (PVOID)&iReport);
+
+	ResetVJoyController();
+	UpdateVJD(iInterface, (PVOID)&iReport);
+
+#if 0
     //change back selected item for when summoned
     iReport.bHats = ddown;
     UpdateVJD(iInterface, (PVOID)&iReport);
     Sleep(100);
     iReport.bHats = dcenter;
     UpdateVJD(iInterface, (PVOID)&iReport);
+#endif
 
     RedSignDown = true;
 }
