@@ -21,12 +21,13 @@ void InstinctDecisionMaking(InstinctDecision* instinct_decision){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
 		instinct_decision->subroutine_id.attackid = SwitchWeaponId;
 	}
+#if 0
 	//heal if enemy heals
 	if ((Enemy.animationType_id == CrushUseItem || Enemy.animationType_id == EstusSwig_part1 || Enemy.animationType_id == EstusSwig_part2) && Player.hp < 2000){
 		instinct_decision->priority_decision = EnterAttackSubroutine;
 		instinct_decision->subroutine_id.attackid = HealId;
 	}
-
+#endif
 	//if enemy in range and we/enemy is not in invulnerable position (bs knockdown)
 	if (distanceByLine <= Enemy.weaponRange && !Player.in_backstab && !Enemy.in_backstab){
 		if (
